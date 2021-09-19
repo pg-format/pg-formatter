@@ -1,0 +1,3 @@
+taro :person age:37 born_in:"Tokyo"
+jiro :person
+taro -> jiro :knows since:2015
