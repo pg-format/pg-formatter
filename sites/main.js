@@ -10,7 +10,7 @@ function reformat(event, ui) {
     let sep = '\n';
     if (q('#indent-depth').value === 'space') {
       delim = ' ';
-      sep = '\n';
+      sep = '';
     }
     if (input) {
       outputArea.setValue(pgFormat(input, delim, sep) + '\n');
