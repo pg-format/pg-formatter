@@ -4,7 +4,12 @@ let timerId;
 
 function reformat(event, ui) {
   try {
-    outputArea.setValue(pgFormat(editor.getValue()) + '\n');
+    const input = editor.getValue();
+    if (input) {
+      outputArea.setValue(pgFormat(input) + '\n');
+    } else {
+      outputArea.setValue('');
+    }
   } catch (e) {
     console.log(e);
     toastr.error('', 'SyntaxError', { preventDuplicates: true });
@@ -43,7 +48,7 @@ q('#indent-depth').addEventListener('change', onChanged);
 
 q('#query-select').addEventListener('change', (event) => {
   if (event.target.value === '') {
-    editor.setValue('SELECT * WHERE { ?s ?p ?o. } LIMIT 10');
+    editor.setValue('');
   } else {
     let url = `https://raw.githubusercontent.com/hchiba1/pg-formatter/main/examples/${event.target.value}`;
     axios.get(url).then((response) => {
@@ -67,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
     selectNode.appendChild(firstOption);
 
     for (let object of response.data) {
-      if (object.name.endsWith('.rq')) {
+      if (object.name.endsWith('.pg')) {
         let option = document.createElement('option');
         option.innerText = object.name;
         selectNode.appendChild(option);
