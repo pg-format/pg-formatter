@@ -1,61 +1,62 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-pgFormat = (input) => {
+pgFormat = (input, delim = '\n  ', sep = '\n') => {
   const parser = require('../lib/parser');
   const formatter = require('../lib/formatter.js');
-  return formatter.format(parser.parse(input), '\n  ');
+  return formatter.format(parser.parse(input), delim, sep);
 };
 
 },{"../lib/formatter.js":2,"../lib/parser":3}],2:[function(require,module,exports){
-exports.format = (objectTree, sep) => {
+exports.format = (objectTree, delim, sep) => {
   const out1 = objectTree.nodes.map((node) => {
-    return printNode(node, sep);
+    return printNode(node, delim);
   });
 
   const out2 = objectTree.edges.map((edge) => {
-    return printEdge(edge, sep);
+    return printEdge(edge, delim);
   });
 
-  return out1.join('\n\n') + '\n\n' + out2.join('\n\n');
+  sep += '\n';
+  return out1.join(sep) + sep + out2.join(sep);
 }
 
-function printNode(node, sep) {
+function printNode(node, delim) {
   let out = node.id;
-  const labels = getLabels(node.labels, sep);
-  props = getProps(node.properties, sep);
+  const labels = getLabels(node.labels, delim);
+  props = getProps(node.properties, delim);
   if (labels) {
-    out += `${sep}${labels}`;
+    out += `${delim}${labels}`;
   }
   if (props) {
-    out += `${sep}${props}`;
+    out += `${delim}${props}`;
   }
   return out;
 }
 
-function printEdge(edge, sep) {
+function printEdge(edge, delim) {
   let out = `${edge.from} ${edge.direction} ${edge.to}`;
-  let labels = getLabels(edge.labels, sep);
-  props = getProps(edge.properties, sep);
+  let labels = getLabels(edge.labels, delim);
+  props = getProps(edge.properties, delim);
   if (labels) {
-    out += `${sep}${labels}`;
+    out += `${delim}${labels}`;
   }
   if (props) {
-    out += `${sep}${props}`;
+    out += `${delim}${props}`;
   }
   return out;
 }
 
-function getLabels(labels, sep) {
-  return labels.map(x => `:${x}`).join(sep);
+function getLabels(labels, delim) {
+  return labels.map(x => `:${x}`).join(delim);
 }
 
-function getProps(props, sep) {
+function getProps(props, delim) {
   let ret = [];
   Object.entries(props).forEach(([key, vals]) => {
     vals.forEach((val) => {
       ret.push(`${key}: ${val}`);
     });
   });
-  return ret.join(sep);
+  return ret.join(delim);
 }
 
 },{}],3:[function(require,module,exports){

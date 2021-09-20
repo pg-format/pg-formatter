@@ -5,8 +5,15 @@ let timerId;
 function reformat(event, ui) {
   try {
     const input = editor.getValue();
+    const style = q('#indent-depth').value;
+    let delim = '\n  ';
+    let sep = '\n';
+    if (q('#indent-depth').value === 'space') {
+      delim = ' ';
+      sep = '\n';
+    }
     if (input) {
-      outputArea.setValue(pgFormat(input) + '\n');
+      outputArea.setValue(pgFormat(input, delim, sep) + '\n');
     } else {
       outputArea.setValue('');
     }
