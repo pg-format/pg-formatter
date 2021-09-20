@@ -1,0 +1,24 @@
+{
+  "name": "pg-formatter",
+  "version": "0.0.1",
+  "description": "PG formatter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hchiba1/pg-formatter"
+  },
+  "author": "Hirokazu Chiba",
+  "license": "MIT",
+  "scripts": {
+    "pegjs": "pegjs -o lib/parser.js lib/pg.pegjs",
+    "browserify": "browserify js/_formatter.js > js/formatter.js"
+  },
+  "dependencies": {
+    "commander": "^8.2.0",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7",
+    "pegjs": "^0.10.0"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0"
+  }
+}

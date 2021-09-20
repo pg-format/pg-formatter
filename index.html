@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>PG formatter</title>
+        <link crossorigin='anonymous' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'
+              integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' rel='stylesheet'>
+        <link href='./sites/codemirror/codemirror.css' rel='stylesheet'>
+        <link href='./sites/style.css' rel='stylesheet'>
+        <link href='./sites/img/favicon.ico' rel='icon'>
+        <link href='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css' rel='stylesheet'>
+        <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+        <script src='./sites/codemirror/codemirror.js'></script>
+        <script src='./sites/codemirror/simple.js'></script>
+        <script src='./sites/codemirror/mark-selection.js'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'></script>
+        <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+        <div id='app'>
+            <nav class='navbar navbar-expand-md navbar-light bg-white shadow-sm sticky-top' id='header'>
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <h3 class="mt-2">
+                            PG formatter
+                        </h3>
+                    </div>
+
+                    <div class="nav navbar-nav navbar-right">
+                        <a href="https://github.com/hchiba1/pg-formatter" target="_blank" rel="noopener noreferrer">
+                            <img src="./sites/img/GitHub_Logo_White.png" style="height: 22px;">
+                            <img src="./sites/img/GitHub-Mark-Light-32px.png">
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <div id='main-area'>
+                <div id='input-area' class="mt-2 ml-1">
+                    <span class="ml-3 subheading">Input:</span>
+                    <div class="float-right">
+                        <span class="mr-1 text-muted">example</span>
+                        <select id="query-select" class="text-muted rounded" style="width: 150px"></select>
+                    </div>
+
+                    <div class="mt-1 text-container">
+                        <textarea id='input-text'>
+taro :person age:37 born_in:"Tokyo"
+jiro :person
+taro -> jiro :knows since:2015</textarea>
+                    </div>
+                </div>
+
+                <div id='formatted-area' class="mt-2 mr-2">
+                    <span class="ml-3 subheading">Formatted:</span>
+                    <div class="float-right">
+                        <span class="mr-1 text-muted">indent</span>
+                        <select id="indent-depth" class="text-muted rounded" style="width: 75px">
+                            <option>2</option>
+                            <option>4</option>
+                        </select>
+                    </div>
+
+                    <div class="mt-1 text-container">
+                        <button id="copy-button" class="border-0 rounded">
+                            <i class="far fa-copy text-muted small"></i>
+                            <span class="small text-muted">Copy</span>
+                        </button>
+                        <textarea id='formatted-text'>
+taro
+  :person
+  age: 37
+  born_in: Tokyo
+
+jiro
+  :person
+
+taro -> jiro
+  :knows
+  since: 2015</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src='https://cdn.jsdelivr.net/gh/hchiba1/pg-formatter@main/js/formatter.min.js'></script>
+        <script src='./sites/main.js'></script>
+    </body>
+</html>
