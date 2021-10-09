@@ -1,0 +1,21 @@
+# comment
+
+# nodes
+taro :human
+ age:23
+sabro :human
+ age:20
+taro -- sabro
+ :brother
+
+jiro :dog
+
+shiro
+ :dog
+
+# edges
+jiro -> taro
+ :likes
+ since:2015
+
+# end comment
