@@ -8,10 +8,6 @@
   },
   "author": "Hirokazu Chiba",
   "license": "MIT",
-  "scripts": {
-    "pegjs": "pegjs -o lib/parser.js lib/pg.pegjs",
-    "browserify": "browserify js/_formatter.js > js/formatter.js"
-  },
   "dependencies": {
     "commander": "^8.2.0",
     "fs": "0.0.1-security",
@@ -20,5 +16,9 @@
   },
   "devDependencies": {
     "browserify": "^17.0.0"
+  },
+  "scripts": {
+    "pegjs": "pegjs -o lib/parser.js lib/pg.pegjs",
+    "browserify": "browserify js/_formatter.js > js/formatter.js"
   }
 }
