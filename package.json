@@ -4,7 +4,7 @@
   "description": "PG formatter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hchiba1/pg-formatter"
+    "url": "https://github.com/g2glab/pg-formatter"
   },
   "author": "Hirokazu Chiba",
   "license": "MIT",
