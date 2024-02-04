@@ -59,7 +59,7 @@ q('#query-select').addEventListener('change', (event) => {
   if (event.target.value === '') {
     editor.setValue('');
   } else {
-    let url = `https://raw.githubusercontent.com/hchiba1/pg-formatter/main/examples/${event.target.value}`;
+    let url = `https://raw.githubusercontent.com/g2glab/pg-formatter/main/examples/${event.target.value}`;
     axios.get(url).then((response) => {
       editor.setValue(response.data);
     });
@@ -71,7 +71,7 @@ q('#copy-button').addEventListener('click', () => {
 });
 
 document.addEventListener('DOMContentLoaded', function (event) {
-  let url = `https://api.github.com/repos/hchiba1/pg-formatter/contents/examples`;
+  let url = `https://api.github.com/repos/g2glab/pg-formatter/contents/examples`;
   axios.get(url).then((response) => {
     const selectNode = q('#query-select');
     selectNode.innerHTML = '';
