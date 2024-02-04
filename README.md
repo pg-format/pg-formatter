@@ -1,3 +1,3 @@
-# pg-formatter
+# PG formatter
 
-Website: https://hchiba1.github.io/pg-formatter/
+Website: https://g2glab.github.io/pg-formatter/
