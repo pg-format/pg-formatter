@@ -73,6 +73,22 @@
                 </div>
             </div>
         </div>
+        <script>
+         const q = document.querySelector.bind(document);
+         const editor = CodeMirror.fromTextArea(q('#input-text'), {
+             lineNumbers: true,
+             viewportMargin: Infinity,
+             lineWrapping: true
+         });
+         const outputArea = CodeMirror.fromTextArea(q('#formatted-text'), {
+             lineNumbers: true,
+             viewportMargin: Infinity,
+             lineWrapping: false,
+             readOnly: true
+         });
+         editor.setSize('100%', '100%');
+         outputArea.setSize('100%', '100%');
+        </script>
         <!-- <script src='https://cdn.jsdelivr.net/gh/hchiba1/pg-formatter@f191e15/js/formatter.min.js'></script> -->
         <script src='./js/formatter.js'></script>
         <script src='./sites/main.js'></script>

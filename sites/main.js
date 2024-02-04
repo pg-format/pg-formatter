@@ -1,5 +1,4 @@
-const q = document.querySelector.bind(document);
-let byProgram = false, editor, outputArea;
+let byProgram = false;
 let timerId;
 
 function reformat(event, ui) {
@@ -31,23 +30,6 @@ function onChanged(delta) {
     byProgram = false;
   }
 }
-
-editor = CodeMirror.fromTextArea(q('#input-text'), {
-  lineNumbers: true,
-  viewportMargin: Infinity,
-  lineWrapping: true
-});
-
-outputArea = CodeMirror.fromTextArea(q('#formatted-text'), {
-  lineNumbers: true,
-  viewportMargin: Infinity,
-  lineWrapping: true,
-  readOnly: true
-});
-
-editor.setSize('100%', '100%');
-
-outputArea.setSize('100%', '100%');
 
 editor.on('change', onChanged);
 
