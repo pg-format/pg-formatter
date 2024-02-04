@@ -2,23 +2,43 @@ let byProgram = false;
 let timerId;
 
 function reformat(event, ui) {
+  const input = editor.getValue();
+  let delim = '\n  ';
+  let sep = '\n';
+  if (q('#indent-depth').value === 'space') {
+    delim = ' ';
+    sep = '';
+  }
   try {
-    const input = editor.getValue();
-    const style = q('#indent-depth').value;
-    let delim = '\n  ';
-    let sep = '\n';
-    if (q('#indent-depth').value === 'space') {
-      delim = ' ';
-      sep = '';
+    toastr.clear();
+    outputArea.setValue(pgFormat(input, delim, sep) + '\n');
+  } catch (err) {
+    toastr.remove();
+    outputArea.setValue(input);
+    let title = 'SyntaxError';
+    if (err.location) {
+      const startLine = err.location.start.line;
+      const endLine = err.location.end.line;
+      const startCol = err.location.start.column;
+      const endCol = err.location.end.column;
+      if (startLine == endLine) {
+        title += ` at line:${startLine}(col:${startCol}-${endCol})\n`;
+      } else {
+        title += ` at line:${startLine}(col:${startCol})-${endLine}(col:${endCol})\n`;
+      }
+      outputArea.setSelection({line: startLine-1, ch: startCol-1}, {line: endLine-1, ch: endCol-1});
     }
-    if (input) {
-      outputArea.setValue(pgFormat(input, delim, sep) + '\n');
-    } else {
-      outputArea.setValue('');
+    toastr.options = {
+      timeOut: 0,
+      extendedTimeOut: 0,
+      closeButton: true,
+      preventDuplicates: true
     }
-  } catch (e) {
-    console.log(e);
-    toastr.error('', 'SyntaxError', { preventDuplicates: true });
+    let message = '';
+    if (err.message) {
+      message = err.message;
+    }
+    toastr.error(message, title);
   }
 }
 
