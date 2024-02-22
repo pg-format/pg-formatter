@@ -213,8 +213,6 @@ function peg$parse(input, options) {
           edgeLabels: edgeLabelHash,
           nodeProperties: nodePropHash,
           edgeProperties: edgePropHash
-          // nodeProperties: Object.keys(nodePropHash),
-          // edgeProperties: Object.keys(edgePropHash)
         }
       },
       peg$c1 = function(n) {
@@ -235,7 +233,6 @@ function peg$parse(input, options) {
           } else {
             propObj[prop.key] = [prop.value];
           }
-          // nodePropHash[prop.key] = true;
           if (nodePropHash[prop.key]) {
             nodePropHash[prop.key]++;
           } else {
@@ -267,7 +264,6 @@ function peg$parse(input, options) {
           } else {
             propObj[prop.key] = [prop.value];
           }
-          // edgePropHash[prop.key] = true;
           if (edgePropHash[prop.key]) {
             edgePropHash[prop.key]++;
           } else {
