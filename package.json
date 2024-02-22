@@ -19,6 +19,6 @@
   },
   "scripts": {
     "pegjs": "pegjs -o lib/parser.js lib/pg.pegjs",
-    "browserify": "browserify js/_formatter.js > js/formatter.js"
+    "webpack": "webpack ./lib/index.js --mode=production"
   }
 }
