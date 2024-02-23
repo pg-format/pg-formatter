@@ -12,7 +12,11 @@ Overview
 
 Multi-line description of a node or an edge
 
-* If the first column is empty (i.e. a line begins with spaces or tabs followed by a column describing a label or property), the line is considered a continuation of the previous line.
+* If the first column is empty (i.e. a line begins with arbitrary numbers of spaces or tabs followed by columns describing labels or properties), the line is considered a continuation of the previous line.
+
+Comments
+* Comment lines begin with `#` followed by any characters and end with a new line. Arbitrary numbers of spaces or tabs can be added before `#`.
+* If a line describing a node or an edge ends with a space or tab followed by `#` and any characters, they are considered comments (trailing comments).
 
 ## Documentation
 
