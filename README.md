@@ -1,12 +1,13 @@
 # PG formatter
 
-This repository contains a parser and serializer of PG format and a web application to 
+This repository contains a parser and formatter of **PG format** for labeled
+property graphs and a web application to validate and beautify PG format.
 
 ## PG format
 
-PG format is a text-based serialization of property graphs. A PG file encodes
-a property graph as Unicode string using UTF-8 ([RFC3629]). The format is based
-on the following rules:
+PG format is a text-based serialization of labeled property graphs. A PG file
+encodes such a graph as Unicode string using UTF-8 ([RFC3629]). The format is
+based on the following rules:
 
 * Each line describes a node or an edge.
 * All elements in a line are separated by one or more spaces or tabs.
@@ -32,10 +33,18 @@ Comments
 
 The web application is started via `index.html`, just open the file in a web browser.
 
+## Development
+
 To re-generate the code, install dependencies (`npm install`) and run:
 
-* `npm run pegjs` to update the parser 
+* `npm run pegjs` to update the parser from `lib/pg.pegjs`
 * `npm run webpack` to update the web application
+
+Run `npm test` to execute unit tests.
+
+## License
+
+The source code is licensed under MIT License.
 
 ## References
 
