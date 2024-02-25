@@ -21,6 +21,8 @@ const valid = [
   'a b:""', // empty string value
 // This should be allowed to suppor plain URI as ids
 // 'http://example.org/',
+// TODO:
+// '"\\u1234"' Unicode escape sequence
 ]
 
 describe("parse edge cases", () => {
@@ -42,16 +44,14 @@ const invalid = [
   'a b:',       // missing property value
   'a:',         // invalid id (must not end with colon)        
   'a b:c:d',    // not clear where key and where value
-/* These need to be detected:
-  '"',         // missing end of quoted string
-  '"\\"',     // missing end of quoted string with escaped '
-  'a :"',      // missing end of quoted string
-  'a :\'\\"',  // missing end of quoted string with escaped '
-  'a b:"',     // missing end of quoted string
-  'a b:"\\"', // missing end of quoted string with escaped '
-/* These need to be discussed:
-  '(a',       // invalid id (must not start with bracket)        
-  'a)',       // invalid id (must not end with bracket) */
+  '"',          // missing end of quoted string
+  '"\\"',       // missing end of quoted string with escaped '
+  'a :"',       // missing end of quoted string
+  'a :\"\\"',   // missing end of quoted string with escaped '
+  'a b:"',      // missing end of quoted string
+  'a b:"\\"',   // missing end of quoted string with escaped '
+  '(a',         // invalid id (must not start with opening parenthesis)       
+  '"\\uxxxx"',  // invalid Unicode Escape sequence
 ]
 
 describe("detect syntax errors", () => {
