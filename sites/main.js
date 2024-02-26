@@ -9,6 +9,7 @@ function reformat(event, ui) {
     delim = ' ';
     sep = '';
   }
+  blitzboard.setGraph('', false);
   try {
     toastr.clear();
     outputArea.setValue(pgFormat(input, delim, sep) + '\n');
@@ -40,6 +41,9 @@ function reformat(event, ui) {
     }
     toastr.error(message, title);
   }
+  blitzboard.setGraph(input, false);
+  blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
+  blitzboard.network.stabilize();
 }
 
 function onChanged(delta) {

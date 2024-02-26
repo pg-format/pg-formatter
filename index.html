@@ -20,6 +20,7 @@
         <script src='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'></script>
         <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/gh/blitzboard/blitzboard@v1.2.0/dist/blitzboard.bundle.min.js'></script>
     </head>
     <body>
         <div id='app'>
@@ -72,6 +73,11 @@
                     </div>
                 </div>
             </div>
+            <div style="display: flex; justify-content: center;">
+                <div id='graph-area' style="width: 95%; height: 40vh; border: solid 1px silver; background: radial-gradient(white, silver);">
+                    <div id='child-area' style='width: 95%; height: 40vh;'></div>
+                </div>
+            </div>
         </div>
         <script>
          const q = document.querySelector.bind(document);
@@ -88,6 +94,7 @@
          });
          editor.setSize('100%', '100%');
          outputArea.setSize('100%', '100%');
+         let blitzboard = new Blitzboard(document.getElementById('child-area'));
         </script>
         <!-- <script src='https://cdn.jsdelivr.net/gh/hchiba1/pg-formatter@f191e15/js/formatter.min.js'></script> -->
         <script src='./dist/main.js'></script>

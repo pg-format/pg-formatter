@@ -9,15 +9,15 @@ body {
 #main-area {
     display: inline-flex;
     width: 100%;
-    height: calc(100vh - 60px);
+    height: 50vh;
 }
 #input-area {
     width: 49%;
-    height: 93%;
+    height: calc(50vh - 50px);
 }
 #formatted-area {
     flex: 1;
-    height: 93%;
+    height: calc(50vh - 50px);
 }
 #copy-button {
     position: absolute;
