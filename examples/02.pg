@@ -1,9 +1,9 @@
 # comment
 
 # nodes
-taro :human
+taro :person
  age:23
-sabro :human
+sabro :person
  age:20
 taro -- sabro
  :brother
