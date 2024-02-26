@@ -11,17 +11,17 @@
   "dependencies": {
     "commander": "^8.2.0",
     "fs": "0.0.1-security",
-    "path": "^0.12.7",
-    "peggy": "^3.0.2"
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "chai": "^4.0.0",
     "mocha": "^10.3.0",
+    "peggy": "^3.0.2",
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
     "test": "mocha",
-    "parser": "peggy -o lib/parser.js lib/pg.pegjs",
+    "peggy": "peggy -o lib/parser.js lib/pg.pegjs",
     "webpack": "webpack ./lib/index.js --mode=production"
   }
 }
