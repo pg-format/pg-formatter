@@ -10,11 +10,9 @@ function reformat(event, ui) {
     sep = '';
   }
   blitzboard.setGraph('', false);
-  let formatted;
   try {
     toastr.clear();
-    formatted = pgFormat(input, delim, sep);
-    outputArea.setValue(formatted + '\n');
+    outputArea.setValue(pgFormat(input, delim, sep) + '\n');
   } catch (err) {
     toastr.remove();
     outputArea.setValue(input);
@@ -43,7 +41,7 @@ function reformat(event, ui) {
     }
     toastr.error(message, title);
   }
-  blitzboard.setGraph(formatted, false);
+  blitzboard.setGraph(input, false);
   blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
   blitzboard.network.stabilize();
 }
