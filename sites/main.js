@@ -41,9 +41,12 @@ function reformat(event, ui) {
     }
     toastr.error(message, title);
   }
-  blitzboard.setGraph(input, false);
-  blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
-  blitzboard.network.stabilize();
+  try {
+    blitzboard.setGraph(pgForBlitz(input), false);
+    blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
+    blitzboard.network.stabilize();
+  } catch (err) {
+  }
 }
 
 function onChanged(delta) {
