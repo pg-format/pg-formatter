@@ -22,8 +22,7 @@ if (program.args.length < 1 && process.stdin.isTTY) {
 // Get input
 let inputText;
 if(program.args[0]) {
-  const inputFile = program.args[0];
-  inputText = fs.readFileSync(inputFile, "utf8").toString();
+  inputText = fs.readFileSync(program.args[0], "utf8").toString();
 } else {
   inputText = fs.readFileSync(process.stdin.fd).toString();
 }
