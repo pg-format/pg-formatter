@@ -12,7 +12,6 @@ const opts = program
   .option('-o, --outdir <DIR>', 'output directory', './')
   .option('-c, --check', 'check for missing/orphan nodes')
   .option('-d, --debug', 'output parsed synatax tree')
-  .option('-s, --stats', 'output statistics for nodes and labels')
   .version(version)
   .arguments('[PG_FILE]')
   .parse(process.argv)
@@ -47,20 +46,8 @@ try {
 }
 
 // Output
-function replacer(key, value) {
-  if (key === 'nodes') {
-    return undefined;
-  } else if (key === 'edges') {
-    return undefined;
-  } else {
-    return value;
-  }
-}
-
 if (opts.check) {
   checkGraph(objectTree);
-} else if (opts.stats) {
-  console.log(JSON.stringify(objectTree, replacer, 2));
 } else if (opts.debug) {
   console.log(JSON.stringify(objectTree, null, 2));
 } else if (opts.format) {
