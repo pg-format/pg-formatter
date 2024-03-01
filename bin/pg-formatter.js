@@ -31,7 +31,7 @@ if (program.args.length < 1 && process.stdin.isTTY) {
   try {
     parsedObj = new parser.parse(inputText);
   } catch (err) {
-    printError(err);
+    printError(inputText, err);
     process.exit(1);
   }
 
@@ -100,22 +100,22 @@ function getElement(elem) {
   return elem.quote + elem.literal + elem.quote;
 }
 
-function printError(err) {
+function printError(inputText, err) {
   const startLine = err.location.start.line;
   const endLine = err.location.end.line;
   const startCol = err.location.start.column;
   const endCol = err.location.end.column;
   if (startLine == endLine) {
-    console.error(`ERROR line:${startLine}(col:${startCol}-${endCol})`);
+    console.error(`Error at line:${startLine}(col:${startCol}-${endCol})`);
   } else {
-    console.error(`ERROR line:${startLine}(col:${startCol})-${endLine}(col:${endCol})`);
+    console.error(`Error at line:${startLine}(col:${startCol})-${endLine}(col:${endCol})`);
   }
   console.error(err.message);
   console.error('--');
   const lines = inputText.split('\n').slice(startLine-1, endLine);
   lines.forEach((line, i) => {
     if (i == 0) {
-      console.error(makeRed(line.substring(0, startCol - 1)) + line.substring(startCol - 1));
+      console.error(line.substring(0, startCol - 1) + makeRed(line.substring(startCol - 1)));
     } else if (i < lines.length - 1) {
       console.error(makeRed(line));
     } else {
