@@ -72,27 +72,27 @@ function readStdin() {
 
 function getNodeObj(node) {
   return {
-    id: getElement(node.id),
-    labels: node.labels.map(getElement),
+    id: getLiteral(node.id),
+    labels: node.labels.map(getLiteral),
     properties: node.properties.map(property => ({
-      [getElement(property.key)]: property.values.map(getElement)
+      [getLiteral(property.key)]: property.values.map(getLiteral)
     }))
   };
 }
 
 function getEdgeObj(edge) {
   return {
-    from: getElement(edge.from),
-    to: getElement(edge.to),
+    from: getLiteral(edge.from),
+    to: getLiteral(edge.to),
     undirected: edge.direction === '--',
-    labels: edge.labels.map(getElement),
+    labels: edge.labels.map(getLiteral),
     properties: edge.properties.map(property => ({
-      [getElement(property.key)]: property.values.map(getElement)
+      [getLiteral(property.key)]: property.values.map(getLiteral)
     }))
   };
 }
 
-function getElement(elem) {
+function getLiteral(elem) {
   return elem.literal;
 }
 
