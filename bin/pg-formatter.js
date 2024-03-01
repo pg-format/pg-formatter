@@ -56,7 +56,13 @@ if (opts.check) {
       outputJSON(objectTree);
       break;
     case 'jsonl':
-      outputJsonLines(objectTree, outFilePrefix);
+      objectTree.lines.forEach(line => {
+        if (line.node) {
+          console.log(JSON.stringify(getNodeObj(line.node)));
+        } else if (line.edge) {
+          console.log(JSON.stringify(getEdgeObj(line.edge)));
+        }
+      });
       break;
     case 'neo':
       outputNeo(objectTree, outFilePrefix);
@@ -76,6 +82,36 @@ if (opts.check) {
   }
 } else {
   console.log(formatter.format(objectTree, ' ', ''));
+}
+
+function getNodeObj(node) {
+  return {
+    id: getElement(node.id),
+    labels: node.labels.map(label => getElement(label)),
+    properties: node.properties.map(property => {
+      let obj = {};
+      obj[getElement(property.key)] = property.values.map(v => getElement(v));
+      return obj;
+    })
+  };
+}
+
+function getEdgeObj(edge) {
+  return {
+    from: getElement(edge.from),
+    to: getElement(edge.to),
+    undirected: edge.direction === '--',
+    labels: edge.labels.map(label => getElement(label)),
+    properties: edge.properties.map(property => {
+      let obj = {};
+      obj[getElement(property.key)] = property.values.map(v => getElement(v));
+      return obj;
+    })
+  };
+}
+
+function getElement(elem) {
+  return elem.quote + elem.literal + elem.quote;
 }
 
 function outputJSON(objectTree) {
