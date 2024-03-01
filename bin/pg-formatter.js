@@ -8,7 +8,7 @@ const formatter = require('../lib/formatter.js');
 const version = require('../package.json').version;
 
 const opts = program
-  .option('-f, --format <FORMAT>', 'json, jsonl, neo, cyjs, cyjson')
+  .option('-f, --format <FORMAT>', 'jsonl')
   .option('-o, --outdir <DIR>', 'output directory', './')
   .option('-c, --check', 'check for missing/orphan nodes')
   .option('-d, --debug', 'output parsed synatax tree')
@@ -52,9 +52,6 @@ if (opts.check) {
   console.log(JSON.stringify(objectTree, null, 2));
 } else if (opts.format) {
   switch (opts.format) {
-    case 'json':
-      outputJSON(objectTree);
-      break;
     case 'jsonl':
       objectTree.lines.forEach(line => {
         if (line.node) {
@@ -63,18 +60,6 @@ if (opts.check) {
           console.log(JSON.stringify(getEdgeObj(line.edge)));
         }
       });
-      break;
-    case 'neo':
-      outputNeo(objectTree, outFilePrefix);
-      break;
-    case 'cyjs':
-      outputCyJS(objectTree, outFilePrefix);
-      break;
-    case 'cyjson':
-      outputCyJSON(objectTree, outFilePrefix);
-      break;
-    case 'pgx':
-      outputPGX(objectTree, outFilePrefix);
       break;
     default:
       console.error(`${opts.format}: unknown output format`);
