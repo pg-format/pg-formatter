@@ -15,14 +15,15 @@ const opts = program
   .parse(process.argv)
   .opts();
 
+if (program.args.length < 1 && process.stdin.isTTY) {
+  program.help();
+}
+
 // Get input
 let inputText;
 if(program.args[0]) {
   const inputFile = program.args[0];
-  const basename = path.basename(inputFile, '.pg');
   inputText = fs.readFileSync(inputFile, "utf8").toString();
-} else if (process.stdin.isTTY) {
-  program.help();
 } else {
   inputText = fs.readFileSync(process.stdin.fd).toString();
 }
