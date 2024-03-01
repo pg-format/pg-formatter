@@ -20,7 +20,6 @@ if (program.args.length < 1 && process.stdin.isTTY) {
 }
 
 (async () => {
-  // Get input
   let inputText;
   if(program.args[0]) {
     inputText = await fs.readFile(program.args[0], "utf8").toString();
@@ -28,22 +27,20 @@ if (program.args.length < 1 && process.stdin.isTTY) {
     inputText = await readStdin();
   }
 
-  // Parse PG file
-  let objectTree;
+  let parsedObj;
   try {
-    objectTree = new parser.parse(inputText);
+    parsedObj = new parser.parse(inputText);
   } catch (err) {
     printError(err);
     process.exit(1);
   }
 
-  // Output
   if (opts.debug) {
-    console.log(JSON.stringify(objectTree, null, 2));
+    console.log(JSON.stringify(parsedObj, null, 2));
   } else if (opts.format) {
     switch (opts.format) {
       case 'jsonl':
-        objectTree.lines.forEach(line => {
+        parsedObj.lines.forEach(line => {
           if (line.node) {
             console.log(JSON.stringify(getNodeObj(line.node)));
           } else if (line.edge) {
@@ -56,7 +53,7 @@ if (program.args.length < 1 && process.stdin.isTTY) {
         break;
     }
   } else {
-    console.log(formatter.format(objectTree, ' ', ''));
+    console.log(formatter.format(parsedObj, ' ', ''));
   }
 })();
 
