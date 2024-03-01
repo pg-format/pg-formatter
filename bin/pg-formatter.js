@@ -110,7 +110,17 @@ function printError(inputText, err) {
   } else {
     console.error(`Error at line:${startLine}(col:${startCol})-${endLine}(col:${endCol})`);
   }
-  console.error(err.message);
+  let message = '';
+  if (err.message) {
+    message = err.message;
+    message = message.replace(/^Expected/, 'Expected:');
+    message = message.replace(/ but .* found.$/, '');
+    message = message.replace('[ \\t]', '');
+    message = message.replace('[\\r\\n]', '');
+    message = message.replace('or ', ', ');
+    message = message.replace(/ *(, )+/g, ' ');
+  }
+  console.error(message);
   console.error('--');
   const lines = inputText.split('\n').slice(startLine-1, endLine);
   lines.forEach((line, i) => {
