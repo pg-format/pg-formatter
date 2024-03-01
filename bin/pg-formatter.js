@@ -9,30 +9,22 @@ const version = require('../package.json').version;
 
 const opts = program
   .option('-f, --format <FORMAT>', 'jsonl')
-  .option('-o, --outdir <DIR>', 'output directory', './')
   .option('-d, --debug', 'output parsed synatax tree')
   .version(version)
   .arguments('[PG_FILE]')
   .parse(process.argv)
   .opts();
 
-// Get input and output file names
+// Get input
 let inputText;
-
-let outFilePrefix;
 if(program.args[0]) {
   const inputFile = program.args[0];
   const basename = path.basename(inputFile, '.pg');
   inputText = fs.readFileSync(inputFile, "utf8").toString();
-  outFilePrefix = path.join(opts.outdir, basename);
-  if (!fs.existsSync(opts.outdir)) {
-    fs.mkdirSync(opts.outdir, {recursive: true});
-  }
 } else if (process.stdin.isTTY) {
   program.help();
 } else {
   inputText = fs.readFileSync(process.stdin.fd).toString();
-  outFilePrefix = 'pgfmt';
 }
 
 // Parse PG file
