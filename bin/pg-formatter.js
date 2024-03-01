@@ -19,43 +19,58 @@ if (program.args.length < 1 && process.stdin.isTTY) {
   program.help();
 }
 
-// Get input
-let inputText;
-if(program.args[0]) {
-  inputText = fs.readFileSync(program.args[0], "utf8").toString();
-} else {
-  inputText = fs.readFileSync(process.stdin.fd).toString();
-}
-
-// Parse PG file
-let objectTree;
-try {
-  objectTree = new parser.parse(inputText);
-} catch (err) {
-  printError(err);
-  process.exit(1);
-}
-
-// Output
-if (opts.debug) {
-  console.log(JSON.stringify(objectTree, null, 2));
-} else if (opts.format) {
-  switch (opts.format) {
-    case 'jsonl':
-      objectTree.lines.forEach(line => {
-        if (line.node) {
-          console.log(JSON.stringify(getNodeObj(line.node)));
-        } else if (line.edge) {
-          console.log(JSON.stringify(getEdgeObj(line.edge)));
-        }
-      });
-      break;
-    default:
-      console.error(`${opts.format}: unknown output format`);
-      break;
+(async () => {
+  // Get input
+  let inputText;
+  if(program.args[0]) {
+    inputText = await fs.readFile(program.args[0], "utf8").toString();
+  } else {
+    inputText = await readStdin();
   }
-} else {
-  console.log(formatter.format(objectTree, ' ', ''));
+
+  // Parse PG file
+  let objectTree;
+  try {
+    objectTree = new parser.parse(inputText);
+  } catch (err) {
+    printError(err);
+    process.exit(1);
+  }
+
+  // Output
+  if (opts.debug) {
+    console.log(JSON.stringify(objectTree, null, 2));
+  } else if (opts.format) {
+    switch (opts.format) {
+      case 'jsonl':
+        objectTree.lines.forEach(line => {
+          if (line.node) {
+            console.log(JSON.stringify(getNodeObj(line.node)));
+          } else if (line.edge) {
+            console.log(JSON.stringify(getEdgeObj(line.edge)));
+          }
+        });
+        break;
+      default:
+        console.error(`${opts.format}: unknown output format`);
+        break;
+    }
+  } else {
+    console.log(formatter.format(objectTree, ' ', ''));
+  }
+})();
+
+function readStdin() {
+  let buf = '';
+  return new Promise(resolve => {
+    process.stdin.on('readable', () => {
+      let chunk;
+      while (chunk = process.stdin.read()) {
+        buf += chunk;
+      }
+    });
+    process.stdin.on('end', () => resolve(buf))
+  });
 }
 
 function getNodeObj(node) {
