@@ -10,7 +10,6 @@ const version = require('../package.json').version;
 const opts = program
   .option('-f, --format <FORMAT>', 'jsonl')
   .option('-o, --outdir <DIR>', 'output directory', './')
-  .option('-c, --check', 'check for missing/orphan nodes')
   .option('-d, --debug', 'output parsed synatax tree')
   .version(version)
   .arguments('[PG_FILE]')
@@ -46,9 +45,7 @@ try {
 }
 
 // Output
-if (opts.check) {
-  checkGraph(objectTree);
-} else if (opts.debug) {
+if (opts.debug) {
   console.log(JSON.stringify(objectTree, null, 2));
 } else if (opts.format) {
   switch (opts.format) {
