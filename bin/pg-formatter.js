@@ -21,8 +21,8 @@ if (program.args.length < 1 && process.stdin.isTTY) {
 
 (async () => {
   let inputText;
-  if(program.args[0]) {
-    inputText = await fs.readFile(program.args[0], "utf8").toString();
+  if (program.args[0]) {
+    inputText = await fs.readFile(program.args[0], 'utf8').toString();
   } else {
     inputText = await readStdin();
   }
@@ -66,7 +66,7 @@ function readStdin() {
         buf += chunk;
       }
     });
-    process.stdin.on('end', () => resolve(buf))
+    process.stdin.on('end', () => resolve(buf));
   });
 }
 
@@ -122,7 +122,7 @@ function printError(inputText, err) {
   }
   console.error(message);
   console.error('--');
-  const lines = inputText.split('\n').slice(startLine-1, endLine);
+  const lines = inputText.split('\n').slice(startLine - 1, endLine);
   lines.forEach((line, i) => {
     if (i == 0) {
       console.error(line.substring(0, startCol - 1) + makeRed(line.substring(startCol - 1)));
@@ -135,8 +135,7 @@ function printError(inputText, err) {
 }
 
 function makeRed(text) {
-  // const red = '\u001b[31m'; // foreground
-  const red = '\u001b[41m'; // backgrond
+  const red = '\u001b[41m';
   const reset = '\u001b[0m';
   return red + text + reset;
 }
