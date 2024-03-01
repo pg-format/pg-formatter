@@ -73,12 +73,10 @@ function readStdin() {
 function getNodeObj(node) {
   return {
     id: getElement(node.id),
-    labels: node.labels.map(label => getElement(label)),
-    properties: node.properties.map(property => {
-      let obj = {};
-      obj[getElement(property.key)] = property.values.map(v => getElement(v));
-      return obj;
-    })
+    labels: node.labels.map(getElement),
+    properties: node.properties.map(property => ({
+      [getElement(property.key)]: property.values.map(getElement)
+    }))
   };
 }
 
@@ -87,12 +85,10 @@ function getEdgeObj(edge) {
     from: getElement(edge.from),
     to: getElement(edge.to),
     undirected: edge.direction === '--',
-    labels: edge.labels.map(label => getElement(label)),
-    properties: edge.properties.map(property => {
-      let obj = {};
-      obj[getElement(property.key)] = property.values.map(v => getElement(v));
-      return obj;
-    })
+    labels: edge.labels.map(getElement),
+    properties: edge.properties.map(property => ({
+      [getElement(property.key)]: property.values.map(getElement)
+    }))
   };
 }
 
