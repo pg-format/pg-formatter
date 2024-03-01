@@ -93,11 +93,7 @@ function getEdgeObj(edge) {
 }
 
 function getElement(elem) {
-  if (elem.hasOwnProperty('quote') && elem.quote === '') {
-    return elem.quote + elem.literal + elem.quote;
-  } else {
-    return elem.literal;
-  }
+  return elem.literal;
 }
 
 function printError(inputText, err) {
