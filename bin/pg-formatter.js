@@ -5,6 +5,7 @@ const program = require('commander');
 const path = require('path');
 const parser = require('../lib/parser.js');
 const formatter = require('../lib/formatter.js');
+const jsonl = require('../lib/jsonl.js');
 const version = require('../package.json').version;
 
 const opts = program
@@ -41,11 +42,7 @@ if (program.args.length < 1 && process.stdin.isTTY) {
     switch (opts.format) {
       case 'jsonl':
         parsedObj.lines.forEach(line => {
-          if (line.node) {
-            console.log(JSON.stringify(getNodeObj(line.node)));
-          } else if (line.edge) {
-            console.log(JSON.stringify(getEdgeObj(line.edge)));
-          }
+          console.log(jsonl.format(line));
         });
         break;
       default:
@@ -68,32 +65,6 @@ function readStdin() {
     });
     process.stdin.on('end', () => resolve(buf));
   });
-}
-
-function getNodeObj(node) {
-  return {
-    id: getLiteral(node.id),
-    labels: node.labels.map(getLiteral),
-    properties: node.properties.map(property => ({
-      [getLiteral(property.key)]: property.values.map(getLiteral)
-    }))
-  };
-}
-
-function getEdgeObj(edge) {
-  return {
-    from: getLiteral(edge.from),
-    to: getLiteral(edge.to),
-    undirected: edge.direction === '--',
-    labels: edge.labels.map(getLiteral),
-    properties: edge.properties.map(property => ({
-      [getLiteral(property.key)]: property.values.map(getLiteral)
-    }))
-  };
-}
-
-function getLiteral(elem) {
-  return elem.literal;
 }
 
 function printError(inputText, err) {
