@@ -1,8 +1,15 @@
 #!/usr/bin/perl -w
 use strict;
 use File::Basename;
+use Getopt::Std;
 my $PROGRAM = basename $0;
-my $USAGE = "Usage: $PROGRAM [file.pegjs]\n";
+my $USAGE=
+"Usage: $PROGRAM
+-s: simple mode
+";
+
+my %OPT;
+getopts('s', \%OPT);
 
 !@ARGV && -t and die $USAGE;
 
@@ -38,17 +45,21 @@ for my $line (@LINE) {
     }
 }
 
-print "### PG grammar\n";
-print "\n";
-print "Summary of `pg.pegjs` are formatted like EBNF:\n";
-print "```\n";
-print "\$ ./docs/peg2md.pl lib/pg.pegjs > docs/grammar.md\n";
-print "```\n";
-print "\n";
-print "```ebnf\n";
+if (!$OPT{s}) {
+    print "### PG grammar\n";
+    print "\n";
+    print "Summary of `pg.pegjs` are formatted like EBNF:\n";
+    print "```\n";
+    print "\$ ./docs/peg2md.pl lib/pg.pegjs > docs/grammar.md\n";
+    print "```\n";
+    print "\n";
+    print "```ebnf\n";
+}
 for (my $i=0; $i<@LINE; $i++) {
     my $space = " " x ($MAX_TERM_LEN - $TERM_LEN[$i]);
     print "$TERM[$i]$space ::= $RULE[$i]\n";
     
 }
-print "```\n";
+if (!$OPT{s}) {
+    print "```\n";
+}
