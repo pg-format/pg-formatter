@@ -9,11 +9,7 @@ my $USAGE = "Usage: $PROGRAM [file.pegjs]\n";
 my @LINE;
 while (<>) {
     chomp;
-    if (/^{/) {
-    } elsif (/^}/) {
-    } elsif (/^ /) {
-    } elsif (/^$/) {
-    } elsif (/^\/\//) {
+    if (/^$/ || /^ / || /^{/ || /^}/ || /^\/\//) {
     } elsif (/^\//) {
         $LINE[-1] .= " $_";
     } else {
