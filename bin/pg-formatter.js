@@ -23,7 +23,7 @@ if (program.args.length < 1 && process.stdin.isTTY) {
 (async () => {
   let inputText;
   if (program.args[0]) {
-    inputText = await fs.readFile(program.args[0], 'utf8').toString();
+    inputText = fs.readFileSync(program.args[0], 'utf8').toString();
   } else {
     inputText = await readStdin();
   }
