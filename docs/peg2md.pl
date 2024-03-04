@@ -17,10 +17,10 @@ my @LINE;
 while (<>) {
     chomp;
     if (/^$/ || /^ / || /^{/ || /^}/ || /^\/\//) {
-    } elsif (/^\//) {
-        $LINE[-1] .= " $_";
-    } else {
+    } elsif (/^\S+ = /) {
         push(@LINE, $_);
+    } else {
+        $LINE[-1] .= " $_";
     }
 }
 
@@ -41,7 +41,7 @@ for my $line (@LINE) {
             $MAX_TERM_LEN = $term_len;
         }
     } else {
-        die;
+        die $line;
     }
 }
 
