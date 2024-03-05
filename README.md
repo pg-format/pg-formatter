@@ -11,14 +11,14 @@ based on the following rules:
 
 * Each line describes a node or an edge.
 * All elements in a line are separated by one or more spaces or tabs.
-* The first element of a node line contains the node ID (if the first element is not empty).　
-* The first three elements of an edge line contain the source node ID, direction, and destination node ID (if the first element is not empty).
+* The first element of a node line contains the node ID.　
+* The first three elements of an edge line contain the source node ID, direction, and destination node ID.
 * Each line can contain an arbitrary number of labels.
 * Each line can contain an arbitrary number of properties (key-value pairs)
 
 Multi-line description of a node or an edge
 
-* If the first element is empty (i.e. a line begins with one or more of spaces or tabs followed by elements describing nodes or edges), the line is considered a continuation of the previous line.
+* If a line begins with one or more spaces or tabs followed by elements, the line is considered a continuation of the previous line.
 
 Comments
 
