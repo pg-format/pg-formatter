@@ -5,11 +5,11 @@ const program = require('commander');
 const path = require('path');
 const parser = require('../lib/parser.js');
 const formatter = require('../lib/formatter.js');
-const jsonl = require('../lib/jsonl.js');
+const graph = require('../lib/graph.js');
 const version = require('../package.json').version;
 
 const opts = program
-  .option('-f, --format <FORMAT>', 'jsonl')
+  .option('-f, --format <FORMAT>', 'outut format (json|ndjson)')
   .option('-d, --debug', 'output parsed synatax tree')
   .version(version)
   .arguments('[PG_FILE]')
@@ -41,9 +41,14 @@ if (program.args.length < 1 && process.stdin.isTTY) {
   } else if (opts.format) {
     switch (opts.format) {
       case 'jsonl':
+      case 'ndjson':
         parsedObj.lines.forEach(line => {
-          console.log(jsonl.format(line));
+          console.log(graph.formatNDJSON(line));
         });
+        break;
+      case 'json':
+        const pg = graph.buildGraph(parsedObj.lines)
+        console.log(JSON.stringify(pg,null,2))
         break;
       default:
         console.error(`${opts.format}: unknown output format`);
