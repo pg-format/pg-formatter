@@ -18,8 +18,10 @@ const valid = [
   'a\r :b', // plain \r is valid line break
   '""',     // empty string id
   'a :""',  // empty string label
+  'a : x',  // space between colon and label
   'a "":b', // empty string key
   'a b:""', // empty string value
+  'a b : true', // space before/after colon of proprty
   "x\nxy\r\nxyz # comment\n\"X\"", // folded line
   "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
   // This should be allowed to suppor plain URI as ids
