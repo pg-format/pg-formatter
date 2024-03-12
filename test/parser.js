@@ -24,6 +24,7 @@ const valid = [
   'a b : true', // space before/after colon of proprty
   "x\nxy\r\nxyz # comment\n\"X\"", // folded line
   "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
+  'a <- b', // reverse direction
   // This should be allowed to suppor plain URI as ids
   // 'http://example.org/',
 ]
