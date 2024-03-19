@@ -6,12 +6,12 @@ $ ./docs/peg2md.pl lib/pg.pegjs > docs/grammar.md
 ```
 
 ```ebnf
-PG            ::= NodeOrEdge* IgnoredLine*
-NodeOrEdge    ::= IgnoredLine* (Edge | Node) TrailingSpace? EOL
-Node          ::= ID Label* Property*
-Edge          ::= ID WS Direction WS ID Label* Property*
-Label         ::= WS ':' SPACE_OR_TAB* String
-Property      ::= WS String SPACE_OR_TAB* ':' WS? ValueList
+PG            ::= (IgnoredLine* NodeOrEdge)* IgnoredLine*
+NodeOrEdge    ::= (Edge | Node) TrailingSpace? EOL
+Node          ::= ID (WS Label)* (WS Property)*
+Edge          ::= ID WS Direction WS ID (WS Label)* (WS Property)*
+Label         ::= ':' SPACE_OR_TAB* String
+Property      ::= String SPACE_OR_TAB* ':' WS? ValueList
 ID            ::= Integer & WORD_BOUNDARY | String
 Value         ::= Number & WORD_BOUNDARY | 'true' | 'false' | 'null' | String
 ValueList     ::= Value (WS? ',' WS? Value)*
