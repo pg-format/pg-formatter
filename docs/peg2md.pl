@@ -34,6 +34,7 @@ for my $line (@LINE) {
         my $term_len = length($term);
         $rule =~ s/[a-z]+://g;
         $rule =~ s/ \/ / \| /g;
+        $rule =~ s/\@//g;
         push(@TERM, $term);
         push(@RULE, $rule);
         push(@TERM_LEN, $term_len);
