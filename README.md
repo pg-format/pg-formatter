@@ -37,7 +37,7 @@ The web application is started via `index.html`, just open the file in a web bro
 
 To re-generate the code, install dependencies (`npm install`) and run:
 
-* `npm run peggy` to update the parser from `lib/pg.pegjs`
+* `npm run peggy` to update the parser from `src/pg.pegjs`
 * `npm run webpack` to update the web application
 
 Run `npm test` to execute unit tests.
