@@ -21,7 +21,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "peggy": "peggy -o lib/parser.js lib/pg.pegjs",
-    "webpack": "webpack ./lib/index.js --mode=production"
+    "peggy": "peggy -o src/parser.js src/pg.pegjs",
+    "webpack": "webpack ./src/index.js --mode=production"
   }
 }

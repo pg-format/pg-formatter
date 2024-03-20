@@ -3,9 +3,9 @@
 const fs = require('fs');
 const program = require('commander');
 const path = require('path');
-const parser = require('../lib/parser.js');
-const formatter = require('../lib/formatter.js');
-const graph = require('../lib/graph.js');
+const parser = require('../src/parser.js');
+const formatter = require('../src/formatter.js');
+const graph = require('../src/graph.js');
 const version = require('../package.json').version;
 
 const opts = program
