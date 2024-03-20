@@ -1,3 +1,6 @@
+exports.formatJSONL = formatJSONL
+exports.buildGraph = buildGraph
+
 function mergeProperties(properties={}, props) {
   for (let [key, values] of props) {
     if (key in properties) {
@@ -36,7 +39,7 @@ function buildGraph(lines) {
   }
 }
 
-function formatNDJSON(line) {
+function formatJSONL(line) {
   if (line.node) {
     return JSON.stringify(getNodeObj(line.node));
   } else if (line.edge) {
@@ -69,6 +72,3 @@ function getEdgeObj(edge) {
 function getLiteral(elem) {
   return elem.literal;
 }
-
-exports.formatNDJSON = formatNDJSON
-exports.buildGraph = buildGraph

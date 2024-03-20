@@ -9,7 +9,7 @@ const graph = require('../src/graph.js');
 const version = require('../package.json').version;
 
 const opts = program
-  .option('-f, --format <FORMAT>', 'outut format (json|ndjson)')
+  .option('-f, --format <FORMAT>', 'outut format (json|jsonl)')
   .option('-d, --debug', 'output parsed synatax tree')
   .version(version)
   .arguments('[PG_FILE]')
@@ -41,9 +41,8 @@ if (program.args.length < 1 && process.stdin.isTTY) {
   } else if (opts.format) {
     switch (opts.format) {
       case 'jsonl':
-      case 'ndjson':
         parsedObj.lines.forEach(line => {
-          console.log(graph.formatNDJSON(line));
+          console.log(graph.formatJSONL(line));
         });
         break;
       case 'json':
