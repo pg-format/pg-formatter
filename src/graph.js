@@ -40,11 +40,16 @@ function buildGraph(lines) {
 }
 
 function formatJSONL(line) {
+  let obj;
   if (line.node) {
-    return JSON.stringify(getNodeObj(line.node));
+    obj = getNodeObj(line.node);
   } else if (line.edge) {
-    return JSON.stringify(getEdgeObj(line.edge));
+    obj = getEdgeObj(line.edge);
   }
+  return JSON.stringify(obj, null, 2)
+    .replace(/{\n */g, '{').replace(/\n *}/g, '}')
+    .replace(/\[\n */g, '[').replace(/\n *\]/g, ']')
+    .replace(/\n */g, ' ');
 }
 
 function getNodeObj(node) {
