@@ -42,9 +42,9 @@ function buildGraph(lines) {
 function formatJSONL(line) {
   let obj;
   if (line.node) {
-    obj = getNodeObj(line.node);
+    obj = { type: "node", ...getNodeObj(line.node) };
   } else if (line.edge) {
-    obj = getEdgeObj(line.edge);
+    obj = { type: "edge", ...getEdgeObj(line.edge) };
   }
   return JSON.stringify(obj, null, 2)
     .replace(/{\n */g, '{').replace(/\n *}/g, '}')
