@@ -16,7 +16,7 @@ body {
     height: calc(50vh - 50px);
 }
 #formatted-area {
-    flex: 1;
+    width: 50%;
     height: calc(50vh - 50px);
 }
 #copy-button {
