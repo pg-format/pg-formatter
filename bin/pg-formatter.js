@@ -5,7 +5,7 @@ const program = require('commander');
 const path = require('path');
 const parser = require('../src/parser.js');
 const formatter = require('../src/formatter.js');
-const graph = require('../src/graph.js');
+const json = require('../src/for-json.js');
 const version = require('../package.json').version;
 
 const opts = program
@@ -42,11 +42,11 @@ if (program.args.length < 1 && process.stdin.isTTY) {
     switch (opts.format) {
       case 'jsonl':
         parsedObj.lines.forEach(line => {
-          console.log(graph.formatJSONL(line));
+          console.log(json.formatJSONL(line));
         });
         break;
       case 'json':
-        const pg = graph.buildGraph(parsedObj.lines)
+        const pg = json.buildGraph(parsedObj.lines)
         console.log(JSON.stringify(pg,null,2))
         break;
       default:
