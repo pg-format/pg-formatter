@@ -2,7 +2,7 @@ const chai = require('chai');
 const assert = chai.assert;
 const fs = require('fs');
 
-const { parse } = require('../lib/parser.js');
+const { parse } = require('../src/parser.js');
 
 describe("parse examples", () => {
   for (let file of fs.readdirSync("examples")) {
