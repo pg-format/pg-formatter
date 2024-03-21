@@ -3,11 +3,19 @@ let timerId;
 
 function reformat(event, ui) {
   const input = editor.getValue();
-  let delim = '\n  ';
-  let sep = '\n';
-  if (q('#indent-depth').value === 'space') {
+  const outputStyle = q('#indent-depth').value;
+  let delim;
+  let sep;
+  if (outputStyle === 'space') {
     delim = ' ';
     sep = '';
+    outputArea.setOption('mode', 'pgMode');
+  } else if (outputStyle === 'jsonl') {
+    outputArea.setOption('mode', 'application/json');
+  } else {
+    delim = '\n  ';
+    sep = '\n';
+    outputArea.setOption('mode', 'pgMode');
   }
   blitzboard.setGraph('', false);
   try {
