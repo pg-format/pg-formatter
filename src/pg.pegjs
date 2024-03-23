@@ -73,18 +73,7 @@ Value = Number & WORD_BOUNDARY
     literal: Number(text()),
   };
 }
-/ 'true'
-{
-  return {
-    literal: true,
-  };
-}
-/ 'false'
-{
-  return {
-    literal: false,
-  };
-}
+/ Boolean
 / 'null'
 {
   return {
@@ -193,7 +182,19 @@ Escaped = "'"
   return "\x0B";
 }
 
-// space or tab
+Boolean = 'true'
+{
+  return {
+    literal: true,
+  };
+}
+/ 'false'
+{
+  return {
+    literal: false,
+  };
+}
+
 SPACE_OR_TAB = [\x20\x09]
 
 // CR or LF
