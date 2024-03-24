@@ -109,11 +109,11 @@ Comment = '#' NON_NEWLINE*
 
 Direction = '--' / '->'
 
-Number = '-'? Integer ('.' [0-9]+)? Exp?
+Number = '-'? Integer ('.' [0-9]+)? Exponent?
 
 Integer = '0' / [1-9] [0-9]*
 
-Exp = [eE] ('-' / '+')? [0-9]+
+Exponent = [eE] [+-]? [0-9]+
 
 String = '"' chars:DoubleQuoted* '"'
 {
