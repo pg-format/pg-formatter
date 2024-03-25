@@ -123,6 +123,13 @@ QuotedString = '"' chars:DoubleQuoted* '"'
     literal: chars.join(''),
   };
 }
+/ "`" chars:BackQuoted* "`"
+{
+  return {
+    quote: "`",
+    literal: chars.join(''),
+  };
+}
 
 Key = QuotedString
 / chars:UNQUOTED+
@@ -150,6 +157,15 @@ DoubleQuoted = !('"' / "\\") char:.
 }
 
 SingleQuoted = !("'" / "\\") char:.
+{
+  return char;
+}
+/ "\\" esc:Escaped
+{
+  return esc;
+}
+
+BackQuoted = !("`" / "\\") char:.
 {
   return char;
 }
