@@ -51,7 +51,7 @@ Label = ':' SPACE_OR_TAB* l:String
   return l;
 }
 
-Property = k:String SPACE_OR_TAB* ':' WS? v:ValueList
+Property = k:Key SPACE_OR_TAB* ':' WS? v:ValueList
 {
   return {
     key: k,
@@ -109,7 +109,7 @@ Integer = '0' / [1-9] [0-9]*
 
 Exponent = [eE] [+-]? [0-9]+
 
-String = '"' chars:DoubleQuoted* '"'
+QuotedString = '"' chars:DoubleQuoted* '"'
 {
   return {
     quote: '"',
@@ -123,7 +123,17 @@ String = '"' chars:DoubleQuoted* '"'
     literal: chars.join(''),
   };
 }
+
+Key = QuotedString
 / chars:UNQUOTED+
+{
+  return {
+    literal: chars.join(''),
+  };
+}
+
+String = QuotedString
+/ chars:UNQUOTED_COLON+
 {
   return {
     literal: chars.join(''),
@@ -197,6 +207,7 @@ CHAR = [^\x0D\x0A]
 
 WORD_BOUNDARY = [:\x20\x09\x0D\x0A\'\"(),]
 UNQUOTED = [^:\x20\x09\x0D\x0A\'\"(),]
+UNQUOTED_COLON = [^\x20\x09\x0D\x0A\'\"(),]
 
 EOL = EOF / NEWLINE
 EOF = !.
