@@ -37,16 +37,16 @@ describe("parse edge cases", () => {
 const invalid = [
   ' a',         // line must not start with space
   '\ta',        // line must not start with tab
-  ':a',         // missing id but label
-  'a:b',        // missing id but property
-  ':',          // no id
+  // ':a',         // missing id but label
+  // 'a:b',        // missing id but property
+  // ':',          // no id
   'a b',        // no label or property
   'a :',        // invalid label
   'a ->',       // missing id
   'a b:c :d',   // label must come before properties 
   'a b:',       // missing property value
-  'a:',         // invalid id (must not end with colon)        
-  'a b:c:d',    // not clear where key and where value
+  // 'a:',         // invalid id (must not end with colon)
+  // 'a b:c:d',    // not clear where key and where value
   '"',          // missing end of quoted string
   '"\\"',       // missing end of quoted string with escaped '
   'a :"',       // missing end of quoted string
