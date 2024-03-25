@@ -53,12 +53,17 @@ Label = ':' SPACE_OR_TAB* l:String
   return l;
 }
 
-Property = k:Key SPACE_OR_TAB* ':' WS? v:ValueList
+Property = k:Key SPACE_OR_TAB* ':' WS? v:Values
 {
   return {
     key: k,
     values: v,
   };
+}
+
+Values = v:Value a:( WS? ',' WS? @Value )*
+{
+  return [v, ...a];
 }
 
 Value = Number & WORD_BOUNDARY
@@ -75,11 +80,6 @@ Value = Number & WORD_BOUNDARY
   };
 }
 / String
-
-ValueList = v:Value a:( WS? ',' WS? @Value )*
-{
-  return [v, ...a];
-}
 
 Direction = '--' / '->'
 
