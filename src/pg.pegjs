@@ -2,7 +2,7 @@
   let comments = {};
 }
 
-PG = lines:(IgnoredLine* @NodeOrEdge)* IgnoredLine*
+PG = lines:( IgnoredLine* @NodeOrEdge )* IgnoredLine*
 {
   return {
     lines: lines,
@@ -10,13 +10,13 @@ PG = lines:(IgnoredLine* @NodeOrEdge)* IgnoredLine*
   };
 }
 
-NodeOrEdge = e:(Edge / Node) TrailingSpace? EOL
+NodeOrEdge = e:( Edge / Node ) TrailingSpace? EOL
 {
   e.pos.end = location().end.offset;
   return e;
 }
 
-Node = i:ID l:(WS @Label)* p:(WS @Property)*
+Node = i:ID l:( WS @Label )* p:( WS @Property )*
 {
   return {
     node: {
@@ -30,7 +30,7 @@ Node = i:ID l:(WS @Label)* p:(WS @Property)*
   };
 }
 
-Edge = i:ID WS d:Direction WS j:ID l:(WS @Label)* p:(WS @Property)*
+Edge = i:ID WS d:Direction WS j:ID l:( WS @Label )* p:( WS @Property )*
 {
   return {
     edge: {
@@ -76,7 +76,7 @@ Value = Number & WORD_BOUNDARY
 }
 / String
 
-ValueList = v:Value a:(WS? ',' WS? @Value)*
+ValueList = v:Value a:( WS? ',' WS? @Value )*
 {
   return [v, ...a];
 }
@@ -92,7 +92,7 @@ TrailingSpace = SPACE_OR_TAB+ Comment
 }
 / SPACE_OR_TAB+
 
-IgnoredLine = SPACE_OR_TAB* (Comment EOL / NEWLINE)
+IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
 {
   comments[location().start.offset] = text().replace(/\n$/, '');
 
@@ -103,7 +103,7 @@ Comment = '#' CHAR*
 
 Direction = '--' / '->'
 
-Number = '-'? Integer ('.' [0-9]+)? Exponent?
+Number = '-'? Integer ( '.' [0-9]+ )? Exponent?
 
 Integer = '0' / [1-9] [0-9]*
 
@@ -147,7 +147,7 @@ String = QuotedString
   };
 }
 
-DoubleQuoted = !('"' / "\\") char:.
+DoubleQuoted = !( '"' / "\\" ) char:.
 {
   return char;
 }
@@ -156,7 +156,7 @@ DoubleQuoted = !('"' / "\\") char:.
   return esc;
 }
 
-SingleQuoted = !("'" / "\\") char:.
+SingleQuoted = !( "'" / "\\" ) char:.
 {
   return char;
 }
@@ -165,7 +165,7 @@ SingleQuoted = !("'" / "\\") char:.
   return esc;
 }
 
-BackQuoted = !("`" / "\\") char:.
+BackQuoted = !( "`" / "\\" ) char:.
 {
   return char;
 }
