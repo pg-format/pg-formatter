@@ -205,7 +205,7 @@ function peg$parse(input, options) {
   var peg$r5 = /^[\r]/;
   var peg$r6 = /^[\n]/;
   var peg$r7 = /^[^\r\n]/;
-  var peg$r8 = /^[: \t\r\n]/;
+  var peg$r8 = /^[: \t\r\n'"(),]/;
   var peg$r9 = /^[^: \t\r\n'"(),]/;
 
   var peg$e0 = peg$literalExpectation(":", false);
@@ -237,7 +237,7 @@ function peg$parse(input, options) {
   var peg$e26 = peg$classExpectation(["\r"], false, false);
   var peg$e27 = peg$classExpectation(["\n"], false, false);
   var peg$e28 = peg$classExpectation(["\r", "\n"], true, false);
-  var peg$e29 = peg$classExpectation([":", " ", "\t", "\r", "\n"], false, false);
+  var peg$e29 = peg$classExpectation([":", " ", "\t", "\r", "\n", "'", "\"", "(", ")", ","], false, false);
   var peg$e30 = peg$classExpectation([":", " ", "\t", "\r", "\n", "'", "\"", "(", ")", ","], true, false);
 
   var peg$f0 = function(lines) {
