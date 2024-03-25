@@ -99,7 +99,7 @@ IgnoredLine = SPACE_OR_TAB* (Comment EOL / NEWLINE)
   return '';
 }
 
-Comment = '#' NON_NEWLINE*
+Comment = '#' CHAR*
 
 Direction = '--' / '->'
 
@@ -193,7 +193,7 @@ SPACE_OR_TAB = [\x20\x09]
 
 // CR? LF
 NEWLINE = [\x0D]? [\x0A]
-NON_NEWLINE = [^\x0D\x0A]
+CHAR = [^\x0D\x0A]
 
 WORD_BOUNDARY = [:\x20\x09\x0D\x0A]
 UNQUOTED = [^:\x20\x09\x0D\x0A\'\"(),]

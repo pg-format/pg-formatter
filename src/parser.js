@@ -1143,10 +1143,10 @@ function peg$parse(input, options) {
     }
     if (s1 !== peg$FAILED) {
       s2 = [];
-      s3 = peg$parseNON_NEWLINE();
+      s3 = peg$parseCHAR();
       while (s3 !== peg$FAILED) {
         s2.push(s3);
-        s3 = peg$parseNON_NEWLINE();
+        s3 = peg$parseCHAR();
       }
       s1 = [s1, s2];
       s0 = s1;
@@ -1810,7 +1810,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseNON_NEWLINE() {
+  function peg$parseCHAR() {
     var s0;
 
     if (peg$r7.test(input.charAt(peg$currPos))) {
