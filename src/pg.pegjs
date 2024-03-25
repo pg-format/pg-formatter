@@ -81,6 +81,27 @@ ValueList = v:Value a:( WS? ',' WS? @Value )*
   return [v, ...a];
 }
 
+Direction = '--' / '->'
+
+Number = '-'? Integer ( '.' [0-9]+ )? Exponent?
+
+Integer = '0' / [1-9] [0-9]*
+
+Exponent = [eE] [+-]? [0-9]+
+
+Boolean = 'true'
+{
+  return {
+    literal: true,
+  };
+}
+/ 'false'
+{
+  return {
+    literal: false,
+  };
+}
+
 WS = (TrailingSpace? NEWLINE)* SPACE_OR_TAB+
 
 TrailingSpace = SPACE_OR_TAB+ Comment
@@ -101,13 +122,21 @@ IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
 
 Comment = '#' COMMENT_CHAR*
 
-Direction = '--' / '->'
+String = QuotedString
+/ chars:UNQUOTED_COLON+
+{
+  return {
+    literal: chars.join(''),
+  };
+}
 
-Number = '-'? Integer ( '.' [0-9]+ )? Exponent?
-
-Integer = '0' / [1-9] [0-9]*
-
-Exponent = [eE] [+-]? [0-9]+
+Key = QuotedString
+/ chars:UNQUOTED+
+{
+  return {
+    literal: chars.join(''),
+  };
+}
 
 QuotedString = '"' chars:DoubleQuoted* '"'
 {
@@ -131,23 +160,7 @@ QuotedString = '"' chars:DoubleQuoted* '"'
   };
 }
 
-Key = QuotedString
-/ chars:UNQUOTED+
-{
-  return {
-    literal: chars.join(''),
-  };
-}
-
-String = QuotedString
-/ chars:UNQUOTED_COLON+
-{
-  return {
-    literal: chars.join(''),
-  };
-}
-
-DoubleQuoted = !( '"' / "\\" ) char:.
+SingleQuoted = !( "'" / "\\" ) char:.
 {
   return char;
 }
@@ -156,7 +169,7 @@ DoubleQuoted = !( '"' / "\\" ) char:.
   return esc;
 }
 
-SingleQuoted = !( "'" / "\\" ) char:.
+DoubleQuoted = !( '"' / "\\" ) char:.
 {
   return char;
 }
@@ -202,28 +215,13 @@ ESCAPED_CHAR = "'"
   return "\x0B";
 }
 
-Boolean = 'true'
-{
-  return {
-    literal: true,
-  };
-}
-/ 'false'
-{
-  return {
-    literal: false,
-  };
-}
-
-SPACE_OR_TAB = [\x20\x09]
-
+COMMENT_CHAR = [^\x0D\x0A]
 // CR? LF
 NEWLINE = [\x0D]? [\x0A]
-COMMENT_CHAR = [^\x0D\x0A]
-
+SPACE_OR_TAB = [\x20\x09]
 WORD_BOUNDARY = [:\x20\x09\x0D\x0A\'\"(),]
-UNQUOTED = [^:\x20\x09\x0D\x0A\'\"(),]
 UNQUOTED_COLON = [^\x20\x09\x0D\x0A\'\"(),]
+UNQUOTED = [^:\x20\x09\x0D\x0A\'\"(),]
 
 EOL = EOF / NEWLINE
 EOF = !.
