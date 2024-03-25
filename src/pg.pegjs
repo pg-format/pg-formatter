@@ -217,7 +217,7 @@ ESCAPED_CHAR = "'"
 
 COMMENT_CHAR = [^\x0D\x0A]
 // CR? LF
-NEWLINE = [\x0D]? [\x0A]
+NEWLINE = [\x0A] / [\x0D] [\x0A] / [\x0D]
 SPACE_OR_TAB = [\x20\x09]
 WORD_BOUNDARY = [:\x20\x09\x0D\x0A\'\"(),]
 UNQUOTED_COLON = [^\x20\x09\x0D\x0A\'\"(),]
