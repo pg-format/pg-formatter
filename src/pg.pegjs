@@ -2,7 +2,7 @@
   let comments = {};
 }
 
-PG = lines:( IgnoredLine* @NodeOrEdge )* IgnoredLine*
+PG = lines:( IgnoredLine* @Statement )* IgnoredLine*
 {
   return {
     lines: lines,
@@ -10,7 +10,7 @@ PG = lines:( IgnoredLine* @NodeOrEdge )* IgnoredLine*
   };
 }
 
-NodeOrEdge = e:( Edge / Node ) TrailingSpace? EOL
+Statement = e:( Edge / Node ) TrailingSpace? EOL
 {
   e.pos.end = location().end.offset;
   return e;
@@ -46,6 +46,8 @@ Edge = i:ID WS d:Direction WS j:ID l:( WS @Label )* p:( WS @Property )*
   };
 }
 
+ID = String
+
 Label = ':' SPACE_OR_TAB* l:String
 {
   return l;
@@ -58,8 +60,6 @@ Property = k:Key SPACE_OR_TAB* ':' WS? v:ValueList
     values: v,
   };
 }
-
-ID = String
 
 Value = Number & WORD_BOUNDARY
 {
