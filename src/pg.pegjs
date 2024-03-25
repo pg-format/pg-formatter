@@ -191,8 +191,8 @@ Boolean = 'true'
 
 SPACE_OR_TAB = [\x20\x09]
 
-// CR or LF
-NEWLINE = [\x0D\x0A]
+// CR? LF
+NEWLINE = [\x0D]? [\x0A]
 NON_NEWLINE = [^\x0D\x0A]
 
 WORD_BOUNDARY = [:\x20\x09\x0D\x0A]
