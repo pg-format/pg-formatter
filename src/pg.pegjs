@@ -59,13 +59,7 @@ Property = k:String SPACE_OR_TAB* ':' WS? v:ValueList
   };
 }
 
-ID = Integer & WORD_BOUNDARY
-{
-  return {
-    literal: Number(text()),
-  };
-}
-/ String
+ID = String
 
 Value = Number & WORD_BOUNDARY
 {
