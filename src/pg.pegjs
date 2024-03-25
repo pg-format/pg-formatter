@@ -219,7 +219,7 @@ COMMENT_CHAR = [^\x0D\x0A]
 // LF | CR LF | CR
 NEWLINE = [\x0A] / [\x0D] [\x0A] / [\x0D]
 SPACE_OR_TAB = [\x20\x09]
-WORD_BOUNDARY = [:\x20\x09\x0D\x0A\'\"(),]
+WORD_BOUNDARY = [\x20\x09\x0D\x0A,]
 UNQUOTED_COLON = [^\x20\x09\x0D\x0A\'\"(),]
 UNQUOTED = [^:\x20\x09\x0D\x0A\'\"(),]
 
