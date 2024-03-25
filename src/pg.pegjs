@@ -99,7 +99,7 @@ IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
   return '';
 }
 
-Comment = '#' CHAR*
+Comment = '#' COMMENT_CHAR*
 
 Direction = '--' / '->'
 
@@ -151,7 +151,7 @@ DoubleQuoted = !( '"' / "\\" ) char:.
 {
   return char;
 }
-/ "\\" esc:Escaped
+/ "\\" esc:ESCAPED_CHAR
 {
   return esc;
 }
@@ -160,7 +160,7 @@ SingleQuoted = !( "'" / "\\" ) char:.
 {
   return char;
 }
-/ "\\" esc:Escaped
+/ "\\" esc:ESCAPED_CHAR
 {
   return esc;
 }
@@ -169,12 +169,12 @@ BackQuoted = !( "`" / "\\" ) char:.
 {
   return char;
 }
-/ "\\" esc:Escaped
+/ "\\" esc:ESCAPED_CHAR
 {
   return esc;
 }
 
-Escaped = "'"
+ESCAPED_CHAR = "'"
 / '"'
 / "\\"
 / "b"
@@ -219,7 +219,7 @@ SPACE_OR_TAB = [\x20\x09]
 
 // CR? LF
 NEWLINE = [\x0D]? [\x0A]
-CHAR = [^\x0D\x0A]
+COMMENT_CHAR = [^\x0D\x0A]
 
 WORD_BOUNDARY = [:\x20\x09\x0D\x0A\'\"(),]
 UNQUOTED = [^:\x20\x09\x0D\x0A\'\"(),]
