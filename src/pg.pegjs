@@ -123,7 +123,7 @@ IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
 Comment = '#' COMMENT_CHAR*
 
 StringNonEmpty = QuotedNonEmpty
-/ chars:UNQUOTED_COLON+
+/ chars:UNQUOTED_CHAR+
 {
   return {
     literal: chars.join(''),
@@ -131,7 +131,7 @@ StringNonEmpty = QuotedNonEmpty
 }
 
 String = QuotedString
-/ chars:UNQUOTED_COLON+
+/ chars:UNQUOTED_CHAR+
 {
   return {
     literal: chars.join(''),
@@ -139,7 +139,7 @@ String = QuotedString
 }
 
 Key = QuotedString
-/ chars:UNQUOTED+
+/ chars:WITHOUT_COLON+
 {
   return {
     literal: chars.join(''),
@@ -250,8 +250,8 @@ COMMENT_CHAR = [^\x0D\x0A]
 NEWLINE = [\x0A] / [\x0D] [\x0A] / [\x0D]
 SPACE_OR_TAB = [\x20\x09]
 WORD_BOUNDARY = [\x20\x09\x0D\x0A,]
-UNQUOTED_COLON = [^\x20\x09\x0D\x0A\'\"(),]
-UNQUOTED = [^:\x20\x09\x0D\x0A\'\"(),]
+UNQUOTED_CHAR = [^\x20\x09\x0D\x0A\'\"(),]
+WITHOUT_COLON = [^:\x20\x09\x0D\x0A\'\"(),]
 
 EOL = EOF / NEWLINE
 EOF = !.
