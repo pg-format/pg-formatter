@@ -46,7 +46,7 @@ Edge = i:ID WS d:Direction WS j:ID l:( WS @Label )* p:( WS @Property )*
   };
 }
 
-ID = String
+ID = StringNonEmpty
 
 Label = ':' SPACE_OR_TAB* l:String
 {
@@ -122,6 +122,14 @@ IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
 
 Comment = '#' COMMENT_CHAR*
 
+StringNonEmpty = QuotedNonEmpty
+/ chars:UNQUOTED_COLON+
+{
+  return {
+    literal: chars.join(''),
+  };
+}
+
 String = QuotedString
 / chars:UNQUOTED_COLON+
 {
@@ -153,6 +161,28 @@ QuotedString = '"' chars:DoubleQuoted* '"'
   };
 }
 / "`" chars:BackQuoted* "`"
+{
+  return {
+    quote: "`",
+    literal: chars.join(''),
+  };
+}
+
+QuotedNonEmpty = '"' chars:DoubleQuoted+ '"'
+{
+  return {
+    quote: '"',
+    literal: chars.join(''),
+  };
+}
+/ "'" chars:SingleQuoted+ "'"
+{
+  return {
+    quote: "'",
+    literal: chars.join(''),
+  };
+}
+/ "`" chars:BackQuoted+ "`"
 {
   return {
     quote: "`",
