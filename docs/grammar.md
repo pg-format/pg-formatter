@@ -7,10 +7,10 @@ $ ./docs/peg2md.pl lib/pg.pegjs > docs/grammar.md
 
 ```ebnf
 PG             ::= ( IgnoredLine* Statement )* IgnoredLine*
-Statement      ::= ( Edge | Node ) TrailingSpace? EOL
-Node           ::= ID ( WS Label )* ( WS Property )*
-Edge           ::= ID WS Direction WS ID ( WS Label )* ( WS Property )*
-ID             ::= StringNonEmpty
+Statement      ::= ( Edge | Node ) ( WS Label )* ( WS Property )* TrailingSpace? EOL
+Node           ::= ID
+Edge           ::= ID WS Direction WS ID | ID WS ID WS Direction WS ID
+ID             ::= !( '--' | '->' ) StringNonEmpty
 Label          ::= ':' SPACE_OR_TAB* String
 Property       ::= Key SPACE_OR_TAB* ':' WS? Values
 Values         ::= Value ( WS? ',' WS? Value )*
