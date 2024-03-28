@@ -48,11 +48,16 @@ function formatNode({ id, labels, properties }, pos, delim) {
   }
 }
 
-function formatEdge({ from, to, direction, labels, properties }, pos, delim) {
+function formatEdge({ id, from, to, direction, labels, properties }, pos, delim) {
   while (commentsArr.length && commentsArr[0].pos < pos.start) {
     formatted.push(commentsArr.shift().text);
   }
-  formatted.push([`${formatElement(from)} ${direction} ${formatElement(to)}`, ...labels.map(formatLabel), ...properties.map(formatProperty)].join(delim));
+  let edge = '';
+  if (id) {
+    edge += `${formatElement(id)} `;
+  }
+  edge += `${formatElement(from)} ${direction} ${formatElement(to)}`;
+  formatted.push([edge, ...labels.map(formatLabel), ...properties.map(formatProperty)].join(delim));
   while (commentsArr.length && commentsArr[0].pos < pos.end) {
     formatted[formatted.length - 1] += commentsArr.shift().text;
   }
