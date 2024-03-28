@@ -21,6 +21,7 @@ const valid = [
   'a "":b', // empty string key
   'a b:""', // empty string value
   'a b : true', // space before/after colon of proprty
+  'a b:c:d',    // parsed as property key 'b' with value 'c:d'
   "x\nxy\r\nxyz # comment\n\"X\"", // folded line
   "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
   // This should be allowed to suppor plain URI as ids
@@ -46,7 +47,6 @@ const invalid = [
   'a b:c :d',   // label must come before properties 
   'a b:',       // missing property value
   // 'a:',         // invalid id (must not end with colon)
-  // 'a b:c:d',    // not clear where key and where value
   '"',          // missing end of quoted string
   '"\\"',       // missing end of quoted string with escaped '
   'a :"',       // missing end of quoted string
