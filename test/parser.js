@@ -24,8 +24,7 @@ const valid = [
   'a b:c:d',    // parsed as property key 'b' with value 'c:d'
   "x\nxy\r\nxyz # comment\n\"X\"", // folded line
   "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
-  // This should be allowed to suppor plain URI as ids
-  // 'http://example.org/',
+  'http://example.org/', // plain URI as node ID
 ]
 
 describe("parse edge cases", () => {
