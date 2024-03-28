@@ -63,7 +63,7 @@ Edge = i:ID WS d:Direction WS j:ID
   };
 }
 
-ID = !( '--' / '->' ) s:StringNonEmpty
+ID = !Direction s:StringNonEmpty
 {
   return s;
 }
