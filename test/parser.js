@@ -25,6 +25,9 @@ const valid = [
   "x\nxy\r\nxyz # comment\n\"X\"", // folded line
   "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
   'http://example.org/', // plain URI as node ID
+  'a:',     // node ID ending with colon
+  ':a',     // node ID starting with colon
+  ':',      // colon as node ID
 ]
 
 describe("parse edge cases", () => {
@@ -37,15 +40,11 @@ const invalid = [
   '""',     // empty string node id
   ' a',         // line must not start with space
   '\ta',        // line must not start with tab
-  // ':a',         // missing id but label
-  // 'a:b',        // missing id but property
-  // ':',          // no id
   'a b',        // no label or property
   'a :',        // invalid label
   'a ->',       // missing id
   'a b:c :d',   // label must come before properties 
   'a b:',       // missing property value
-  // 'a:',         // invalid id (must not end with colon)
   '"',          // missing end of quoted string
   '"\\"',       // missing end of quoted string with escaped '
   'a :"',       // missing end of quoted string
