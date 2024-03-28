@@ -67,13 +67,21 @@ function getEdgeObj(edge) {
   const properties = Object.fromEntries(
     edge.properties.map(({key, values}) => [getLiteral(key), values.map(getLiteral)])
   );
-  return {
+  let obj = {
     from: getLiteral(edge.from),
     to: getLiteral(edge.to),
     undirected: edge.direction === '--',
     labels: edge.labels.map(getLiteral),
     properties,
   };
+  if (edge.id) {
+    return {
+      id: getLiteral(edge.id),
+      ...obj,
+    };
+  } else {
+    return obj;
+  }
 }
 
 function getLiteral(elem) {
