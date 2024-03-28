@@ -10,7 +10,7 @@ PG = lines:( IgnoredLine* @Statement )* IgnoredLine*
   };
 }
 
-Statement = e:( EdgeWithID / Edge / Node ) l:( WS @Label )* p:( WS @Property )* TrailingSpace? EOL
+Statement = e:( Edge / Node ) l:( WS @Label )* p:( WS @Property )* TrailingSpace? EOL
 {
   if (e.node) {
     e.node.labels = l;
@@ -48,8 +48,7 @@ Edge = i:ID WS d:Direction WS j:ID
     }
   };
 }
-
-EdgeWithID = i:ID WS j:ID WS d:Direction WS k:ID
+/ i:ID WS j:ID WS d:Direction WS k:ID
 {
   return {
     edge: {
