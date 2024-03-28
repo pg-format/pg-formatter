@@ -63,11 +63,6 @@ Edge = i:ID WS d:Direction WS j:ID
   };
 }
 
-ID = !Direction s:StringNonEmpty
-{
-  return s;
-}
-
 Label = ':' SPACE_OR_TAB* l:String
 {
   return l;
@@ -100,6 +95,11 @@ Value = Number & WORD_BOUNDARY
   };
 }
 / String
+
+ID = !Direction s:StringNonEmpty
+{
+  return s;
+}
 
 Direction = '--' / '->'
 
@@ -166,28 +166,6 @@ Key = QuotedString
   };
 }
 
-QuotedString = '"' chars:DoubleQuoted* '"'
-{
-  return {
-    quote: '"',
-    literal: chars.join(''),
-  };
-}
-/ "'" chars:SingleQuoted* "'"
-{
-  return {
-    quote: "'",
-    literal: chars.join(''),
-  };
-}
-/ "`" chars:BackQuoted* "`"
-{
-  return {
-    quote: "`",
-    literal: chars.join(''),
-  };
-}
-
 QuotedNonEmpty = '"' chars:DoubleQuoted+ '"'
 {
   return {
@@ -203,6 +181,28 @@ QuotedNonEmpty = '"' chars:DoubleQuoted+ '"'
   };
 }
 / "`" chars:BackQuoted+ "`"
+{
+  return {
+    quote: "`",
+    literal: chars.join(''),
+  };
+}
+
+QuotedString = '"' chars:DoubleQuoted* '"'
+{
+  return {
+    quote: '"',
+    literal: chars.join(''),
+  };
+}
+/ "'" chars:SingleQuoted* "'"
+{
+  return {
+    quote: "'",
+    literal: chars.join(''),
+  };
+}
+/ "`" chars:BackQuoted* "`"
 {
   return {
     quote: "`",
