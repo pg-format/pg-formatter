@@ -10,7 +10,7 @@ PG = lines:( IgnoredLine* @Statement )* IgnoredLine*
   };
 }
 
-Statement = e:( Edge / Node ) TrailingSpace? EOL
+Statement = e:( EdgeWithID / Edge / Node ) TrailingSpace? EOL
 {
   e.pos.end = location().end.offset;
   return e;
@@ -36,6 +36,23 @@ Edge = i:ID WS d:Direction WS j:ID l:( WS @Label )* p:( WS @Property )*
     edge: {
       from: i,
       to: j,
+      direction: d,
+      labels: l,
+      properties: p,
+    },
+    pos: {
+      start: location().start.offset,
+    }
+  };
+}
+
+EdgeWithID = i:ID WS j:ID WS d:Direction WS k:ID l:( WS @Label )* p:( WS @Property )*
+{
+  return {
+    edge: {
+      id: i,
+      from: j,
+      to: k,
       direction: d,
       labels: l,
       properties: p,
