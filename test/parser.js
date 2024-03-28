@@ -16,7 +16,6 @@ describe("parse examples", () => {
 const valid = [
   '',       // empty graph
   'a\r :b', // plain \r is valid line break
-  '""',     // empty string id
   'a :""',  // empty string label
   'a : x',  // space between colon and label
   'a "":b', // empty string key
@@ -35,6 +34,7 @@ describe("parse edge cases", () => {
 });
 
 const invalid = [
+  '""',     // empty string node id
   ' a',         // line must not start with space
   '\ta',        // line must not start with tab
   // ':a',         // missing id but label
