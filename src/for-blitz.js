@@ -1,19 +1,3 @@
-/**
- * Formatted serialization of PG given in parsed form.
- *
- * Parsed form differs from PG-JSON to preserve some formatting:
- *
- * - properties are Array instead of Object
- * - edges have an additional key 'direction'
- * - node ids, labels, property keys and values are Objects
- *   with information about original formatting
- *
- * Formatting can be configured with
- * - delimiter between elements (expect between the first three
- *   elements of an edge, these are always separated with space)
- * - separator between lines
- */
-
 let formatted;
 
 exports.format = formatGraph;
@@ -60,6 +44,6 @@ function formatElement(value) {
   if (value.quote) {
     return value.quote + value.literal + value.quote;
   } else {
-    return value.literal;
+    return '"' + value.literal + '"';
   }
 }
