@@ -63,7 +63,10 @@ Edge = i:ID WS d:Direction WS j:ID
   };
 }
 
-ID = StringNonEmpty
+ID = !( '--' / '->' ) s:StringNonEmpty
+{
+  return s;
+}
 
 Label = ':' SPACE_OR_TAB* l:String
 {
