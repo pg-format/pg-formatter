@@ -10,19 +10,24 @@ PG = lines:( IgnoredLine* @Statement )* IgnoredLine*
   };
 }
 
-Statement = e:( EdgeWithID / Edge / Node ) TrailingSpace? EOL
+Statement = e:( EdgeWithID / Edge / Node ) l:( WS @Label )* p:( WS @Property )* TrailingSpace? EOL
 {
+  if (e.node) {
+    e.node.labels = l;
+    e.node.properties = p;
+  } else if (e.edge) {
+    e.edge.labels = l;
+    e.edge.properties = p;
+  }
   e.pos.end = location().end.offset;
   return e;
 }
 
-Node = i:ID l:( WS @Label )* p:( WS @Property )*
+Node = i:ID
 {
   return {
     node: {
       id: i,
-      labels: l,
-      properties: p,
     },
     pos: {
       start: location().start.offset,
@@ -30,15 +35,13 @@ Node = i:ID l:( WS @Label )* p:( WS @Property )*
   };
 }
 
-Edge = i:ID WS d:Direction WS j:ID l:( WS @Label )* p:( WS @Property )*
+Edge = i:ID WS d:Direction WS j:ID
 {
   return {
     edge: {
       from: i,
       to: j,
       direction: d,
-      labels: l,
-      properties: p,
     },
     pos: {
       start: location().start.offset,
@@ -46,7 +49,7 @@ Edge = i:ID WS d:Direction WS j:ID l:( WS @Label )* p:( WS @Property )*
   };
 }
 
-EdgeWithID = i:ID WS j:ID WS d:Direction WS k:ID l:( WS @Label )* p:( WS @Property )*
+EdgeWithID = i:ID WS j:ID WS d:Direction WS k:ID
 {
   return {
     edge: {
@@ -54,8 +57,6 @@ EdgeWithID = i:ID WS j:ID WS d:Direction WS k:ID l:( WS @Label )* p:( WS @Proper
       from: j,
       to: k,
       direction: d,
-      labels: l,
-      properties: p,
     },
     pos: {
       start: location().start.offset,
