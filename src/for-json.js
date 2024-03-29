@@ -53,26 +53,20 @@ function formatJSONL(line) {
 }
 
 function getNodeObj(node) {
-  const properties = Object.fromEntries(
-    node.properties.map(({key, values}) => [getLiteral(key), values.map(getLiteral)])
-  );
   return {
     id: getLiteral(node.id),
     labels: node.labels.map(getLiteral),
-    properties,
+    properties: getPropertiesObj(node.properties),
   };
 }
 
 function getEdgeObj(edge) {
-  const properties = Object.fromEntries(
-    edge.properties.map(({key, values}) => [getLiteral(key), values.map(getLiteral)])
-  );
   let obj = {
     from: getLiteral(edge.from),
     to: getLiteral(edge.to),
     undirected: edge.direction === '--',
     labels: edge.labels.map(getLiteral),
-    properties,
+    properties: getPropertiesObj(edge.properties),
   };
   if (edge.id) {
     return {
@@ -82,6 +76,20 @@ function getEdgeObj(edge) {
   } else {
     return obj;
   }
+}
+
+function getPropertiesObj(properties) {
+  let obj = {};
+  properties.forEach((property) => {
+    const key = getLiteral(property.key);
+    const values = property.values.map(getLiteral);
+    if (obj.hasOwnProperty(key)) {
+      obj[key] = obj[key].concat(values);
+    } else {
+      obj[key] = values;
+    }
+  });
+  return obj;
 }
 
 function getLiteral(elem) {
