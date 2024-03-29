@@ -25,19 +25,31 @@ function formatGraph({ lines, comments }, delim, sep) {
 }
 
 function formatNode({ id, labels, properties }, delim) {
-  formatted.push([formatElement(id), ...labels.map(formatLabel), ...properties.map(formatProperty)].join(delim));
+  formatted.push([formatElement(id), ...labels.map(formatLabel), ...formatProperty(properties)].join(delim));
 }
 
 function formatEdge({ from, to, direction, labels, properties }, delim) {
-  formatted.push([`${formatElement(from)} ${direction} ${formatElement(to)}`, ...labels.map(formatLabel), ...properties.map(formatProperty)].join(delim));
+  formatted.push([`${formatElement(from)} ${direction} ${formatElement(to)}`, ...labels.map(formatLabel), ...formatProperty(properties)].join(delim));
 }
 
 function formatLabel(label) {
   return `:${formatElement(label)}`;
 }
 
-function formatProperty({ key, values }) {
-  return values.map(v => `${formatElement(key)}:${formatElement(v)}`).join(' ');
+function formatProperty(properties) {
+  let obj = {};
+  properties.forEach((property) => {
+    const key = formatElement(property.key);
+    const values = property.values.map(value => value.literal);
+    if (obj.hasOwnProperty(key)) {
+      obj[key] = obj[key].concat(values);
+    } else {
+      obj[key] = values;
+    }
+  });
+  return Object.entries(obj).map(([key, values]) => {
+    return `${key}:"${values.join(",")}"`;
+  });
 }
 
 function formatElement(value) {

@@ -54,6 +54,7 @@ function reformat(event, ui) {
     blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
     blitzboard.network.stabilize();
   } catch (err) {
+    console.log(err);
   }
 }
 
