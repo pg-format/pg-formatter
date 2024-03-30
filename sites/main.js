@@ -46,6 +46,13 @@ function reformat(event, ui) {
     let message = '';
     if (err.message) {
       message = err.message;
+      message = message.replace(/ but .* found.$/, '');
+      message = message.replace('end of input', '');
+      message = message.replace('[ \\t]', '');
+      message = message.replace('[\\n]', '');
+      message = message.replace('[\\r]', '');
+      message = message.replace('or ', ', ');
+      message = message.replace(/(, )+/g, '<br>');
     }
     toastr.error(message, title);
   }
