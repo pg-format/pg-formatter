@@ -84,12 +84,16 @@ function printError(inputText, err) {
   let message = '';
   if (err.message) {
     message = err.message;
-    message = message.replace(/^Expected/, 'Expected:');
-    message = message.replace(/ but .* found.$/, '');
-    message = message.replace('[ \\t]', '');
-    message = message.replace('[\\r\\n]', '');
-    message = message.replace('or ', ', ');
-    message = message.replace(/ *(, )+/g, ' ');
+    if (!opts.debug) {
+      message = message.replace(/^Expected/, 'Expected:');
+      message = message.replace(/ but .* found.$/, '');
+      message = message.replace('[ \\t]', '');
+      message = message.replace('[\\n]', '');
+      message = message.replace('[\\r]', '');
+      message = message.replace('end of input', '');
+      message = message.replace('or ', ', ');
+      message = message.replace(/ *(, )+/g, ' ');
+    }
   }
   console.error(message);
   console.error('--');
