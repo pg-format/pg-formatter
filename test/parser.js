@@ -22,6 +22,7 @@ const valid = [
   'a b:""', // empty string value
   'a b : true', // space before/after colon of proprty
   'a b:c:d',    // parsed as property key 'b' with value 'c:d'
+  'a b:c :d',   // parsed as property key 'b:c' with value 'd'
   "x\nxy\r\nxyz # comment\n\"X\"", // folded line
   "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
   'http://example.org/', // plain URI as node ID
@@ -44,7 +45,6 @@ const invalid = [
   'a b',        // no label or property
   'a :',        // invalid label
   'a ->',       // missing id
-  'a b:c :d',   // label must come before properties 
   'a b:',       // missing property value
   '"',          // missing end of quoted string
   '"\\"',       // missing end of quoted string with escaped '
