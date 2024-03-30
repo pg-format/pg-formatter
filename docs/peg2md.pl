@@ -16,11 +16,15 @@ getopts('s', \%OPT);
 my @LINE;
 while (<>) {
     chomp;
-    if (/^$/ || /^ / || /^{/ || /^}/ || /^\/\//) {
-    } elsif (/^\S+ = /) {
-        push(@LINE, $_);
-    } else {
+    if (/^\s*(=.*)/) {
+        $LINE[-1] .= " $1";
+    } elsif (/^$/ || /^ / || /^{/ || /^}/ || /^\/\//) {
+    } elsif (/^\//) {
         $LINE[-1] .= " $_";
+    } elsif (/^(\S+) ".+"$/) {
+        push(@LINE, $1);
+    } else {
+        push(@LINE, $_);
     }
 }
 
