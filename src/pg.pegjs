@@ -68,7 +68,7 @@ Label = ':' SPACE_OR_TAB* l:String
   return l;
 }
 
-Property = k:Key v:Values
+Property = k:KeyDef v:Values
 {
   return {
     key: k,
@@ -159,11 +159,13 @@ String = QuotedString
   };
 }
 
-Key = s:QuotedString SPACE_OR_TAB* ':' WS?
+KeyDef = s:QuotedString SPACE_OR_TAB* ':' WS?
 {
   return s;
 }
-/ k:KeyWithColon ( ':' WS / SPACE_OR_TAB+ ':' WS?)
+/ KeyDefUnquoted
+
+KeyDefUnquoted = k:KeyWithColon ( ':' WS / SPACE_OR_TAB+ ':' WS? )
 {
   return {
     literal: k,
