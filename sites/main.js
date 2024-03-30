@@ -51,6 +51,8 @@ function reformat(event, ui) {
       message = message.replace('[ \\t]', '');
       message = message.replace('[\\n]', '');
       message = message.replace('[\\r]', '');
+      message = message.replace(/"(\S+)"/g, '$1');
+      message = message.replace(/\\"/g, '"');
       message = message.replace('or ', ', ');
       message = message.replace(/(, )+/g, '<br>');
     }
