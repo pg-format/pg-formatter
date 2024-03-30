@@ -68,7 +68,7 @@ Label = ':' SPACE_OR_TAB* l:String
   return l;
 }
 
-Property = k:Key SPACE_OR_TAB* ':' WS? v:Values
+Property = k:Key v:Values
 {
   return {
     key: k,
@@ -158,12 +158,26 @@ String = QuotedString
   };
 }
 
-Key = QuotedString
-/ chars:WITHOUT_COLON+
+Key = s:QuotedString SPACE_OR_TAB* ':' WS?
+{
+  return s;
+}
+/ k:KeyWithColon ( ':' WS / SPACE_OR_TAB+ ':' WS?)
+{
+  return {
+    literal: k,
+  };
+}
+/ chars:WITHOUT_COLON+ SPACE_OR_TAB* ':' WS?
 {
   return {
     literal: chars.join(''),
   };
+}
+
+KeyWithColon = WITHOUT_COLON ( ':' WITHOUT_COLON )+
+{
+  return text();
 }
 
 QuotedNonEmpty = '"' chars:DoubleQuoted+ '"'
