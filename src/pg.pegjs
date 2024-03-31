@@ -208,7 +208,12 @@ BackQuoted = !( "`" / "\\" ) char:.
   return esc;
 }
 
-WS = (TrailingSpace? NEWLINE)* SPACE_OR_TAB+
+IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
+{
+  comments[location().start.offset] = text().replace(/\n$/, '');
+
+  return '';
+}
 
 TrailingSpace = SPACE_OR_TAB+ Comment
 {
@@ -219,14 +224,11 @@ TrailingSpace = SPACE_OR_TAB+ Comment
 }
 / SPACE_OR_TAB+
 
-IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
-{
-  comments[location().start.offset] = text().replace(/\n$/, '');
-
-  return '';
-}
+WS = (TrailingSpace? NEWLINE)* SPACE_OR_TAB+
 
 Comment = '#' COMMENT_CHAR*
+
+DIRECTION = '--' / '->'
 
 ESCAPED_CHAR = "'"
 / '"'
@@ -265,8 +267,6 @@ UNQUOTED_CHAR "UNQUOTED_CHAR"
   = [^\x20\x09\x0D\x0A\'\"(),]
 WITHOUT_COLON "WITHOUT_COLON"
   = [^:\x20\x09\x0D\x0A\'\"(),]
-
-DIRECTION = '--' / '->'
 
 INTEGER "INTEGER"
   = '0' / [1-9] [0-9]*
