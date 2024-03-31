@@ -35,7 +35,7 @@ Node = i:ID
   };
 }
 
-Edge = i:ID WS d:Direction WS j:ID
+Edge = i:ID WS d:DIRECTION WS j:ID
 {
   return {
     edge: {
@@ -48,7 +48,7 @@ Edge = i:ID WS d:Direction WS j:ID
     }
   };
 }
-/ i:ID WS j:ID WS d:Direction WS k:ID
+/ i:ID WS j:ID WS d:DIRECTION WS k:ID
 {
   return {
     edge: {
@@ -61,6 +61,11 @@ Edge = i:ID WS d:Direction WS j:ID
       start: location().start.offset,
     }
   };
+}
+
+ID = !DIRECTION s:StringNonEmpty
+{
+  return s;
 }
 
 Label = ':' SPACE_OR_TAB* l:String
@@ -87,55 +92,10 @@ Value = Number & WORD_BOUNDARY
     literal: Number(text()),
   };
 }
-/ Boolean
+/ BOOLEAN
 / String
 
-ID = !Direction s:StringNonEmpty
-{
-  return s;
-}
-
-Direction = '--' / '->'
-
-Number = '-'? Integer ( '.' [0-9]+ )? Exponent?
-
-Integer "Integer"
-  = '0' / [1-9] [0-9]*
-
-Exponent = [eE] [+-]? [0-9]+
-
-Boolean = 'true'
-{
-  return {
-    literal: true,
-  };
-}
-/ 'false'
-{
-  return {
-    literal: false,
-  };
-}
-
-WS = (TrailingSpace? NEWLINE)* SPACE_OR_TAB+
-
-TrailingSpace = SPACE_OR_TAB+ Comment
-{
-  const pos = location().start.offset;
-  comments[pos] = text();
-
-  return '';
-}
-/ SPACE_OR_TAB+
-
-IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
-{
-  comments[location().start.offset] = text().replace(/\n$/, '');
-
-  return '';
-}
-
-Comment = '#' COMMENT_CHAR*
+Number = '-'? INTEGER ( '.' [0-9]+ )? EXPONENT?
 
 StringNonEmpty = QuotedNonEmpty
 / chars:UNQUOTED_CHAR+
@@ -248,6 +208,26 @@ BackQuoted = !( "`" / "\\" ) char:.
   return esc;
 }
 
+WS = (TrailingSpace? NEWLINE)* SPACE_OR_TAB+
+
+TrailingSpace = SPACE_OR_TAB+ Comment
+{
+  const pos = location().start.offset;
+  comments[pos] = text();
+
+  return '';
+}
+/ SPACE_OR_TAB+
+
+IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
+{
+  comments[location().start.offset] = text().replace(/\n$/, '');
+
+  return '';
+}
+
+Comment = '#' COMMENT_CHAR*
+
 ESCAPED_CHAR = "'"
 / '"'
 / "\\"
@@ -285,6 +265,26 @@ UNQUOTED_CHAR "UNQUOTED_CHAR"
   = [^\x20\x09\x0D\x0A\'\"(),]
 WITHOUT_COLON "WITHOUT_COLON"
   = [^:\x20\x09\x0D\x0A\'\"(),]
+
+DIRECTION = '--' / '->'
+
+INTEGER "INTEGER"
+  = '0' / [1-9] [0-9]*
+
+EXPONENT = [eE] [+-]? [0-9]+
+
+BOOLEAN = 'true'
+{
+  return {
+    literal: true,
+  };
+}
+/ 'false'
+{
+  return {
+    literal: false,
+  };
+}
 
 EOL = EOF / NEWLINE
 EOF = !.
