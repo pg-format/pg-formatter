@@ -88,12 +88,6 @@ Value = Number & WORD_BOUNDARY
   };
 }
 / Boolean
-/ 'null'
-{
-  return {
-    literal: null,
-  };
-}
 / String
 
 ID = !Direction s:StringNonEmpty
