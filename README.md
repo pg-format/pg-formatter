@@ -1,7 +1,7 @@
 # PG formatter
 
 This repository contains a parser and formatter of **PG format** for labeled
-property graphs and a web application to validate and beautify PG format.
+property graphs and a web application to validate, format, and visualize PG format.
 
 ## PG format
 
