@@ -20,10 +20,11 @@ Multi-line description of a node or an edge
 
 * If a line begins with one or more spaces or tabs followed by elements, the line is considered a continuation of the previous line.
 
-Comments
+Comments and blank lines
 
 * Comment lines begin with `#` followed by any characters and end with a new line. Arbitrary numbers of spaces or tabs can be added before `#`.
-* If a line describing a node or an edge ends with a space or tab followed by `#` and any characters, they are considered comments (trailing comments).
+* Trailing comments: If a line describing a node or an edge ends with a space or tab followed by `#` and any characters, they are considered comments.
+* Blank lines containing only spaces or tabs are ignored.
 
 ## Documentation
 
