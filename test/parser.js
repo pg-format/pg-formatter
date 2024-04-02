@@ -47,11 +47,11 @@ const invalid = [
   'a ->',       // missing id
   'a b:',       // missing property value
   '"',          // missing end of quoted string
-  // '"\\"',       // missing end of quoted string with escaped '
+  '"\\"',       // missing end of quoted string with escaped '
   'a :"',       // missing end of quoted string
   'a :\'\\"',   // missing end of quoted string with escaped '
   'a b:"',      // missing end of quoted string
-  // 'a b:"\\"',   // missing end of quoted string with escaped '
+  'a b:"\\"',   // missing end of quoted string with escaped '
   '(a',         // invalid id (must not start with opening parenthesis)
   'a)',         // invalid id (must not end with closing parenthesis)
   // '"\\uxxxx"',  // invalid Unicode Escape sequence

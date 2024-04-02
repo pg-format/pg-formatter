@@ -137,55 +137,55 @@ KeyWithColon = WITHOUT_COLON ( ':' WITHOUT_COLON )+
   return text();
 }
 
-QuotedNonEmpty = '"' chars:DoubleQuoted+ '"'
-{
-  return {
-    quote: '"',
-    literal: chars.join(''),
-  };
-}
-/ "'" chars:SingleQuoted+ "'"
+QuotedNonEmpty = "'" chars:SingleQuoted+ "'"
 {
   return {
     quote: "'",
     literal: chars.join(''),
   };
 }
-/ "`" chars:BackQuoted+ "`"
-{
-  return {
-    quote: "`",
-    literal: chars.join(''),
-  };
-}
-
-QuotedString = '"' chars:DoubleQuoted* '"'
+/ '"' chars:DoubleQuoted+ '"'
 {
   return {
     quote: '"',
     literal: chars.join(''),
   };
 }
-/ "'" chars:SingleQuoted* "'"
+/ '`' chars:BackQuoted+ '`'
+{
+  return {
+    quote: '`',
+    literal: chars.join(''),
+  };
+}
+
+QuotedString = "'" chars:SingleQuoted* "'"
 {
   return {
     quote: "'",
     literal: chars.join(''),
   };
 }
-/ "`" chars:BackQuoted* "`"
+/ '"' chars:DoubleQuoted* '"'
 {
   return {
-    quote: "`",
+    quote: '"',
+    literal: chars.join(''),
+  };
+}
+/ '`' chars:BackQuoted* '`'
+{
+  return {
+    quote: '`',
     literal: chars.join(''),
   };
 }
 
-SingleQuoted = [^'] / "\\'"
+SingleQuoted = "\\'" / [^']
 
-DoubleQuoted = [^"] / '\\"'
+DoubleQuoted = '\\"' / [^"]
 
-BackQuoted = [^`] / '``'
+BackQuoted = '``' / [^`]
 
 IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
 {
