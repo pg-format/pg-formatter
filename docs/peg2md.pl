@@ -16,11 +16,11 @@ getopts('s', \%OPT);
 my @LINE;
 while (<>) {
     chomp;
-    if (/^\s*(=.*)/) {
+    if (/^\s*(=[^{]*)/) {
+        $LINE[-1] .= " $1";
+    } elsif (/^ *(\/ [^{]*)/) {
         $LINE[-1] .= " $1";
     } elsif (/^$/ || /^ / || /^{/ || /^}/ || /^\/\//) {
-    } elsif (/^\//) {
-        $LINE[-1] .= " $_";
     } elsif (/^(\S+) ".+"$/) {
         push(@LINE, $1);
     } else {
@@ -33,7 +33,7 @@ my @RULE;
 my @TERM_LEN;
 my $MAX_TERM_LEN = 0;
 for my $line (@LINE) {
-    if ($line =~ /(\S+) = (.+)/) {
+    if ($line =~ /(\S+) += (.+)/) {
         my ($term, $rule) = ($1, $2);
         my $term_len = length($term);
         $rule =~ s/[a-z]+://g;
