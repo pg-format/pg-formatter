@@ -181,32 +181,11 @@ QuotedString = '"' chars:DoubleQuoted* '"'
   };
 }
 
-SingleQuoted = !( "'" / "\\" ) char:.
-{
-  return char;
-}
-/ "\\" esc:ESCAPED_CHAR
-{
-  return esc;
-}
+SingleQuoted = [^'] / "\\'"
 
-DoubleQuoted = !( '"' / "\\" ) char:.
-{
-  return char;
-}
-/ "\\" esc:ESCAPED_CHAR
-{
-  return esc;
-}
+DoubleQuoted = [^"] / '\\"'
 
-BackQuoted = !( "`" / "\\" ) char:.
-{
-  return char;
-}
-/ "\\" esc:ESCAPED_CHAR
-{
-  return esc;
-}
+BackQuoted = [^`] / '``'
 
 IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
 {
@@ -229,34 +208,6 @@ WS = (TrailingSpace? NEWLINE)* SPACE_OR_TAB+
 Comment = '#' COMMENT_CHAR*
 
 DIRECTION = '--' / '->'
-
-ESCAPED_CHAR = "'"
-/ '"'
-/ "\\"
-/ "b"
-{
-  return "\b";
-}
-/ "f"
-{
-  return "\f";
-}
-/ "n"
-{
-  return "\n";
-}
-/ "r"
-{
-  return "\r";
-}
-/ "t"
-{
-  return "\t";
-}
-/ "v"
-{
-  return "\x0B";
-}
 
 COMMENT_CHAR = [^\x0D\x0A]
 // LF | CR LF | CR
