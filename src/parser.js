@@ -220,8 +220,8 @@ function peg$parse(input, options) {
   var peg$e9 = peg$classExpectation(["'"], true, false);
   var peg$e10 = peg$literalExpectation("\\\"", false);
   var peg$e11 = peg$classExpectation(["\""], true, false);
-  var peg$e12 = peg$literalExpectation("``", false);
-  var peg$e13 = peg$classExpectation(["`"], true, false);
+  var peg$e12 = peg$classExpectation(["`"], true, false);
+  var peg$e13 = peg$literalExpectation("``", false);
   var peg$e14 = peg$literalExpectation("#", false);
   var peg$e15 = peg$literalExpectation("--", false);
   var peg$e16 = peg$literalExpectation("->", false);
@@ -1655,17 +1655,17 @@ function peg$parse(input, options) {
   function peg$parseBackQuoted() {
     var s0;
 
-    if (input.substr(peg$currPos, 2) === peg$c9) {
-      s0 = peg$c9;
-      peg$currPos += 2;
+    if (peg$r3.test(input.charAt(peg$currPos))) {
+      s0 = input.charAt(peg$currPos);
+      peg$currPos++;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e12); }
     }
     if (s0 === peg$FAILED) {
-      if (peg$r3.test(input.charAt(peg$currPos))) {
-        s0 = input.charAt(peg$currPos);
-        peg$currPos++;
+      if (input.substr(peg$currPos, 2) === peg$c9) {
+        s0 = peg$c9;
+        peg$currPos += 2;
       } else {
         s0 = peg$FAILED;
         if (peg$silentFails === 0) { peg$fail(peg$e13); }

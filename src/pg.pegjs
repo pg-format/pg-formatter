@@ -185,7 +185,7 @@ SingleQuoted = "\\'" / [^']
 
 DoubleQuoted = '\\"' / [^"]
 
-BackQuoted = '``' / [^`]
+BackQuoted = [^`] / '``'
 
 IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
 {
