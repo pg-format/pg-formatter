@@ -48,7 +48,7 @@ Edge = i:ID WS d:DIRECTION WS j:ID
     }
   };
 }
-/ i:ID WS j:ID WS d:DIRECTION WS k:ID
+/ i:ID SPACE_OR_TAB* ':' WS* j:ID WS d:DIRECTION WS k:ID
 {
   return {
     edge: {
@@ -61,11 +61,6 @@ Edge = i:ID WS d:DIRECTION WS j:ID
       start: location().start.offset,
     }
   };
-}
-
-ID = !DIRECTION s:StringNonEmpty
-{
-  return s;
 }
 
 Label = ':' SPACE_OR_TAB* l:String
@@ -97,11 +92,11 @@ Value = Number & WORD_BOUNDARY
 
 Number = '-'? INTEGER ( '.' [0-9]+ )? EXPONENT?
 
-StringNonEmpty = QuotedNonEmpty
-/ chars:UNQUOTED_CHAR+
+ID = QuotedNonEmpty
+/ WITHOUT_COLON+ ( ':' WITHOUT_COLON+ )*
 {
   return {
-    literal: chars.join(''),
+    literal: text(),
   };
 }
 
