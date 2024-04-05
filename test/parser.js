@@ -26,9 +26,6 @@ const valid = [
   "x\nxy\r\nxyz # comment\n\"X\"", // folded line
   "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
   'http://example.org/', // plain URI as node ID
-  'a:',     // node ID ending with colon
-  ':a',     // node ID starting with colon
-  ':',      // colon as node ID
   // '"\\u1234"', // Unicode escape sequence
 ]
 
@@ -54,6 +51,9 @@ const invalid = [
   'a b:"\\"',   // missing end of quoted string with escaped '
   '(a',         // invalid id (must not start with opening parenthesis)
   'a)',         // invalid id (must not end with closing parenthesis)
+  'a:',         // node ID ending with colon
+  ':a',         // node ID starting with colon
+  ':',          // colon as node ID
   // '"\\uxxxx"',  // invalid Unicode Escape sequence
 ]
 
