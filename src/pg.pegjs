@@ -127,7 +127,7 @@ KeyDefUnquoted = k:KeyWithColon ( ':' WS / SPACE_OR_TAB+ ':' WS? )
   };
 }
 
-KeyWithColon = WITHOUT_COLON ( ':' WITHOUT_COLON )+
+KeyWithColon = WITHOUT_COLON+ ( ':' WITHOUT_COLON+ )+
 {
   return text();
 }
