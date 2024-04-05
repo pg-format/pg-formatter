@@ -101,10 +101,10 @@ ID = QuotedNonEmpty
 }
 
 String = QuotedString
-/ chars:UNQUOTED_CHAR+
+/ UNQUOTED_CHAR+
 {
   return {
-    literal: chars.join(''),
+    literal: text(),
   };
 }
 
