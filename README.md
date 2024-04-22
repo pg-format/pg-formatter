@@ -28,11 +28,19 @@ Comments and blank lines
 
 ## Documentation
 
+Final specification of PG format is still being done. See:
+
 * https://pg-format.readthedocs.io/en/0.3/contents/pg-format.html
+* https://github.com/pg-format/specification
 
 ## Usage
 
 The web application is started via `index.html`, just open the file in a web browser.
+
+* Query parameter `pg` can be used to pass a graph in [PG format](#pg-format).
+* The "permalink" links to the current page with current editor content.
+* Examples from directory [examples](examples) can be loaded by selecting from a dropdown.
+* A formatted variant or PG-JSONL can be selected to be shown at the right.
 
 ## Development
 
