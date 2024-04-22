@@ -104,17 +104,6 @@
          editor.setSize('100%', '100%');
          outputArea.setSize('100%', '100%');
          let blitzboard = new Blitzboard(document.getElementById('child-area'));
-
-         function updatePermalink() {
-             const url = new URL(window.location);
-             url.search = new URLSearchParams({ pg: editor.getDoc().getValue() })
-             document.getElementById("permalink").href = url;
-         }
-         editor.on("change", updatePermalink);
-         const urlParams = new URLSearchParams(window.location.search);
-         if (urlParams.has('pg')) {
-             editor.getDoc().setValue(urlParams.get('pg'));
-         }
         </script>
         <script src='./dist/main.js'></script>
         <script src='./sites/main.js'></script>

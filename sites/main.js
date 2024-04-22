@@ -74,6 +74,10 @@ function onChanged(delta) {
   } else {
     byProgram = false;
   }
+  // update permalink 
+  const url = new URL(window.location);
+  url.search = new URLSearchParams({ pg: editor.getDoc().getValue() });
+  document.getElementById("permalink").href = url;
 }
 
 editor.on('change', onChanged);
@@ -94,6 +98,11 @@ q('#query-select').addEventListener('change', (event) => {
 q('#copy-button').addEventListener('click', () => {
   navigator.clipboard.writeText(outputArea.getValue());
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('pg')) {
+    editor.getDoc().setValue(urlParams.get('pg'));
+}
 
 document.addEventListener('DOMContentLoaded', function (event) {
   let url = `https://api.github.com/repos/g2glab/pg-formatter/contents/examples`;
