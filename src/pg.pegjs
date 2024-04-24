@@ -176,11 +176,32 @@ QuotedString = "'" chars:SingleQuoted* "'"
   };
 }
 
-SingleQuoted = "\\'" / [^']
+SingleQuoted = [^'\\] / Escaped
 
-DoubleQuoted = '\\"' / [^"]
+DoubleQuoted = [^"\\] / Escaped
 
 BackQuoted = [^`] / '``'
+
+Escaped
+  = "\\"
+    sequence:(
+        '"'
+      / "'"
+      / "\\"
+      / "/"
+      / "b" { return "\b" }
+      / "f" { return "\f" }
+      / "n" { return "\n" }
+      / "r" { return "\r" }
+      / "t" { return "\t" }
+      / "u" @Codepoint )
+    // As code formatter this ignores the character value but returns escape sequence
+    { return text() }
+
+Codepoint
+  = digits:$( HEX |4| ) {
+      return String.fromCharCode(parseInt(digits, 16))
+    }
 
 EmptyLine = SPACES? ( COMMENT EOL / LINE_BREAK )
 {
@@ -204,14 +225,13 @@ WS = (TrailingSpace? LINE_BREAK)* SPACES
 
 DIRECTION = '--' / '->'
 
-// Whitespace
-
 COMMENT = '#' [^\x0D\x0A]*
 
 LINE_BREAK = [\x0A] / [\x0D] [\x0A]?    // LF | CR LF | CR
 
 SPACES = [\x20\x09]+
 
+HEX = [0-9a-f]i
 
 WORD_BOUNDARY = [\x20\x09\x0D\x0A,]
 UNQUOTED_CHAR "UNQUOTED_CHAR"
