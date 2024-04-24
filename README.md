@@ -48,6 +48,7 @@ To re-generate the code, install dependencies (`npm install`) and run:
 
 * `npm run peggy` to update the parser from `src/pg.pegjs`
 * `npm run webpack` to update the web application
+* `nom run docs` to update the grammar in EBNF form
 
 Run `npm test` to execute unit tests.
 

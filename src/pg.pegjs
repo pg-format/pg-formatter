@@ -2,7 +2,7 @@
   let comments = {};
 }
 
-PG = lines:( IgnoredLine* @Statement )* IgnoredLine*
+PG = lines:( EmptyLine* @Statement )* EmptyLine*
 {
   return {
     lines: lines,
@@ -48,7 +48,7 @@ Edge = i:ID WS d:DIRECTION WS j:ID
     }
   };
 }
-/ i:ID SPACE_OR_TAB* ':' WS* j:ID WS d:DIRECTION WS k:ID
+/ i:ID SPACES? ':' WS* j:ID WS d:DIRECTION WS k:ID
 {
   return {
     edge: {
@@ -63,7 +63,7 @@ Edge = i:ID WS d:DIRECTION WS j:ID
   };
 }
 
-Label = ':' SPACE_OR_TAB* l:String
+Label = ':' SPACES? l:String
 {
   return l;
 }
@@ -108,19 +108,19 @@ String = QuotedString
   };
 }
 
-KeyDef = s:QuotedString SPACE_OR_TAB* ':' WS?
+KeyDef = s:QuotedString SPACES? ':' WS?
 {
   return s;
 }
 / KeyDefUnquoted
 
-KeyDefUnquoted = k:KeyWithColon ( ':' WS / SPACE_OR_TAB+ ':' WS? )
+KeyDefUnquoted = k:KeyWithColon ( ':' WS / SPACES ':' WS? )
 {
   return {
     literal: k,
   };
 }
-/ chars:WITHOUT_COLON+ SPACE_OR_TAB* ':' WS?
+/ chars:WITHOUT_COLON+ SPACES? ':' WS?
 {
   return {
     literal: chars.join(''),
@@ -182,32 +182,37 @@ DoubleQuoted = '\\"' / [^"]
 
 BackQuoted = [^`] / '``'
 
-IgnoredLine = SPACE_OR_TAB* ( Comment EOL / NEWLINE )
+EmptyLine = SPACES? ( COMMENT EOL / LINE_BREAK )
 {
   comments[location().start.offset] = text().replace(/\n$/, '');
 
   return '';
 }
 
-TrailingSpace = SPACE_OR_TAB+ Comment
+TrailingSpace = SPACES COMMENT
 {
   const pos = location().start.offset;
   comments[pos] = text();
 
   return '';
 }
-/ SPACE_OR_TAB+
+/ SPACES
 
-WS = (TrailingSpace? NEWLINE)* SPACE_OR_TAB+
+WS = (TrailingSpace? LINE_BREAK)* SPACES
 
-Comment = '#' COMMENT_CHAR*
+// Terminal symbols
 
 DIRECTION = '--' / '->'
 
-COMMENT_CHAR = [^\x0D\x0A]
-// LF | CR LF | CR
-NEWLINE = [\x0A] / [\x0D] [\x0A] / [\x0D]
-SPACE_OR_TAB = [\x20\x09]
+// Whitespace
+
+COMMENT = '#' [^\x0D\x0A]*
+
+LINE_BREAK = [\x0A] / [\x0D] [\x0A]?    // LF | CR LF | CR
+
+SPACES = [\x20\x09]+
+
+
 WORD_BOUNDARY = [\x20\x09\x0D\x0A,]
 UNQUOTED_CHAR "UNQUOTED_CHAR"
   = [^\x20\x09\x0D\x0A\'\"(),]
@@ -232,5 +237,5 @@ BOOLEAN = 'true'
   };
 }
 
-EOL = EOF / NEWLINE
-EOF = !.
+EOL = LINE_BREAK / END
+END = !.
