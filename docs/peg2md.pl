@@ -3,13 +3,12 @@ use strict;
 use File::Basename;
 use Getopt::Std;
 my $PROGRAM = basename $0;
-my $USAGE=
-"Usage: $PROGRAM
+my $USAGE   = "Usage: $PROGRAM
 -s: simple mode
 ";
 
 my %OPT;
-getopts('s', \%OPT);
+getopts( 's', \%OPT );
 
 !@ARGV && -t and die $USAGE;
 
@@ -18,13 +17,17 @@ while (<>) {
     chomp;
     if (/^\s*(=[^{]*)/) {
         $LINE[-1] .= " $1";
-    } elsif (/^ *(\/ [^{]*)/) {
+    }
+    elsif (/^ *(\/ [^{]*)/) {
         $LINE[-1] .= " $1";
-    } elsif (/^$/ || /^ / || /^{/ || /^}/ || /^\/\//) {
-    } elsif (/^(\S+) ".+"$/) {
-        push(@LINE, $1);
-    } else {
-        push(@LINE, $_);
+    }
+    elsif ( /^$/ || /^ / || /^{/ || /^}/ || /^\/\// ) {
+    }
+    elsif (/^(\S+) ".+"$/) {
+        push( @LINE, $1 );
+    }
+    else {
+        push( @LINE, $_ );
     }
 }
 
@@ -33,38 +36,40 @@ my @RULE;
 my @TERM_LEN;
 my $MAX_TERM_LEN = 0;
 for my $line (@LINE) {
-    if ($line =~ /(\S+) += (.+)/) {
-        my ($term, $rule) = ($1, $2);
+    if ( $line =~ /(\S+) += (.+)/ ) {
+        my ( $term, $rule ) = ( $1, $2 );
         my $term_len = length($term);
         $rule =~ s/[a-z]+://g;
         $rule =~ s/ \/ / \| /g;
         $rule =~ s/\@//g;
-        push(@TERM, $term);
-        push(@RULE, $rule);
-        push(@TERM_LEN, $term_len);
-        if ($term_len > $MAX_TERM_LEN) {
+        push( @TERM,     $term );
+        push( @RULE,     $rule );
+        push( @TERM_LEN, $term_len );
+
+        if ( $term_len > $MAX_TERM_LEN ) {
             $MAX_TERM_LEN = $term_len;
         }
-    } else {
+    }
+    else {
         die $line;
     }
 }
 
-if (!$OPT{s}) {
+if ( !$OPT{s} ) {
     print "### PG grammar\n";
     print "\n";
     print "Summary of `pg.pegjs` are formatted like EBNF:\n";
     print "```\n";
-    print "\$ ./docs/peg2md.pl lib/pg.pegjs > docs/grammar.md\n";
+    print "\$ ./docs/peg2md.pl src/pg.pegjs > docs/grammar.md\n";
     print "```\n";
     print "\n";
     print "```ebnf\n";
 }
-for (my $i=0; $i<@LINE; $i++) {
-    my $space = " " x ($MAX_TERM_LEN - $TERM_LEN[$i]);
+for ( my $i = 0 ; $i < @LINE ; $i++ ) {
+    my $space = " " x ( $MAX_TERM_LEN - $TERM_LEN[$i] );
     print "$TERM[$i]$space ::= $RULE[$i]\n";
-    
+
 }
-if (!$OPT{s}) {
+if ( !$OPT{s} ) {
     print "```\n";
 }

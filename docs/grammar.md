@@ -2,25 +2,24 @@
 
 Summary of `pg.pegjs` are formatted like EBNF:
 ```
-$ ./docs/peg2md.pl lib/pg.pegjs > docs/grammar.md
+$ ./docs/peg2md.pl src/pg.pegjs > docs/grammar.md
 ```
 
 ```ebnf
 PG             ::= ( IgnoredLine* Statement )* IgnoredLine*
 Statement      ::= ( Edge | Node ) ( WS Label )* ( WS Property )* TrailingSpace? EOL
 Node           ::= ID
-Edge           ::= ID WS DIRECTION WS ID | ID WS ID WS DIRECTION WS ID
-ID             ::= !DIRECTION StringNonEmpty
+Edge           ::= ID WS DIRECTION WS ID | ID SPACE_OR_TAB* ':' WS* ID WS DIRECTION WS ID
 Label          ::= ':' SPACE_OR_TAB* String
 Property       ::= KeyDef Values
 Values         ::= Value ( WS? ',' WS? Value )*
 Value          ::= Number & WORD_BOUNDARY | BOOLEAN | String
 Number         ::= '-'? INTEGER ( '.' [0-9]+ )? EXPONENT?
-StringNonEmpty ::= QuotedNonEmpty | UNQUOTED_CHAR+
+ID             ::= QuotedNonEmpty | WITHOUT_COLON+ ( ':' WITHOUT_COLON+ )*
 String         ::= QuotedString | UNQUOTED_CHAR+
 KeyDef         ::= QuotedString SPACE_OR_TAB* ':' WS? | KeyDefUnquoted
 KeyDefUnquoted ::= KeyWithColon ( ':' WS | SPACE_OR_TAB+ ':' WS? ) | WITHOUT_COLON+ SPACE_OR_TAB* ':' WS?
-KeyWithColon   ::= WITHOUT_COLON ( ':' WITHOUT_COLON )+
+KeyWithColon   ::= WITHOUT_COLON+ ( ':' WITHOUT_COLON+ )+
 QuotedNonEmpty ::= "'" SingleQuoted+ "'" | '"' DoubleQuoted+ '"' | '`' BackQuoted+ '`'
 QuotedString   ::= "'" SingleQuoted* "'" | '"' DoubleQuoted* '"' | '`' BackQuoted* '`'
 SingleQuoted   ::= "\\'" | [^']

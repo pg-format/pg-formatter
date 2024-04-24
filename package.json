@@ -22,6 +22,7 @@
   "scripts": {
     "test": "mocha",
     "peggy": "peggy -o src/parser.js src/pg.pegjs",
-    "webpack": "webpack ./src/index.js --mode=production"
+    "webpack": "webpack ./src/index.js --mode=production",
+    "docs": "./docs/peg2md.pl src/pg.pegjs > docs/grammar.md"
   }
 }
