@@ -15,7 +15,7 @@ getopts( 's', \%OPT );
 my @LINE;
 while (<>) {
     chomp;
-    if (/^\s*(=[^{]*)/) {
+    if (/^\s*(=.*)/) {
         $LINE[-1] .= " $1";
     }
     elsif (/^ *(\/ [^{]*)/) {
@@ -36,6 +36,7 @@ my @RULE;
 my @TERM_LEN;
 my $MAX_TERM_LEN = 0;
 for my $line (@LINE) {
+    say STDERR $line;
     if ( $line =~ /(\S+) += (.+)/ ) {
         my ( $term, $rule ) = ( $1, $2 );
         my $term_len = length($term);

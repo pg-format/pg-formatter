@@ -88,7 +88,13 @@ Value = Number & WORD_BOUNDARY
   };
 }
 / BOOLEAN
-/ String
+/ QuotedString
+/ UnquotedValue
+
+UnquotedValue = (!"," WITHOUT_COLON) (!"," UNQUOTED_CHAR)*
+{
+  return text();
+}
 
 Number = '-'? INTEGER ( '.' [0-9]+ )? EXPONENT?
 
@@ -198,10 +204,10 @@ Escaped
     // As code formatter this ignores the character value but returns escape sequence
     { return text() }
 
-Codepoint
-  = digits:$( HEX |4| ) {
-      return String.fromCharCode(parseInt(digits, 16))
-    }
+Codepoint = digits:$( HEX |4| ) 
+{
+  return String.fromCharCode(parseInt(digits, 16))
+}
 
 EmptyLine = SPACES? ( COMMENT EOL / LINE_BREAK )
 {
@@ -235,9 +241,9 @@ HEX = [0-9a-f]i
 
 WORD_BOUNDARY = [\x20\x09\x0D\x0A,]
 UNQUOTED_CHAR "UNQUOTED_CHAR"
-  = [^\x20\x09\x0D\x0A\'\"(),]
+  = [^\x00-\x20<>"{}|^`\\]
 WITHOUT_COLON "WITHOUT_COLON"
-  = [^:\x20\x09\x0D\x0A\'\"(),]
+  = [^\x00-\x20<>"{}|^`\\:]
 
 INTEGER "INTEGER"
   = '0' / [1-9] [0-9]*

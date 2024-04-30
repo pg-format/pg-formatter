@@ -36,7 +36,8 @@ describe("parse edge cases", () => {
 });
 
 const invalid = [
-  '""',     // empty string node id
+  '""',         // empty string node id
+  '\x19',       // control code not allowed in unquoted identifier
   ' a',         // line must not start with space
   '\ta',        // line must not start with tab
   'a b',        // no label or property
@@ -49,8 +50,6 @@ const invalid = [
   'a :\'\\"',   // missing end of quoted string with escaped '
   'a b:"',      // missing end of quoted string
   'a b:"\\"',   // missing end of quoted string with escaped '
-  '(a',         // invalid id (must not start with opening parenthesis)
-  'a)',         // invalid id (must not end with closing parenthesis)
   'a:',         // node ID ending with colon
   ':a',         // node ID starting with colon
   ':',          // colon as node ID
