@@ -57,6 +57,7 @@ const invalid = [
   '"\\"',       // escape sequence not closed
   '"\\x',       // unknown escape sequence
   'a : b -> d', // invalid space after edge identfier
+  '`x`',        // backquoted string is not part of the specification
 ]
 
 describe("detect syntax errors", () => {

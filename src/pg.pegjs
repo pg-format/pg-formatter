@@ -152,13 +152,6 @@ QuotedNonEmpty = "'" chars:SingleQuoted+ "'"
     literal: chars.join(''),
   };
 }
-/ '`' chars:BackQuoted+ '`'
-{
-  return {
-    quote: '`',
-    literal: chars.join(''),
-  };
-}
 
 QuotedString = "'" chars:SingleQuoted* "'"
 {
@@ -174,19 +167,10 @@ QuotedString = "'" chars:SingleQuoted* "'"
     literal: chars.join(''),
   };
 }
-/ '`' chars:BackQuoted* '`'
-{
-  return {
-    quote: '`',
-    literal: chars.join(''),
-  };
-}
 
 SingleQuoted = [^'\\] / Escaped
 
 DoubleQuoted = [^"\\] / Escaped
-
-BackQuoted = [^`] / '``'
 
 Escaped
   = "\\"
