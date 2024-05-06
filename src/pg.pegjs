@@ -168,9 +168,12 @@ QuotedString = "'" chars:SingleQuoted* "'"
   };
 }
 
-SingleQuoted = [^'\\] / Escaped
+SingleQuoted = Unescaped / '"' / Escaped
 
-DoubleQuoted = [^"\\] / Escaped
+DoubleQuoted = Unescaped / "'" / Escaped
+
+// Excludes quoted, escape, and control codes but includes \t, \n, \r
+Unescaped = [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]   
 
 Escaped
   = "\\"

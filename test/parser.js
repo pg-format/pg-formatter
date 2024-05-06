@@ -27,6 +27,7 @@ const valid = [
   "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
   'http://example.org/', // plain URI as node ID
   '"\\u1234"', // Unicode escape sequence
+  '"\n \r \t"',  // multiline string
 ]
 
 describe("parse edge cases", () => {
@@ -58,6 +59,7 @@ const invalid = [
   '"\\x',       // unknown escape sequence
   'a : b -> d', // invalid space after edge identfier
   '`x`',        // backquoted string is not part of the specification
+  '"\x0B"',     // control code in quoted string
 ]
 
 describe("detect syntax errors", () => {
