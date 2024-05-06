@@ -9,7 +9,7 @@ $ ./docs/peg2md.pl src/pg.pegjs > docs/grammar.md
 PG             ::= ( EmptyLine* Statement )* EmptyLine*
 Statement      ::= ( Edge | Node ) ( WS Label )* ( WS Property )* TrailingSpace? EOL
 Node           ::= ID
-Edge           ::= ID WS DIRECTION WS ID | ID SPACES? ':' WS* ID WS DIRECTION WS ID
+Edge           ::= ID WS DIRECTION WS ID | ID ':' WS* ID WS DIRECTION WS ID
 Label          ::= ':' SPACES? String
 Property       ::= KeyDef Values
 Values         ::= Value ( WS? ',' WS? Value )*

@@ -48,7 +48,7 @@ Edge = i:ID WS d:DIRECTION WS j:ID
     }
   };
 }
-/ i:ID SPACES? ':' WS* j:ID WS d:DIRECTION WS k:ID
+/ i:ID ':' WS* j:ID WS d:DIRECTION WS k:ID
 {
   return {
     edge: {

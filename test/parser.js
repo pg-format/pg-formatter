@@ -56,6 +56,7 @@ const invalid = [
   '"\\uxxxx"',  // invalid Unicode Escape sequence
   '"\\"',       // escape sequence not closed
   '"\\x',       // unknown escape sequence
+  'a : b -> d', // invalid space after edge identfier
 ]
 
 describe("detect syntax errors", () => {
