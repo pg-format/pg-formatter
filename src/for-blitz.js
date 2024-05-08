@@ -4,20 +4,29 @@ exports.format = formatGraph;
 
 function formatGraph({ lines, comments }, delim, sep) {
   formatted = [];
-  const declaredNodes = new Set();
+  const nodes = {};
   const connectedNodes = new Set();
   lines.forEach((line) => {
     if (line.node) {
-      declaredNodes.add(line.node.id.literal);
-      formatNode(line.node, delim);
+      const id = line.node.id.literal;
+      if (nodes[id]) {
+        nodes[id].labels = Array.from(new Set([...nodes[id].labels, ...line.node.labels]))
+        nodes[id].properties = [...nodes[id].properties, ...line.node.properties];
+      } else {
+        nodes[id] = line.node;
+      }
     } else if (line.edge) {
       connectedNodes.add(line.edge.from);
       connectedNodes.add(line.edge.to);
       formatEdge(line.edge, delim);
     }
   });
+  Object.keys(nodes).forEach((id) => {
+      formatNode(nodes[id], delim);
+  });
+  // Add implicit nodes
   Array.from(connectedNodes).forEach((id) => {
-    if (!declaredNodes.has(id.literal)) {
+    if (!nodes[id.literal]) {
       formatted.push(`${formatElement(id)}`);
     }
   });
