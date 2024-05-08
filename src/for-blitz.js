@@ -4,21 +4,21 @@ exports.format = formatGraph;
 
 function formatGraph({ lines, comments }, delim, sep) {
   formatted = [];
-  let declaredNodes = {};
-  let connectedNodes = {};
+  const declaredNodes = new Set();
+  const connectedNodes = new Set();
   lines.forEach((line) => {
     if (line.node) {
-      declaredNodes[line.node.id.literal] = true;
+      declaredNodes.add(line.node.id);
       formatNode(line.node, delim);
     } else if (line.edge) {
-      connectedNodes[line.edge.from.literal] = true;
-      connectedNodes[line.edge.to.literal] = true;
+      connectedNodes.add(line.edge.from);
+      connectedNodes.add(line.edge.to);
       formatEdge(line.edge, delim);
     }
   });
-  Object.keys(connectedNodes).forEach((id) => {
-    if (!declaredNodes[id]) {
-      formatted.push(`${id}`);
+  Array.from(connectedNodes).forEach((id) => {
+    if (!declaredNodes.has(id)) {
+      formatted.push(`${formatElement(id)}`);
     }
   });
   return formatted.join(sep + '\n');
