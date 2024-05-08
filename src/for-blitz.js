@@ -8,7 +8,7 @@ function formatGraph({ lines, comments }, delim, sep) {
   const connectedNodes = new Set();
   lines.forEach((line) => {
     if (line.node) {
-      declaredNodes.add(line.node.id);
+      declaredNodes.add(line.node.id.literal);
       formatNode(line.node, delim);
     } else if (line.edge) {
       connectedNodes.add(line.edge.from);
@@ -17,7 +17,7 @@ function formatGraph({ lines, comments }, delim, sep) {
     }
   });
   Array.from(connectedNodes).forEach((id) => {
-    if (!declaredNodes.has(id)) {
+    if (!declaredNodes.has(id.literal)) {
       formatted.push(`${formatElement(id)}`);
     }
   });
