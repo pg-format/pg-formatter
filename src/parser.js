@@ -961,6 +961,9 @@ function peg$parse(input, options) {
       } else {
         s2 = peg$FAILED;
       }
+      if (s2 === peg$FAILED) {
+        s2 = peg$parseEND();
+      }
       if (s2 !== peg$FAILED) {
         peg$savedPos = s0;
         s0 = peg$f8();

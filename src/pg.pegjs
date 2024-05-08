@@ -81,7 +81,7 @@ Values = v:Value a:( WS? ',' WS? @Value )*
   return [v, ...a];
 }
 
-Value = Number & WORD_BOUNDARY
+Value = Number ( &WORD_BOUNDARY / END )
 {
   return {
     literal: Number(text()),
