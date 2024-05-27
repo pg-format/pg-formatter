@@ -54,7 +54,7 @@ function formatEdge({ id, from, to, direction, labels, properties }, pos, delim)
   }
   let edge = '';
   if (id) {
-    edge += `${formatElement(id)} : `;
+    edge += `${formatElement(id)}: `;
   }
   edge += `${formatElement(from)} ${direction} ${formatElement(to)}`;
   formatted.push([edge, ...labels.map(formatLabel), ...properties.map(formatProperty)].join(delim));
