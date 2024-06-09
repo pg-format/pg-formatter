@@ -20,9 +20,7 @@ const valid = [
   'a : x',  // space between colon and label
   'a "":b', // empty string key
   'a b:""', // empty string value
-  'a b : true', // space before/after colon of proprty
   'a b:c:d',    // parsed as property key 'b' with value 'c:d'
-  'a b:c :d',   // parsed as property key 'b:c' with value 'd'
   "x\nxy\r\nxyz # comment\n\"X\"", // folded line
   "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
   'http://example.org/', // plain URI as node ID
@@ -60,6 +58,8 @@ const invalid = [
   'a : b -> d', // invalid space after edge identfier
   '`x`',        // backquoted string is not part of the specification
   '"\x0B"',     // control code in quoted string
+  'a b : true', // space before/after colon of property
+  'a b:c :d',   // space before/after colon of property
 ]
 
 describe("detect syntax errors", () => {

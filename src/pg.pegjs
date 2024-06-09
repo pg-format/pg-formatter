@@ -68,7 +68,7 @@ Label = ':' SPACES? l:String
   return l;
 }
 
-Property = k:KeyDef v:Values
+Property = k:Key v:ValueList
 {
   return {
     key: k,
@@ -76,12 +76,12 @@ Property = k:KeyDef v:Values
   };
 }
 
-Values = v:Value a:( WS? ',' WS? @Value )*
+ValueList = WS? v:Value a:( WS? ',' WS? @Value )*
 {
   return [v, ...a];
 }
 
-Value = Number ( &WORD_BOUNDARY / END )
+Value = Number
 {
   return {
     literal: Number(text()),
@@ -91,15 +91,17 @@ Value = Number ( &WORD_BOUNDARY / END )
 / QuotedString
 / UnquotedValue
 
-UnquotedValue = (!"," WITHOUT_COLON) (!"," UNQUOTED_CHAR)*
+UnquotedValue = UNQUOTED_START (!"," UNQUOTED_CHAR)*
 {
-  return text();
+  return {
+    literal: text()
+  }
 }
 
 Number = '-'? INTEGER ( '.' [0-9]+ )? EXPONENT?
 
 ID = QuotedNonEmpty
-/ WITHOUT_COLON+ ( ':' WITHOUT_COLON+ )*
+/ UNQUOTED_START UNQUOTED_CHAR*
 {
   return {
     literal: text(),
@@ -114,28 +116,23 @@ String = QuotedString
   };
 }
 
-KeyDef = s:QuotedString SPACES? ':' WS?
+Key = s:QuotedString ':'
 {
   return s;
 }
-/ KeyDefUnquoted
+/ KeyUnquoted
 
-KeyDefUnquoted = k:KeyWithColon ( ':' WS / SPACES ':' WS? )
+KeyUnquoted = @(UNQUOTED_START ( ( !":" UNQUOTED_CHAR )* ':' )+
 {
   return {
-    literal: k,
+    literal: text(),
   };
-}
-/ chars:WITHOUT_COLON+ SPACES? ':' WS?
+} ) WS
+/ UNQUOTED_START (!":" UNQUOTED_CHAR)* ':'
 {
   return {
-    literal: chars.join(''),
+    literal: text().slice(0,-1),
   };
-}
-
-KeyWithColon = WITHOUT_COLON+ ( ':' WITHOUT_COLON+ )+
-{
-  return text();
 }
 
 QuotedNonEmpty = "'" chars:SingleQuoted+ "'"
@@ -227,10 +224,11 @@ SPACES = [\x20\x09]+
 HEX = [0-9a-f]i
 
 WORD_BOUNDARY = [\x20\x09\x0D\x0A,]
+
 UNQUOTED_CHAR "UNQUOTED_CHAR"
   = [^\x00-\x20<>"{}|^`\\]
-WITHOUT_COLON "WITHOUT_COLON"
-  = [^\x00-\x20<>"{}|^`\\:]
+UNQUOTED_START
+  = ![:#,-] UNQUOTED_CHAR
 
 INTEGER "INTEGER"
   = '0' / [1-9] [0-9]*
