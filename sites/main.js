@@ -9,13 +9,13 @@ function reformat(event, ui) {
   if (outputStyle === 'space') {
     delim = ' ';
     sep = '';
-    outputArea.setOption('mode', 'pgMode');
+    outputArea.setOption('mode', 'pg');
   } else if (outputStyle === 'jsonl') {
     outputArea.setOption('mode', 'application/json');
   } else {
     delim = '\n  ';
     sep = '\n';
-    outputArea.setOption('mode', 'pgMode');
+    outputArea.setOption('mode', 'pg');
   }
   blitzboard.setGraph('', false);
   try {
