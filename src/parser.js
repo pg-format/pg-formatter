@@ -337,7 +337,7 @@ function peg$parse(input, options) {
 };
   var peg$f13 = function() {
   return {
-    literal: text(),
+    literal: text().slice(0,-1),
   };
 };
   var peg$f14 = function() {

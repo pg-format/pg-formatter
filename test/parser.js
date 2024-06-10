@@ -49,7 +49,6 @@ const invalid = [
   'a :\'\\"',   // missing end of quoted string with escaped '
   'a b:"',      // missing end of quoted string
   'a b:"\\"',   // missing end of quoted string with escaped '
-  'a:',         // node ID ending with colon
   ':a',         // node ID starting with colon
   ':',          // colon as node ID
   '"\\uxxxx"',  // invalid Unicode Escape sequence

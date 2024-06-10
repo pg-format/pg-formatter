@@ -11,7 +11,7 @@ function reformat(event, ui) {
     sep = '';
     outputArea.setOption('mode', 'pg');
   } else if (outputStyle === 'jsonl') {
-    outputArea.setOption('mode', 'application/json');
+    outputArea.setOption('mode', 'json');
   } else {
     delim = '\n  ';
     sep = '\n';

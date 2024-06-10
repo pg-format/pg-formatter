@@ -125,7 +125,7 @@ Key = s:QuotedString ':'
 KeyUnquoted = @(UNQUOTED_START ( ( !":" UNQUOTED_CHAR )* ':' )+
 {
   return {
-    literal: text(),
+    literal: text().slice(0,-1),
   };
 } ) WS
 / UNQUOTED_START (!":" UNQUOTED_CHAR)* ':'
