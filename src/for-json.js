@@ -1,6 +1,3 @@
-exports.formatJSONL = formatJSONL
-exports.buildGraph = buildGraph
-
 function mergeProperties(properties={}, props) {
   for (let [key, values] of props) {
     if (key in properties) {
@@ -17,7 +14,7 @@ function mergeProperties(properties={}, props) {
   return proper
 }
 
-function buildGraph(lines) {
+export function buildGraph(lines) {
   const nodes = {}, edges = []
   for (let line of lines) {
     if (line.node) {
@@ -39,7 +36,7 @@ function buildGraph(lines) {
   }
 }
 
-function formatJSONL(line) {
+export function formatJSONL(line) {
   let obj;
   if (line.node) {
     obj = { type: "node", ...getNodeObj(line.node) };

@@ -1,8 +1,6 @@
 let formatted;
 
-exports.format = formatGraph;
-
-function formatGraph({ lines, comments }, delim, sep) {
+export function formatGraph({ lines, comments }, delim, sep) {
   formatted = [];
   const nodes = {};
   const connectedNodes = new Set();

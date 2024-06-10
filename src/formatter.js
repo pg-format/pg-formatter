@@ -17,7 +17,7 @@
 let formatted;
 let commentsArr;
 
-exports.format = formatGraph;
+export { formatGraph as format };
 
 function formatGraph({ lines, comments }, delim=' ', sep='') {
   formatted = [];
@@ -68,7 +68,7 @@ function formatLabel(label) {
 }
 
 function formatProperty({ key, values }) {
-    console.log(key)
+  // console.log(key)
   return (!key.quote && key.literal.match(/:/)) // unquoted key with colon
     ? `${key.literal}: ${formatValueList(values)}`
     : `${formatElement(key)}:${formatValueList(values)}`;

@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const program = require('commander');
-const path = require('path');
-const parser = require('../src/parser.js');
-const formatter = require('../src/formatter.js');
-const json = require('../src/for-json.js');
-const version = require('../package.json').version;
+import fs from 'fs';
+import path from 'path';
+import { program } from 'commander';
+import { parse } from '../src/parser.js';
+import { format } from '../src/formatter.js';
+import { buildGraph, formatJSONL } from '../src/for-json.js';
+
+const packageJsonPath = path.resolve(process.cwd(), 'package.json');
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 
 const opts = program
   .option('-f, --format <FORMAT>', 'outut format (json|jsonl)')
   .option('-d, --debug', 'output parsed synatax tree')
-  .version(version)
+  .version(packageJson.version)
   .arguments('[PG_FILE]')
   .parse(process.argv)
   .opts();
@@ -42,11 +44,11 @@ if (program.args.length < 1 && process.stdin.isTTY) {
     switch (opts.format) {
       case 'jsonl':
         parsedObj.lines.forEach(line => {
-          console.log(json.formatJSONL(line));
+          console.log(formatJSONL(line));
         });
         break;
       case 'json':
-        const pg = json.buildGraph(parsedObj.lines)
+        const pg = buildGraph(parsedObj.lines)
         console.log(JSON.stringify(pg,null,2))
         break;
       default:
@@ -54,7 +56,7 @@ if (program.args.length < 1 && process.stdin.isTTY) {
         break;
     }
   } else {
-    console.log(formatter.format(parsedObj, ' ', ''));
+    console.log(format(parsedObj, ' ', ''));
   }
 })();
 

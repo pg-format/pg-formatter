@@ -1,9 +1,10 @@
-const chai = require('chai');
-const assert = chai.assert;
-const fs = require('fs');
+import chai from 'chai';
+import fs from 'fs';
 
-const { parse } = require('../src/parser.js');
-const { format } = require('../src/formatter.js');
+import { parse } from '../src/parser.js';
+import { format } from '../src/formatter.js';
+
+const assert = chai.assert;
 
 describe("parse examples", () => {
   for (let file of fs.readdirSync("examples")) {
