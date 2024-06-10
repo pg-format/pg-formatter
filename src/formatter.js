@@ -19,7 +19,7 @@ let commentsArr;
 
 exports.format = formatGraph;
 
-function formatGraph({ lines, comments }, delim, sep) {
+function formatGraph({ lines, comments }, delim=' ', sep='') {
   formatted = [];
   commentsArr = Object.entries(comments).map(([pos, text]) => ({
     pos: parseInt(pos),

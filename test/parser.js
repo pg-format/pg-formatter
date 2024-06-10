@@ -3,6 +3,7 @@ const assert = chai.assert;
 const fs = require('fs');
 
 const { parse } = require('../src/parser.js');
+const { format } = require('../src/formatter.js');
 
 describe("parse examples", () => {
   for (let file of fs.readdirSync("examples")) {
@@ -13,26 +14,37 @@ describe("parse examples", () => {
   }
 });
 
-const valid = [
-  '',       // empty graph
-  'a\r :b', // plain \r is valid line break
-  'a :""',  // empty string label
-  'a : x',  // space between colon and label
-  'a "":b', // empty string key
-  'a b:""', // empty string value
-  'a b:c:d',    // parsed as property key 'b' with value 'c:d'
-  "x\nxy\r\nxyz # comment\n\"X\"", // folded line
-  "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", // value list
-  'http://example.org/', // plain URI as node ID
-  '"\\u1234"', // Unicode escape sequence
-  '"\n \r \t"',  // multiline string
+function ex(pg, about, formatted) {
+  return { pg, about, formatted: formatted ?? pg }
+}
+
+const examples = [
+  ex('','empty graph'),
+  ex('a: :b','node id with colon'),
+  ex('a\r :b', 'plain \\r is valid line break', 'a :b'),
+  ex('a :""', 'empty string label'),
+  ex('a : x', 'space between colon and label', 'a :x'),
+  ex('a "":b', 'empty string key'),
+  ex('a b:""', 'empty string value'),
+  ex('a b:c:d', 'parsed as property key "b" with value "c:d"'),
+  ex("x\nxy\r\nxyz # comment\n\"X\"", 'folded line',
+    "x\nxy\nxyz # comment\n\"X\""),
+  ex("a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment", 'value list',
+     'a -> b a:"",2,-200,null,xyz # comment'),
+  ex('http://example.org/', 'plain URI as node ID'),
+  ex('"\\u1234"', 'Unicode escape sequence'),
+  ex('"\n \r \t"', 'multiline string'),
 ]
 
-describe("parse edge cases", () => {
-  valid.forEach((pg, i) => {
-    it(`case ${i}`, () => assert.doesNotThrow(() => parse(pg)))
+describe("parse examples", () => {
+  examples.forEach(({pg,about,formatted}) => {
+    it(about, () => { 
+      const g = parse(pg)
+      if (format(g) != formatted) console.log(JSON.stringify(g,null,2))
+      assert.equal(format(g), formatted)
+    })
   })
-});
+})
 
 const invalid = [
   '""',         // empty string node id
