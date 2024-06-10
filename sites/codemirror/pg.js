@@ -15,7 +15,9 @@ const EMPTY_LINE = /^[ \t]*(?:#.*)?$/
 const TRAILING_SPACE = /[ \t]*(?:#.*)?$/
 const UNQUOTED_VALUE = new RegExp(`${unquoteStart}[^${reserved},]*`)
 const UNQUOTED_ID = new RegExp(`${unquoteStart}[^${reserved}]*`)
-const UNQUOTED_PROPERTY = new RegExp(`${unquoteStart}[^${reserved}:,]*:`)
+const UNQUOTED_PROPERTY_NO_COLON = new RegExp(`${unquoteStart}[^${reserved}:,]*:`)
+const UNQUOTED_PROPERTY_WITH_COLON = new RegExp(`${unquoteStart}(:[^${reserved}:,]*)*:`)
+const UNQUOTED_PROPERTY_WITH_COLON_AND_SPACE = new RegExp(`${unquoteStart}(:[^${reserved}:,]*)*:($|[ \t])`)
 const SPACES = /[ \t]+/
 const DIRECTION = /->|--/
 const ESCAPED = /\\(?:["'\/bfnrt]|u[0-9a-fA-f]{4})/
@@ -33,15 +35,6 @@ const tag = {
   direction: "tag",
   comment: "comment",
   space: "space",
-}
-
-function startState() {
-  return {
-    current: "Statement",
-    next: null,
-    quoteChar: null,
-    stringType: null,
-  }
 }
 
 function token(stream, state) {
@@ -65,8 +58,26 @@ function token(stream, state) {
     return "error"
   }
 
-  const match = token => stream.match(token)
+  const match = (token,consume) => stream.match(token,consume)
   const atQuotation = () => stream.peek() == "\"" || stream.peek() == "'"
+
+  function property() {
+    if (atQuotation()) {
+      return startString(tag.property,"PropertyColon")
+    } else if (match(UNQUOTED_PROPERTY_WITH_COLON_AND_SPACE,false)) {
+      match(UNQUOTED_PROPERTY_WITH_COLON)
+      afterWhitespace("Value")
+      return tag.property
+    } else if (match(UNQUOTED_PROPERTY_NO_COLON)) {
+      if (stream.eol() || match(/[ \t]+/,false)) {
+        afterWhitespace("Value")
+      } else {
+        state.current = "Value"
+      }
+      return tag.property
+    }
+    return error()
+  }
 
   // console.log(state); console.log(stream.peek())
 
@@ -138,14 +149,14 @@ function token(stream, state) {
       return error()
           
     case "Label":
-      if (stream.match(/^[ \t]+/)) {
+      if (match(/^[ \t]+/)) {
         return tag.space
       } else if (stream.sol()) {          
         return skipState("Statement")
       } else if (match(TRAILING_SPACE)) {
         afterWhitespace("Label")
         return tag.comment
-      } else if (stream.match(/:[ \t]*/)) { // label
+      } else if (match(/:[ \t]*/)) { // label
         if (match(UNQUOTED_ID)) {
           afterWhitespace("Label")
         } else if (atQuotation()) {
@@ -154,53 +165,29 @@ function token(stream, state) {
           return error() 
         }
         return tag.label
-      } else if (atQuotation()) {
-        return startString(tag.property,"Property")
-      } else if (match(UNQUOTED_PROPERTY)) {
-        if (stream.eol() || stream.match(/[ \t]+/,false)) {
-          afterWhitespace("Value")
-        } else {
-          state.current = "Value"
-        }
-        return tag.property
-      }
-      return error()
+      } 
+      return property()
 
-    case "Property":
+    case "PropertyColon":
       if (match(COLON)) {
         state.current = "Value"
         return tag.property
-      } else {
-        return error()
       }
+      return error()
 
     case "AfterValue":
       if (match(TRAILING_SPACE)) {
         afterWhitespace("AfterValue")
         return tag.comment
-      } else if (stream.sol()) {
-        if (stream.match(/[ \t]+,/)) {
-          state.current = "Value"
-          return tag.comma
-        }
+      } else if (stream.sol() && match(/[^ \t]/,false)) {
         return skipState("Statement")
-      }
-      if (match(SPACES)) {
+      } else if (match(SPACES)) {
         return tag.space
       } else if (match(COMMA)) {
         state.current = "Value"
         return tag.comma
-      } else if (atQuotation()) {
-        return startString(tag.property,"Property")
-      } else if (match(UNQUOTED_PROPERTY)) {
-        if (stream.eol() || stream.match(SPACES,false)) {
-          afterWhitespace("Value")
-        } else {
-          state.current = "Value"
-        }
-        return tag.property
       }
-      return error()
+      return property()
 
     case "Value":
       if (match(TRAILING_SPACE)) {
@@ -242,7 +229,7 @@ function token(stream, state) {
     case "String":
       if (match(ESCAPED)) {
         return tag.escape
-      } else if (stream.match(/\\.?/)) {
+      } else if (match(/\\.?/)) {
         return "error"
       }
       // TODO: use RegExp instead
@@ -266,7 +253,12 @@ function token(stream, state) {
 
 CodeMirror.defineMode("pg", () => {
   return {
-    startState,
+    startState: () => ({
+      current: "Statement",
+      next: null,
+      quoteChar: null,
+      stringType: null,
+    }),
     lineComment: "#",
     token,
   }
