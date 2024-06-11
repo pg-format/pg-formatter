@@ -6,12 +6,13 @@ $ ./docs/peg2md.pl src/pg.pegjs > docs/grammar.md
 ```
 
 ```ebnf
-PG             ::= ( EmptyLine* Statement )* EmptyLine*
-Statement      ::= ( Edge | Node ) ( WS Label )* ( WS Property )* TrailingSpace? EOL
+PG             ::= ( EmptyLine* Statement EOL )* EmptyLine*
+Statement      ::= ( Edge | Node ) ( WS Label )* ( WS Property )* TrailingSpace?
+EmptyLine      ::= SPACES? ( COMMENT EOL | LINE_BREAK )
 Node           ::= ID
 Edge           ::= ( ( EdgeID WS)? ) ( ( ID WS )? ) DIRECTION WS ID
 EdgeID         ::= QuotedKey | UnquotedKey
-Label          ::= ':' SPACES? String
+Label          ::= ':' SPACES? ID
 Property       ::= Key ValueList
 ValueList      ::= WS? Value ( WS? ',' WS? Value )*
 Value          ::= Number | BOOLEAN | QuotedString | UnquotedValue
@@ -20,7 +21,7 @@ Number         ::= '-'? INTEGER ( '.' [0-9]+ )? EXPONENT?
 ID             ::= QuotedNonEmpty | UNQUOTED_START UNQUOTED_CHAR*
 String         ::= QuotedString | UNQUOTED_CHAR+
 Key            ::= QuotedKey | UnquotedKey WS | UNQUOTED_START (!":" UNQUOTED_CHAR)* ':'
-QuotedKey      ::= QuotedString ':'
+QuotedKey      ::= QuotedNonEmpty ':'
 UnquotedKey    ::= UNQUOTED_START ( ( !":" UNQUOTED_CHAR )* ':' )+
 QuotedNonEmpty ::= "'" SingleQuoted+ "'" | '"' DoubleQuoted+ '"'
 QuotedString   ::= "'" SingleQuoted* "'" | '"' DoubleQuoted* '"'
@@ -29,7 +30,6 @@ DoubleQuoted   ::= Unescaped | "'" | Escaped
 Unescaped      ::= [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]
 Escaped        ::= "\\" | "'" | "\\" | "/" | "b"  | "f"  | "n"  | "r"  | "t"  | "u" Codepoint )
 Codepoint      ::= $( HEX |4| ) 
-EmptyLine      ::= SPACES? ( COMMENT EOL | LINE_BREAK )
 TrailingSpace  ::= SPACES COMMENT | SPACES
 WS             ::= (TrailingSpace? LINE_BREAK)* SPACES
 DIRECTION      ::= '--' | '->'

@@ -826,7 +826,7 @@ function peg$parse(input, options) {
       if (s2 === peg$FAILED) {
         s2 = null;
       }
-      s3 = peg$parseString();
+      s3 = peg$parseID();
       if (s3 !== peg$FAILED) {
         peg$savedPos = s0;
         s0 = peg$f5(s3);
@@ -1288,7 +1288,7 @@ function peg$parse(input, options) {
     var s0, s1, s2;
 
     s0 = peg$currPos;
-    s1 = peg$parseQuotedString();
+    s1 = peg$parseQuotedNonEmpty();
     if (s1 !== peg$FAILED) {
       if (input.charCodeAt(peg$currPos) === 58) {
         s2 = peg$c0;

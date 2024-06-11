@@ -1,5 +1,7 @@
 {
   "\"\"":           "empty string node id",
+  "a :\"\"":        "empty string label",
+  "a \"\":1":       "empty string key",
   "\\x19":          "control code not allowed in unquoted identifier",
   " a":             "line must not start with space",
   "\\ta":           "line must not start with tab",

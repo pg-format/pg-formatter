@@ -36,19 +36,9 @@
     "about": "plain \\r is valid line break"
   },
   {
-    "pg": "a :\"\"",
-    "formatted": "a :\"\"",
-    "about": "empty string label"
-  },
-  {
     "pg": "a : x",
     "formatted": "a :x",
     "about": "space between colon and label"
-  },
-  {
-    "pg": "a \"\":b",
-    "formatted": "a \"\":b",
-    "about": "empty string key"
   },
   {
     "pg": "a b:\"\"",

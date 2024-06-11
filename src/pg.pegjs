@@ -58,7 +58,7 @@ Edge = id:( ( @EdgeID WS)? ) from:( ( @ID WS )? ) direction:DIRECTION WS to:ID
 
 EdgeID = QuotedKey / UnquotedKey
 
-Label = ':' SPACES? l:String
+Label = ':' SPACES? l:ID
 {
   return l;
 }
@@ -117,7 +117,7 @@ Key = QuotedKey
   };
 }
 
-QuotedKey = @QuotedString ':'
+QuotedKey = @QuotedNonEmpty ':'
 
 UnquotedKey = UNQUOTED_START ( ( !":" UNQUOTED_CHAR )* ':' )+
 {
