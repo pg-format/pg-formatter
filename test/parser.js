@@ -15,15 +15,18 @@ describe("parse examples", () => {
   }
 });
 
+// Run official PG format test suite
+
 const valid = JSON.parse(fs.readFileSync('test/pg-format-valid.json'))
 describe("parse valid snippets", () => {
-  valid.forEach(({pg,about,formatted,TODO}) => {
-    if (!TODO) it(about, () => { 
+  valid.forEach(({pg,about,formatted}) => {
+    it(about, () => { 
       const g = parse(pg)
       if (formatted) {
         if (format(g) != formatted) console.log(JSON.stringify(g,null,2))
         assert.equal(format(g), formatted)
       }
+      // TODO: check result graph
     })
   })
 })
