@@ -55,6 +55,10 @@
     "about": "folded line"
   },
   {
+    "pg": "x\n#\n :y",
+    "about": "folded line with comment in between"
+  },
+  {
     "pg": "a -> b a:\"\",2\t, -2e2,null ,\n xyz # comment",
     "formatted": "a -> b a:\"\",2,-200,null,xyz # comment",
     "about": "value list"

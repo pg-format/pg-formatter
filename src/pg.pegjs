@@ -36,7 +36,8 @@ Node = id:ID
   };
 }
 
-Edge = id:( ( @EdgeID WS)? ) from:( ( @ID WS )? ) direction:DIRECTION WS to:ID
+// TODO: "a:#" is 
+Edge = id:( EdgeID? ) from:( ( @ID WS )? ) direction:DIRECTION WS to:ID
 {
   if (!id && !from) { expected("identifier") }
   if (!from) {
@@ -54,7 +55,7 @@ Edge = id:( ( @EdgeID WS)? ) from:( ( @ID WS )? ) direction:DIRECTION WS to:ID
   };
 }
 
-EdgeID = QuotedKey / UnquotedKey
+EdgeID = @QuotedKey WS / @UnquotedKey !"#" WS
 
 Label = ':' SPACES? l:ID
 {
@@ -188,7 +189,7 @@ TrailingSpace = SPACES COMMENT
 }
 / SPACES
 
-WS = (TrailingSpace? LINE_BREAK)* SPACES
+WS = (EmptyLine LINE_BREAK)* SPACES
 
 // Terminal symbols
 
@@ -201,8 +202,6 @@ LINE_BREAK = [\x0A] / [\x0D] [\x0A]?    // LF | CR LF | CR
 SPACES = [\x20\x09]+
 
 HEX = [0-9a-f]i
-
-WORD_BOUNDARY = [\x20\x09\x0D\x0A,]
 
 UNQUOTED_CHAR "UNQUOTED_CHAR"
   = [^\x00-\x20<>"{}|^`\\]

@@ -6,12 +6,12 @@ $ ./docs/peg2md.pl src/pg.pegjs > docs/grammar.md
 ```
 
 ```ebnf
-PG             ::= ( EmptyLine* Statement EOL )* EmptyLine*
+PG             ::= ( EmptyLine LINE_BREAK | Statement EOL )* EmptyLine 
 Statement      ::= ( Edge | Node ) ( WS Label )* ( WS Property )* TrailingSpace?
-EmptyLine      ::= SPACES? ( COMMENT EOL | LINE_BREAK )
+EmptyLine      ::= SPACES? COMMENT?
 Node           ::= ID
-Edge           ::= ( ( EdgeID WS)? ) ( ( ID WS )? ) DIRECTION WS ID
-EdgeID         ::= QuotedKey | UnquotedKey
+Edge           ::= ( EdgeID? ) ( ( ID WS )? ) DIRECTION WS ID
+EdgeID         ::= QuotedKey WS | UnquotedKey !"#" WS
 Label          ::= ':' SPACES? ID
 Property       ::= Key ValueList
 ValueList      ::= WS? Value ( WS? ',' WS? Value )*
@@ -31,13 +31,12 @@ Unescaped      ::= [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]
 Escaped        ::= "\\" | "'" | "\\" | "/" | "b"  | "f"  | "n"  | "r"  | "t"  | "u" Codepoint )
 Codepoint      ::= $( HEX |4| ) 
 TrailingSpace  ::= SPACES COMMENT | SPACES
-WS             ::= (TrailingSpace? LINE_BREAK)* SPACES
+WS             ::= (EmptyLine LINE_BREAK)* SPACES
 DIRECTION      ::= '--' | '->'
-COMMENT        ::= '#' [^\x0D\x0A]*
+COMMENT        ::= $( '#' [^\x0D\x0A]* )
 LINE_BREAK     ::= [\x0A] | [\x0D] [\x0A]?    // LF | CR LF | CR
 SPACES         ::= [\x20\x09]+
 HEX            ::= [0-9a-f]i
-WORD_BOUNDARY  ::= [\x20\x09\x0D\x0A,]
 UNQUOTED_CHAR  ::= [^\x00-\x20<>"{}|^`\\]
 UNQUOTED_START ::= ![:#,-] UNQUOTED_CHAR
 INTEGER        ::= '0' | [1-9] [0-9]*

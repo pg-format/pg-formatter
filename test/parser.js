@@ -20,8 +20,10 @@ describe("parse valid snippets", () => {
   valid.forEach(({pg,about,formatted,TODO}) => {
     if (!TODO) it(about, () => { 
       const g = parse(pg)
-      if (format(g) != formatted) console.log(JSON.stringify(g,null,2))
-      assert.equal(format(g), formatted)
+      if (formatted) {
+        if (format(g) != formatted) console.log(JSON.stringify(g,null,2))
+        assert.equal(format(g), formatted)
+      }
     })
   })
 })
