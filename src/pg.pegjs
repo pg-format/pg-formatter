@@ -1,16 +1,14 @@
 {
+  let lines = [];
   let comments = {};
 }
 
-PG = lines:( EmptyLine* @Statement )* EmptyLine*
+PG = ( EmptyLine* Statement EOL )* EmptyLine*
 {
-  return {
-    lines: lines,
-    comments: comments,
-  };
+  return { lines, comments };
 }
 
-Statement = e:( Edge / Node ) l:( WS @Label )* p:( WS @Property )* TrailingSpace? EOL
+Statement = e:( Edge / Node ) l:( WS @Label )* p:( WS @Property )* TrailingSpace?
 {
   if (e.node) {
     e.node.labels = l;
@@ -20,15 +18,20 @@ Statement = e:( Edge / Node ) l:( WS @Label )* p:( WS @Property )* TrailingSpace
     e.edge.properties = p;
   }
   e.pos.end = location().end.offset;
-  return e;
+  lines.push(e);
 }
 
-Node = i:ID
+EmptyLine = SPACES? ( COMMENT EOL / LINE_BREAK )
+{
+  comments[location().start.offset] = text().replace(/\n$/, '');
+
+  return '';
+}
+
+Node = id:ID
 {
   return {
-    node: {
-      id: i,
-    },
+    node: { id },
     pos: {
       start: location().start.offset,
     }
@@ -60,12 +63,9 @@ Label = ':' SPACES? l:String
   return l;
 }
 
-Property = k:Key v:ValueList
+Property = key:Key values:ValueList
 {
-  return {
-    key: k,
-    values: v,
-  };
+  return { key, values };
 }
 
 ValueList = WS? v:Value a:( WS? ',' WS? @Value )*
@@ -182,13 +182,6 @@ Escaped
 Codepoint = digits:$( HEX |4| ) 
 {
   return String.fromCharCode(parseInt(digits, 16))
-}
-
-EmptyLine = SPACES? ( COMMENT EOL / LINE_BREAK )
-{
-  comments[location().start.offset] = text().replace(/\n$/, '');
-
-  return '';
 }
 
 TrailingSpace = SPACES COMMENT
