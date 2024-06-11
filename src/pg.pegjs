@@ -3,7 +3,7 @@
   let comments = {};
 }
 
-PG = ( EmptyLine* Statement EOL )* EmptyLine*
+PG = ( EmptyLine LINE_BREAK / Statement EOL )* EmptyLine 
 {
   return { lines, comments };
 }
@@ -21,11 +21,9 @@ Statement = e:( Edge / Node ) l:( WS @Label )* p:( WS @Property )* TrailingSpace
   lines.push(e);
 }
 
-EmptyLine = SPACES? ( COMMENT EOL / LINE_BREAK )
+EmptyLine = SPACES? c:COMMENT?
 {
-  comments[location().start.offset] = text().replace(/\n$/, '');
-
-  return '';
+  if (c) comments[location().start.offset] = text();
 }
 
 Node = id:ID
@@ -186,10 +184,7 @@ Codepoint = digits:$( HEX |4| )
 
 TrailingSpace = SPACES COMMENT
 {
-  const pos = location().start.offset;
-  comments[pos] = text();
-
-  return '';
+  comments[location().start.offset] = text();
 }
 / SPACES
 
@@ -199,7 +194,7 @@ WS = (TrailingSpace? LINE_BREAK)* SPACES
 
 DIRECTION = '--' / '->'
 
-COMMENT = '#' [^\x0D\x0A]*
+COMMENT = $( '#' [^\x0D\x0A]* )
 
 LINE_BREAK = [\x0A] / [\x0D] [\x0A]?    // LF | CR LF | CR
 

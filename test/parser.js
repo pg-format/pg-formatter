@@ -15,7 +15,7 @@ describe("parse examples", () => {
   }
 });
 
-const valid = JSON.parse(fs.readFileSync('test/valid.json'))
+const valid = JSON.parse(fs.readFileSync('test/pg-format-valid.json'))
 describe("parse valid snippets", () => {
   valid.forEach(({pg,about,formatted,TODO}) => {
     if (!TODO) it(about, () => { 
@@ -26,7 +26,7 @@ describe("parse valid snippets", () => {
   })
 })
 
-const invalid = JSON.parse(fs.readFileSync('test/invalid.json'))
+const invalid = JSON.parse(fs.readFileSync('test/pg-format-invalid.json'))
 describe("detect syntax errors", () => {
   for (let pg in invalid) {
     it(invalid[pg], () => assert.throws(() => parse(pg)))
