@@ -5,9 +5,25 @@
     "about": "empty graph"
   },
   {
+    "TODO": true,
+    "pg": " \t",
+    "formatted": "",
+    "about": "empty graph"
+  },
+  {
     "pg": "# comment",
     "formatted": "# comment",
     "about": "empty graph"
+  },
+  {
+    "pg": "a--",
+    "formatted": "a--",
+    "about": "node with minus"
+  },
+  {
+    "pg": "a(:# -> 本-²",
+    "formatted": "a(:# -> 本-²",
+    "about": "node with special characters"
   },
   {
     "pg": "a: :b",
@@ -83,5 +99,28 @@
     "pg": "1: -> 2",
     "formatted": "1: -> 2",
     "about": "edge with first identifier ending in colon"
+  },
+  {
+    "TODO": true,
+    "pg": "a\\fb",
+    "formatted": "a\\fb",
+    "about": "form feed is no space"
+  },
+  {
+    "TODO": true,
+    "pg": "a\\vb",
+    "formatted": "a\\vb",
+    "about": "vertical tab is no space"
+  },
+  {
+    "TODO": true,
+    "pg": "a\\xA0b",
+    "formatted": "a\\xA0b",
+    "about": "non-break space is no space"
+  },
+  {
+    "pg": "a\uFEFFb",
+    "formatted": "a\uFEFFb",
+    "about": "zero-width space is no space"
   }
 ]

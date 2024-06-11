@@ -17,8 +17,8 @@ describe("parse examples", () => {
 
 const valid = JSON.parse(fs.readFileSync('test/valid.json'))
 describe("parse valid snippets", () => {
-  valid.forEach(({pg,about,formatted}) => {
-    it(about, () => { 
+  valid.forEach(({pg,about,formatted,TODO}) => {
+    if (!TODO) it(about, () => { 
       const g = parse(pg)
       if (format(g) != formatted) console.log(JSON.stringify(g,null,2))
       assert.equal(format(g), formatted)
