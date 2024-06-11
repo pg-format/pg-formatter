@@ -24,6 +24,7 @@
     "test": "mocha",
     "peggy": "peggy -o src/parser.js --format es src/pg.pegjs",
     "webpack": "webpack ./src/index.js --mode=production",
-    "docs": "./docs/peg2md.pl src/pg.pegjs > docs/grammar.md"
+    "docs": "./docs/peg2md.pl src/pg.pegjs > docs/grammar.md",
+    "build": "npm run peggy && npm run test && npm run webpack && npm run docs"
   }
 }
