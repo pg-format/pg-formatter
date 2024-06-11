@@ -35,6 +35,9 @@ const examples = [
   ex('http://example.org/', 'plain URI as node ID'),
   ex('"\\u1234"', 'Unicode escape sequence'),
   ex('"\n \r \t"', 'multiline string'),
+  ex('2 -> 3', 'edge identifier'),
+  ex('1: 2 -> 3', 'edge identifier'),
+  ex('1: -> 2', 'edge with first identifier ending in colon'),
 ]
 
 describe("parse examples", () => {

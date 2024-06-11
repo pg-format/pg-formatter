@@ -68,7 +68,6 @@ function formatLabel(label) {
 }
 
 function formatProperty({ key, values }) {
-  // console.log(key)
   return (!key.quote && key.literal.match(/:/)) // unquoted key with colon
     ? `${key.literal}: ${formatValueList(values)}`
     : `${formatElement(key)}:${formatValueList(values)}`;

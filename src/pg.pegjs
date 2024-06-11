@@ -35,33 +35,25 @@ Node = i:ID
   };
 }
 
-Edge = i:ID WS d:DIRECTION WS j:ID
+Edge = id:( ( @EdgeID WS)? ) from:( ( @ID WS )? ) direction:DIRECTION WS to:ID
 {
+  if (!id && !from) { expected("identifier") }
+  if (!from) {
+    if (id.literal) id.literal += ":"
+    from = id
+    id=null
+  } 
+  const edge = { from, to, direction }
+  if (id) edge.id = id
   return {
-    edge: {
-      from: i,
-      to: j,
-      direction: d,
-    },
+    edge,
     pos: {
       start: location().start.offset,
     }
   };
 }
-/ i:ID ':' WS* j:ID WS d:DIRECTION WS k:ID
-{
-  return {
-    edge: {
-      id: i,
-      from: j,
-      to: k,
-      direction: d,
-    },
-    pos: {
-      start: location().start.offset,
-    }
-  };
-}
+
+EdgeID = QuotedKey / UnquotedKey
 
 Label = ':' SPACES? l:String
 {
@@ -116,19 +108,18 @@ String = QuotedString
   };
 }
 
-Key = s:QuotedString ':'
-{
-  return s;
-}
-/ KeyUnquoted
-
-KeyUnquoted = @(UNQUOTED_START ( ( !":" UNQUOTED_CHAR )* ':' )+
+Key = QuotedKey
+/ @UnquotedKey WS
+/ UNQUOTED_START (!":" UNQUOTED_CHAR)* ':'
 {
   return {
     literal: text().slice(0,-1),
   };
-} ) WS
-/ UNQUOTED_START (!":" UNQUOTED_CHAR)* ':'
+}
+
+QuotedKey = @QuotedString ':'
+
+UnquotedKey = UNQUOTED_START ( ( !":" UNQUOTED_CHAR )* ':' )+
 {
   return {
     literal: text().slice(0,-1),
