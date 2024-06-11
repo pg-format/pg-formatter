@@ -32,7 +32,7 @@ if (program.args.length < 1 && process.stdin.isTTY) {
 
   let parsedObj;
   try {
-    parsedObj = new parser.parse(inputText);
+    parsedObj = parse(inputText);
   } catch (err) {
     printError(inputText, err);
     process.exit(1);
