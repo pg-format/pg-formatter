@@ -1,6 +1,6 @@
 import { parse } from './parser.js';
 import { format } from './formatter.js';
-import { formatGraph as formatForBlitz } from './for-blitz.js';
+import { formatForBlitz } from './for-blitz.js';
 import { formatJSONL } from './for-json.js';
 
 export const pgFormat = (input, delim, sep) => {

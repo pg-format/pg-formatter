@@ -1,6 +1,6 @@
 let formatted;
 
-export function formatGraph({ lines, comments }, delim, sep) {
+export function formatForBlitz({ lines, comments }, delim, sep) {
   formatted = [];
   const nodes = {};
   const connectedNodes = new Set();
