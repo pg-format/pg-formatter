@@ -7,13 +7,9 @@ import { parse } from '../src/parser.js';
 import { format } from '../src/formatter.js';
 import { buildGraph, formatJSONL } from '../src/for-json.js';
 
-const packageJsonPath = path.resolve(process.cwd(), 'package.json');
-const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-
 const opts = program
   .option('-f, --format <FORMAT>', 'outut format (json|jsonl)')
   .option('-d, --debug', 'output parsed synatax tree')
-  .version(packageJson.version)
   .arguments('[PG_FILE]')
   .parse(process.argv)
   .opts();
