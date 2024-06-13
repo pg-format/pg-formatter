@@ -12,6 +12,7 @@ and [PG homepage](https://pg-format.github.io/) for details.
 The web application is started via `index.html`, just open the file in a web browser.
 
 * Query parameter `pg` can be used to pass a graph in [PG format](#pg-format).
+* Query parameter `url` can be used to pass the URL of a graph in [PG format](#pg-format).
 * The "permalink" links to the current page with current editor content.
 * Examples from directory [examples](examples) can be loaded by selecting from a dropdown.
 * A formatted variant or PG-JSONL can be selected to be shown at the right.

@@ -101,7 +101,9 @@ q('#copy-button').addEventListener('click', () => {
 
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('pg')) {
-    editor.getDoc().setValue(urlParams.get('pg'));
+  editor.getDoc().setValue(urlParams.get('pg'));
+} else if (urlParams.has('url')) {
+  axios.get(urlParams.get('url')).then(response => editor.setValue(response.data))
 }
 
 document.addEventListener('DOMContentLoaded', function (event) {
