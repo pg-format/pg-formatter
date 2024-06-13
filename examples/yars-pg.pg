@@ -1,0 +1,33 @@
+# YARS-PG Graph given in Listing 1 of https://doi.org/10.1109/ACCESS.2024.3403924
+# Translated to PG format (without metadata, graph schema, variables)
+
+# Nodes
+
+Author01 :Author fname:"John" lname:"Smith"     # Author01              
+Author02 :Author fname:"Alice" lname:"Brown"                  
+
+EI01 :Entry :InProceedings
+  title: "Serialization for..."                                                          
+  numpages: 10                                   
+  keyword: "Graph database"       
+
+EA01 :Entry :Article                                                                                           
+  title: "Property Graph..."   
+  numpages: 10                                        
+  keyword: "Query", "Graph"         
+
+Proc01 :Proceedings title:BDAS year:2018 month:May
+Jour01 :Journal if:4.321 title:"J. DB" year:2020 vol:30                     
+
+# Edges    
+
+EI01 -> Author01 :has_author order:1                                   
+EI01 -> Author02 :has_author order:2                           
+EA01 -> Author02 :has_author order:1 
+
+# YARS-PG supports nested property value (e.g. { start:111 end:121 } )   
+# PG Format only supports flat keys, so this is modelled differently:
+
+EA01 -> Proc01 :booktitle    pages:start: 111 pages:end: 121                  
+EA01 -> Jour01 :published_in pages:start: 222 pages:end: 232
+
