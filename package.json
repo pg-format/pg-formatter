@@ -25,7 +25,7 @@
     "peggy": "peggy -o src/parser.js --format es src/pg.pegjs",
     "webpack": "webpack ./src/index.js --mode=production",
     "docs": "./docs/peg2md.pl src/pg.pegjs > docs/grammar.md",
-    "update": "cd test && wget -N https://github.com/pg-format/specification/raw/main/tests/pg-format-valid.json && wget -N https://github.com/pg-format/specification/raw/main/tests/pg-format-invalid.json",
+    "update": "cd test && wget -N https://github.com/pg-format/specification/raw/main/tests/pg-format-valid.json && wget -N https://github.com/pg-format/specification/raw/main/tests/pg-format-invalid.json && cd ../sites/codemirror && wget -N https://github.com/pg-format/pg-highlight/raw/main/codemirror5/pg.js",
     "build": "npm run peggy && npm run test && npm run webpack && npm run docs"
   }
 }
