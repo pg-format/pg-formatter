@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import { program } from 'commander';
 import { parse } from '../src/parser.js';
-import { format } from '../src/formatter.js';
 import { pgFormat } from '../src/index.js';
 
 const opts = program

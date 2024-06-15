@@ -17,9 +17,7 @@ export const pgFormat = (input, style) => {
   }
 };
 
-export const pgForBlitz = (input, delim = ' ', sep = '') => {
-  return formatForBlitz(parse(input), delim, sep);
-};
+export const pgForBlitz = input => formatForBlitz(parse(input))
 
 if (typeof window !== 'undefined') {
   window.pgFormat = pgFormat;

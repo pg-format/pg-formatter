@@ -1,6 +1,6 @@
 let formatted;
 
-export function formatForBlitz({ lines, comments }, delim, sep) {
+export function formatForBlitz({ lines, comments }, delim=' ') {
   formatted = [];
   const nodes = {};
   const connectedNodes = new Set();
@@ -28,7 +28,7 @@ export function formatForBlitz({ lines, comments }, delim, sep) {
       formatted.push(`${formatElement(id)}`);
     }
   });
-  return formatted.join(sep + '\n');
+  return formatted.join('\n');
 }
 
 function formatNode({ id, labels, properties }, delim) {

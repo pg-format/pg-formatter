@@ -1,17 +1,14 @@
 function mergeProperties(properties={}, props) {
-  for (let [key, values] of props) {
-    if (key in properties) {
-      for (let val of values) {
-        properties[key].add(val)
+  for (let [key, values] of Object.entries(props)) {
+    if (values.length) {
+      if (key in properties) {
+        properties[key].push(...values)
+      } else {
+        properties[key] = values
       }
-    } else {
-      properties[key] = new Set(values)
     }
   }
-  for (let key in properties) {
-    properties[key] = [...properties[key].values()]
-  }
-  return proper
+  return properties
 }
 
 export function buildGraph(lines) {
@@ -20,14 +17,14 @@ export function buildGraph(lines) {
     if (line.node) {
       const node = getNodeObj(line.node);
       if (node.id in nodes) { // merge node information
-        const labels = [...nodes[id].labels, ...node.labels]
-        nodes[id].labels = Array.from(new Set(labels))
-        mergeProperties(nodes[id].properties, node.properties)
+        const labels = [...nodes[node.id].labels, ...node.labels]
+        nodes[node.id].labels = Array.from(new Set(labels))
+        mergeProperties(nodes[node.id].properties, node.properties)
       } else {
         nodes[node.id] = node;
       }
     } else if (line.edge) {
-        edges.push(getEdgeObj(line.edge));
+      edges.push(getEdgeObj(line.edge));
     }
   }
   return {
@@ -43,10 +40,7 @@ export function formatJSONL(line) {
   } else if (line.edge) {
     obj = { type: "edge", ...getEdgeObj(line.edge) };
   }
-  return JSON.stringify(obj, null, 2)
-    .replace(/{\n */g, '{').replace(/\n *}/g, '}')
-    .replace(/\[\n */g, '[').replace(/\n *\]/g, ']')
-    .replace(/\n */g, ' ');
+  return JSON.stringify(obj)
 }
 
 function getNodeObj(node) {
