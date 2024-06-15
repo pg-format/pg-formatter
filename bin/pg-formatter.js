@@ -5,10 +5,10 @@ import path from 'path';
 import { program } from 'commander';
 import { parse } from '../src/parser.js';
 import { format } from '../src/formatter.js';
-import { buildGraph, formatJSONL } from '../src/for-json.js';
+import { pgFormat } from '../src/index.js';
 
 const opts = program
-  .option('-f, --format <FORMAT>', 'outut format (json|jsonl)')
+  .option('-f, --format <FORMAT>', 'output format (space|lines|json|jsonl)')
   .option('-d, --debug', 'output parsed synatax tree')
   .arguments('[PG_FILE]')
   .parse(process.argv)
@@ -26,33 +26,18 @@ if (program.args.length < 1 && process.stdin.isTTY) {
     inputText = await readStdin();
   }
 
-  let parsedObj;
+  let parsed;
   try {
-    parsedObj = parse(inputText);
+    parsed = parse(inputText);
   } catch (err) {
     printError(inputText, err);
     process.exit(1);
   }
 
   if (opts.debug) {
-    console.log(JSON.stringify(parsedObj, null, 2));
-  } else if (opts.format) {
-    switch (opts.format) {
-      case 'jsonl':
-        parsedObj.lines.forEach(line => {
-          console.log(formatJSONL(line));
-        });
-        break;
-      case 'json':
-        const pg = buildGraph(parsedObj.lines)
-        console.log(JSON.stringify(pg,null,2))
-        break;
-      default:
-        console.error(`${opts.format}: unknown output format`);
-        break;
-    }
+    console.log(JSON.stringify(parsed, null, 2));
   } else {
-    console.log(format(parsedObj, ' ', ''));
+    console.log(pgFormat(parsed, opts.format || 'space'))
   }
 })();
 

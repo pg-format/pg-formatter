@@ -4,23 +4,15 @@ let timerId;
 function reformat(event, ui) {
   const input = editor.getValue();
   const outputStyle = q('#indent-depth').value;
-  let delim;
-  let sep;
-  if (outputStyle === 'space') {
-    delim = ' ';
-    sep = '';
-    outputArea.setOption('mode', 'pg');
-  } else if (outputStyle === 'jsonl') {
+  if (outputStyle === 'jsonl' || outputStyle === 'json') {
     outputArea.setOption('mode', 'javascript');
   } else {
-    delim = '\n  ';
-    sep = '\n';
     outputArea.setOption('mode', 'pg');
   }
   blitzboard.setGraph('', false);
   try {
     toastr.clear();
-    outputArea.setValue(pgFormat(input, delim, sep) + '\n');
+    outputArea.setValue(pgFormat(input, outputStyle));
   } catch (err) {
     toastr.remove();
     outputArea.setValue(input);
