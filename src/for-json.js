@@ -24,7 +24,13 @@ export function buildGraph(lines) {
         nodes[node.id] = node;
       }
     } else if (line.edge) {
-      edges.push(getEdgeObj(line.edge));
+      const edge = getEdgeObj(line.edge)
+      for (let id of [edge.from,edge.to]) {
+        if (!(id in nodes)) {
+          nodes[id] = { id, labels: [], properties: {} }
+        }
+      }
+      edges.push(edge)
     }
   }
   return {
