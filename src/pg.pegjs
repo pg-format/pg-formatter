@@ -129,14 +129,16 @@ QuotedNonEmpty = "'" chars:SingleQuoted+ "'"
 {
   return {
     quote: "'",
-    literal: chars.join(''),
+    literal: text().slice(1,-1),
+    value: chars.join(''),
   };
 }
 / '"' chars:DoubleQuoted+ '"'
 {
   return {
     quote: '"',
-    literal: chars.join(''),
+    literal: text().slice(1,-1),
+    value: chars.join(''),
   };
 }
 
@@ -144,14 +146,16 @@ QuotedString = "'" chars:SingleQuoted* "'"
 {
   return {
     quote: "'",
-    literal: chars.join(''),
+    literal: text().slice(1,-1),
+    value: chars.join(''),
   };
 }
 / '"' chars:DoubleQuoted* '"'
 {
   return {
     quote: '"',
-    literal: chars.join(''),
+    literal: text().slice(1,-1),
+    value: chars.join(''),
   };
 }
 
@@ -164,7 +168,7 @@ Unescaped = [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]
 
 Escaped
   = "\\"
-    sequence:(
+    @(
         '"'
       / "'"
       / "\\"
@@ -175,8 +179,6 @@ Escaped
       / "r" { return "\r" }
       / "t" { return "\t" }
       / "u" @Codepoint )
-    // As code formatter this ignores the character value but returns escape sequence
-    { return text() }
 
 Codepoint = digits:$( HEX |4| ) 
 {

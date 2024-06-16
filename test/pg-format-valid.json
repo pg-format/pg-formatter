@@ -44,6 +44,16 @@
     }
   },
   {
+    "pg": "'\\u000A\\\"\\\\\/\\b\\f\\n\\r\\t\\'\n\r\t'",
+    "about": "node with escape sequences and unquoted LF,CR,TAB",
+    "graph": {
+      "nodes": [
+        { "id": "\n\"\\/\b\f\n\r\t'\n\r\t", "labels": [], "properties": {} }
+      ],
+      "edges": []
+    }
+  },
+  {
     "pg": "a(:# -> 本-²",
     "formatted": "a(:# -> 本-²",
     "about": "node ids with special characters"

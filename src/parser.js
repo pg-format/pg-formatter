@@ -327,25 +327,29 @@ function peg$parse(input, options) {
   var peg$f14 = function(chars) {
   return {
     quote: "'",
-    literal: chars.join(''),
+    literal: text().slice(1,-1),
+    value: chars.join(''),
   };
 };
   var peg$f15 = function(chars) {
   return {
     quote: '"',
-    literal: chars.join(''),
+    literal: text().slice(1,-1),
+    value: chars.join(''),
   };
 };
   var peg$f16 = function(chars) {
   return {
     quote: "'",
-    literal: chars.join(''),
+    literal: text().slice(1,-1),
+    value: chars.join(''),
   };
 };
   var peg$f17 = function(chars) {
   return {
     quote: '"',
-    literal: chars.join(''),
+    literal: text().slice(1,-1),
+    value: chars.join(''),
   };
 };
   var peg$f18 = function() { return "\b" };
@@ -353,19 +357,18 @@ function peg$parse(input, options) {
   var peg$f20 = function() { return "\n" };
   var peg$f21 = function() { return "\r" };
   var peg$f22 = function() { return "\t" };
-  var peg$f23 = function(sequence) { return text() };
-  var peg$f24 = function(digits) {
+  var peg$f23 = function(digits) {
   return String.fromCharCode(parseInt(digits, 16))
 };
-  var peg$f25 = function() {
+  var peg$f24 = function() {
   comments[location().start.offset] = text();
 };
-  var peg$f26 = function() {
+  var peg$f25 = function() {
   return {
     literal: true,
   };
 };
-  var peg$f27 = function() {
+  var peg$f26 = function() {
   return {
     literal: false,
   };
@@ -1879,8 +1882,7 @@ function peg$parse(input, options) {
         }
       }
       if (s2 !== peg$FAILED) {
-        peg$savedPos = s0;
-        s0 = peg$f23(s2);
+        s0 = s2;
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -1922,7 +1924,7 @@ function peg$parse(input, options) {
     }
     if (s1 !== peg$FAILED) {
       peg$savedPos = s0;
-      s1 = peg$f24(s1);
+      s1 = peg$f23(s1);
     }
     s0 = s1;
 
@@ -1938,7 +1940,7 @@ function peg$parse(input, options) {
       s2 = peg$parseCOMMENT();
       if (s2 !== peg$FAILED) {
         peg$savedPos = s0;
-        s0 = peg$f25();
+        s0 = peg$f24();
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -2331,7 +2333,7 @@ function peg$parse(input, options) {
     }
     if (s1 !== peg$FAILED) {
       peg$savedPos = s0;
-      s1 = peg$f26();
+      s1 = peg$f25();
     }
     s0 = s1;
     if (s0 === peg$FAILED) {
@@ -2345,7 +2347,7 @@ function peg$parse(input, options) {
       }
       if (s1 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$f27();
+        s1 = peg$f26();
       }
       s0 = s1;
     }

@@ -90,5 +90,5 @@ function getPropertiesObj(properties) {
 }
 
 function getLiteral(elem) {
-  return elem.literal;
+  return elem.value ?? elem.literal;
 }
