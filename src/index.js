@@ -14,10 +14,12 @@ export const pgFormat = (input, style) => {
       return parsed.lines.map(formatJSONL).join('\n')
     case 'json':
       return JSON.stringify(buildGraph(parsed.lines),null,2)
+    case 'blitz':
+      return formatForBlitz(buildGraph(parsed.lines))
   }
 };
 
-export const pgForBlitz = input => formatForBlitz(parse(input))
+export const pgForBlitz = input => formatForBlitz(buildGraph(parse(input).lines))
 
 if (typeof window !== 'undefined') {
   window.pgFormat = pgFormat;
