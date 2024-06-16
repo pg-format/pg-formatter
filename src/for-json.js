@@ -52,7 +52,7 @@ export function formatJSONL(line) {
 function getNodeObj(node) {
   return {
     id: getLiteral(node.id),
-    labels: node.labels.map(getLiteral),
+    labels: [...(new Set(node.labels.map(getLiteral)))],
     properties: getPropertiesObj(node.properties),
   };
 }
@@ -61,10 +61,10 @@ function getEdgeObj(edge) {
   let obj = {
     from: getLiteral(edge.from),
     to: getLiteral(edge.to),
-    undirected: edge.direction === '--',
     labels: edge.labels.map(getLiteral),
     properties: getPropertiesObj(edge.properties),
   };
+  if (edge.direction === '--') obj.undirected = true
   if (edge.id) {
     return {
       id: getLiteral(edge.id),
