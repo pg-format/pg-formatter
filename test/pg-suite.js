@@ -1,26 +1,50 @@
-import chai from 'chai'
+import { assert } from 'chai'
 import fs from 'fs'
-import path from "path"
-
-const assert = chai.assert
+import path from 'path'
 
 import { parse } from '../src/parser.js'
-import { buildGraph } from '../src/for-json.js';
+import { format } from '../src/formatter.js'
+import { buildGraph } from '../src/for-json.js'
 
-const suitePath = path.resolve(new URL(".", import.meta.url).pathname, "suite")
-const localPath = name => path.resolve(suitePath, name)
-const readFile = path => fs.readFileSync(localPath(path)).toString()
+const suite = path.resolve(new URL(".", import.meta.url).pathname, "pg-test-suite")
+const suitePath = (...name) => path.resolve(suite, ...name)
+const suiteFile = (...name) => fs.readFileSync(suitePath(...name)).toString()
 
+const examples = fs.readdirSync(suitePath('examples')).filter(file => file.match(/\.pg/))
 describe("parse examples", () => {
-  for(let file of fs.readdirSync(suitePath).filter(file => file.match(/\.pg/))) {
-      it(file, () => {
-      const pg = readFile(file)
+  for(let file of examples) {
+    it(file, () => {
+      const pg = suiteFile('examples',file)
       const graph = buildGraph(parse(pg).lines)
-      const jsonFile = localPath(file.replace(/\.pg$/, ".json"))
+      const jsonFile = suitePath('examples',file.replace(/\.pg$/, ".json"))
       if (fs.existsSync(jsonFile)) {
-        const json = JSON.parse(readFile(jsonFile))
+        const json = JSON.parse(suiteFile(jsonFile))
         assert.deepEqual(graph, json)
       }
     })
   }
 })
+
+const valid = JSON.parse(suiteFile('pg-format-valid.json'))
+describe("parse valid test cases", () => {
+  valid.forEach(({pg,about,formatted,graph}) => {
+    it(about, () => { 
+      const g = parse(pg)
+      if (formatted) {
+        if (format(g) != formatted) console.log(JSON.stringify(g,null,2))
+        assert.equal(format(g), formatted)
+      }
+      if (graph) {
+        assert.deepEqual(buildGraph(g.lines), graph)
+      }
+    })
+  })
+})
+
+const invalid = JSON.parse(suiteFile('pg-format-invalid.json'))
+describe("detect errors in invalid test cases", () => {
+  for (let pg in invalid) {
+    it(invalid[pg], () => assert.throws(() => parse(pg)))
+  }
+})
+

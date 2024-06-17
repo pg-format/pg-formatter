@@ -19,6 +19,12 @@ The web application is started via `index.html`, just open the file in a web bro
 
 ## Development
 
+Clone repository with submodules to get unit tests:
+
+~~~
+git submodule update --init --recursive
+~~~
+
 To re-generate the code, install dependencies (`npm install`) and run:
 
 * `npm run peggy` to update the parser from `src/pg.pegjs`
