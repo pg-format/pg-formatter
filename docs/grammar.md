@@ -6,42 +6,53 @@ $ ./docs/peg2md.pl src/pg.pegjs > docs/grammar.md
 ```
 
 ```ebnf
-PG             ::= ( EmptyLine LINE_BREAK | Statement EOL )* EmptyLine 
-Statement      ::= ( Edge | Node ) ( WS Label )* ( WS Property )* TrailingSpace?
-EmptyLine      ::= SPACES? COMMENT?
-Node           ::= ID
-Edge           ::= ( EdgeID? ) ( ( ID WS )? ) DIRECTION WS ID
-EdgeID         ::= QuotedKey WS | UnquotedKey !"#" WS
-Label          ::= ':' SPACES? ID
+
+/* 3.1 Basic Structure */
+PG             ::= ( Empty LineBreak | Statement EOL )* Empty 
+Statement      ::= ( Edge | Node ) ( DW Label )* ( DW Property )* Empty
+Empty          ::= Spaces? Comment?
+EOL            ::= LineBreak | END
+END            ::= !.
+
+/* 3.2 Identifiers */
+Identifier     ::= QuotedNonEmpty | UnquotedStart UnquotedChar*
+UnquotedChar   ::= [^\x00-\x20<>"{}|^`\\]
+UnquotedStart  ::= ![:#,-] UnquotedChar
+
+/* 3.3 Nodes & 3.4 Edges */
+Node           ::= Identifier
+Edge           ::= ( EdgeIdentifier )? ( Identifier DW )? Direction DW Identifier /* Identifier mandatory! */
+EdgeIdentifier ::= QuotedKey DW | UnquotedKey !"#" DW
+Direction      ::= '--' | '->'
+
+/* 3.5 Labels */
+Label          ::= ':' Spaces? Identifier
+
+/* 3.6 Properties */
 Property       ::= Key ValueList
-ValueList      ::= WS? Value ( WS? ',' WS? Value )*
-Value          ::= Number | BOOLEAN | QuotedString | UnquotedValue
-UnquotedValue  ::= UNQUOTED_START (!"," UNQUOTED_CHAR)*
-Number         ::= '-'? INTEGER ( '.' [0-9]+ )? EXPONENT?
-ID             ::= QuotedNonEmpty | UNQUOTED_START UNQUOTED_CHAR*
-String         ::= QuotedString | UNQUOTED_CHAR+
-Key            ::= QuotedKey | UnquotedKey WS | UNQUOTED_START (!":" UNQUOTED_CHAR)* ':'
+Key            ::= QuotedKey | UnquotedKey DW | UnquotedStart (!":" UnquotedChar)* ':'
 QuotedKey      ::= QuotedNonEmpty ':'
-UnquotedKey    ::= UNQUOTED_START ( ( !":" UNQUOTED_CHAR )* ':' )+
-QuotedNonEmpty ::= "'" SingleQuoted+ "'" | '"' DoubleQuoted+ '"'
+UnquotedKey    ::= UnquotedStart ( ( !":" UnquotedChar )* ':' )+
+ValueList      ::= DW? Value ( DW? ',' DW? Value )*
+
+/* 3.6.1 Property Values */
+Value          ::= Number | Boolean | QuotedString | UnquotedValue
+Number         ::= '-'? ('0' | [1-9] [0-9]*) ( '.' [0-9]+ )? ([eE] [+-]? [0-9]+)?
+Boolean        ::= 'true' | 'false'
+UnquotedValue  ::= UnquotedStart (!"," UnquotedChar)*
+
+/* 3.7 Quoted Strings */
 QuotedString   ::= "'" SingleQuoted* "'" | '"' DoubleQuoted* '"'
+QuotedNonEmpty ::= "'" SingleQuoted+ "'" | '"' DoubleQuoted+ '"'
 SingleQuoted   ::= Unescaped | '"' | Escaped
 DoubleQuoted   ::= Unescaped | "'" | Escaped
 Unescaped      ::= [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]
-Escaped        ::= "\\" | "'" | "\\" | "/" | "b"  | "f"  | "n"  | "r"  | "t"  | "u" Codepoint )
-Codepoint      ::= $( HEX |4| ) 
-TrailingSpace  ::= SPACES COMMENT | SPACES
-WS             ::= (EmptyLine LINE_BREAK)* SPACES
-DIRECTION      ::= '--' | '->'
-COMMENT        ::= $( '#' [^\x0D\x0A]* )
-LINE_BREAK     ::= [\x0A] | [\x0D] [\x0A]?    // LF | CR LF | CR
-SPACES         ::= [\x20\x09]+
-HEX            ::= [0-9a-f]i
-UNQUOTED_CHAR  ::= [^\x00-\x20<>"{}|^`\\]
-UNQUOTED_START ::= ![:#,-] UNQUOTED_CHAR
-INTEGER        ::= '0' | [1-9] [0-9]*
-EXPONENT       ::= [eE] [+-]? [0-9]+
-BOOLEAN        ::= 'true' | 'false'
-EOL            ::= LINE_BREAK | END
-END            ::= !.
+Escaped        ::= "\\" | "'" | "\\" | "/" | "b"  | "f"  | "n"  | "r"  | "t"  | "u" Codepoint
+Codepoint      ::= [0-9a-fA-Z] |4|    /* Hexademical two byte number */
+
+/* 3.8 Whitespace */
+LineBreak      ::= [\x0A] | [\x0D] [\x0A]?
+Spaces         ::= [\x20\x09]+
+Comment        ::= '#' [^\x0D\x0A]*
+DW             ::= (Empty LineBreak)* Spaces    /* Delimiting Whitespace */
 ```

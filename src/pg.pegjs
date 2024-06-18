@@ -1,14 +1,22 @@
 {
   let lines = [];
   let comments = {};
+  let quotedString = chars => ({
+    quote: text()[0],
+    literal: text().slice(1,-1),
+    value: chars.join(''),
+  });
 }
 
-PG = ( EmptyLine LINE_BREAK / Statement EOL )* EmptyLine 
+
+/* 3.1 Basic Structure */
+
+PG = ( Empty LineBreak / Statement EOL )* Empty 
 {
   return { lines, comments };
 }
 
-Statement = e:( Edge / Node ) l:( WS @Label )* p:( WS @Property )* TrailingSpace?
+Statement = e:( Edge / Node ) l:( DW @Label )* p:( DW @Property )* Empty
 {
   if (e.node) {
     e.node.labels = l;
@@ -21,142 +29,136 @@ Statement = e:( Edge / Node ) l:( WS @Label )* p:( WS @Property )* TrailingSpace
   lines.push(e);
 }
 
-EmptyLine = SPACES? c:COMMENT?
+Empty = Spaces? c:Comment?
 {
   if (c) comments[location().start.offset] = text();
 }
 
-Node = id:ID
+EOL = LineBreak / END
+END = !.
+
+
+/* 3.2 Identifiers */
+
+Identifier = QuotedNonEmpty
+/ UnquotedStart UnquotedChar*
+{
+  return { literal: text() }
+}
+
+UnquotedChar "UnquotedChar"
+  = [^\x00-\x20<>"{}|^`\\]
+
+UnquotedStart
+  = ![:#,-] UnquotedChar
+
+
+/* 3.3 Nodes & 3.4 Edges */
+
+Node = id:Identifier
 {
   return {
     node: { id },
-    pos: {
-      start: location().start.offset,
-    }
-  };
+    pos: { start: location().start.offset },
+  }
 }
 
-// TODO: "a:#" is 
-Edge = id:( EdgeID? ) from:( ( @ID WS )? ) direction:DIRECTION WS to:ID
+Edge = id:( EdgeIdentifier )? from:( @Identifier DW )? direction:Direction DW to:Identifier /* Identifier mandatory! */
 {
   if (!id && !from) { expected("identifier") }
   if (!from) {
     if (id.literal) id.literal += ":"
     from = id
-    id=null
+    id = null
   } 
   const edge = { from, to, direction }
   if (id) edge.id = id
   return {
     edge,
-    pos: {
-      start: location().start.offset,
-    }
-  };
+    pos: { start: location().start.offset },
+  }
 }
 
-EdgeID = @QuotedKey WS / @UnquotedKey !"#" WS
+EdgeIdentifier = @QuotedKey DW / @UnquotedKey !"#" DW
 
-Label = ':' SPACES? l:ID
-{
-  return l;
-}
+Direction = '--' / '->'
+
+
+/* 3.5 Labels */
+
+Label = ':' Spaces? @Identifier
+
+
+/* 3.6 Properties */
 
 Property = key:Key values:ValueList
 {
   return { key, values };
 }
 
-ValueList = WS? v:Value a:( WS? ',' WS? @Value )*
-{
-  return [v, ...a];
-}
-
-Value = Number
-{
-  return {
-    literal: Number(text()),
-  };
-}
-/ BOOLEAN
-/ QuotedString
-/ UnquotedValue
-
-UnquotedValue = UNQUOTED_START (!"," UNQUOTED_CHAR)*
-{
-  return {
-    literal: text()
-  }
-}
-
-Number = '-'? INTEGER ( '.' [0-9]+ )? EXPONENT?
-
-ID = QuotedNonEmpty
-/ UNQUOTED_START UNQUOTED_CHAR*
-{
-  return {
-    literal: text(),
-  };
-}
-
-String = QuotedString
-/ UNQUOTED_CHAR+
-{
-  return {
-    literal: text(),
-  };
-}
-
 Key = QuotedKey
-/ @UnquotedKey WS
-/ UNQUOTED_START (!":" UNQUOTED_CHAR)* ':'
+/ @UnquotedKey DW
+/ UnquotedStart (!":" UnquotedChar)* ':'
 {
-  return {
-    literal: text().slice(0,-1),
-  };
+  return { literal: text().slice(0,-1) }
 }
 
 QuotedKey = @QuotedNonEmpty ':'
 
-UnquotedKey = UNQUOTED_START ( ( !":" UNQUOTED_CHAR )* ':' )+
+UnquotedKey = UnquotedStart ( ( !":" UnquotedChar )* ':' )+
 {
-  return {
-    literal: text().slice(0,-1),
-  };
+  return { literal: text().slice(0,-1) }
+}
+
+ValueList = DW? a:Value b:( DW? ',' DW? @Value )*
+{
+  return [a, ...b]
+}
+
+/* 3.6.1 Property Values */
+
+Value = Number
+/ Boolean
+/ QuotedString
+/ UnquotedValue
+
+Number = '-'? ('0' / [1-9] [0-9]*) ( '.' [0-9]+ )? ([eE] [+-]? [0-9]+)?
+{
+  return { literal: Number(text()) }
+}
+
+Boolean = 'true'
+{
+  return { literal: true } 
+}
+/ 'false'
+{
+  return { literal: false }
+}
+
+UnquotedValue = UnquotedStart (!"," UnquotedChar)*
+{
+  return { literal: text() }
+}
+
+/* 3.7 Quoted Strings */
+
+QuotedString = "'" chars:SingleQuoted* "'"
+{
+  return quotedString(chars)
+}
+/ '"' chars:DoubleQuoted* '"'
+{
+  return quotedString(chars)
 }
 
 QuotedNonEmpty = "'" chars:SingleQuoted+ "'"
 {
-  return {
-    quote: "'",
-    literal: text().slice(1,-1),
-    value: chars.join(''),
-  };
+  return quotedString(chars)
 }
 / '"' chars:DoubleQuoted+ '"'
 {
-  return {
-    quote: '"',
-    literal: text().slice(1,-1),
-    value: chars.join(''),
-  };
-}
-
-QuotedString = "'" chars:SingleQuoted* "'"
-{
-  return {
-    quote: "'",
-    literal: text().slice(1,-1),
-    value: chars.join(''),
-  };
-}
-/ '"' chars:DoubleQuoted* '"'
-{
-  return {
-    quote: '"',
-    literal: text().slice(1,-1),
-    value: chars.join(''),
-  };
+  return quotedString(chars)
 }
 
 SingleQuoted = Unescaped / '"' / Escaped
@@ -180,53 +182,18 @@ Escaped
       / "t" { return "\t" }
       / "u" @Codepoint )
 
-Codepoint = digits:$( HEX |4| ) 
+Codepoint = [0-9a-fA-Z] |4|    /* Hexademical two byte number */
 {
-  return String.fromCharCode(parseInt(digits, 16))
+  return String.fromCharCode(parseInt(text(), 16))
 }
 
-TrailingSpace = SPACES COMMENT
-{
-  comments[location().start.offset] = text();
-}
-/ SPACES
+/* 3.8 Whitespace */
 
-WS = (EmptyLine LINE_BREAK)* SPACES
+LineBreak = [\x0A] / [\x0D] [\x0A]?
 
-// Terminal symbols
+Spaces = [\x20\x09]+
 
-DIRECTION = '--' / '->'
+Comment = $( '#' [^\x0D\x0A]* )
 
-COMMENT = $( '#' [^\x0D\x0A]* )
+DW = (Empty LineBreak)* Spaces    /* Delimiting Whitespace */
 
-LINE_BREAK = [\x0A] / [\x0D] [\x0A]?    // LF | CR LF | CR
-
-SPACES = [\x20\x09]+
-
-HEX = [0-9a-f]i
-
-UNQUOTED_CHAR "UNQUOTED_CHAR"
-  = [^\x00-\x20<>"{}|^`\\]
-UNQUOTED_START
-  = ![:#,-] UNQUOTED_CHAR
-
-INTEGER "INTEGER"
-  = '0' / [1-9] [0-9]*
-
-EXPONENT = [eE] [+-]? [0-9]+
-
-BOOLEAN = 'true'
-{
-  return {
-    literal: true,
-  };
-}
-/ 'false'
-{
-  return {
-    literal: false,
-  };
-}
-
-EOL = LINE_BREAK / END
-END = !.
