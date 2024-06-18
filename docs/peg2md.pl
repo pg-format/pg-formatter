@@ -72,7 +72,7 @@ if ( !$OPT{s} ) {
 }
 for ( my $i = 0 ; $i < @LINE ; $i++ ) {
     if ( $LINE[$i] =~ /^\/\*/ ) {
-        say "";
+        say "" if $LINE[$i] =~ /^..\s+[0-9]/;
         say $LINE[$i];
     }
     else {

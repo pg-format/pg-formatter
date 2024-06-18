@@ -63,7 +63,8 @@ Node = id:Identifier
   }
 }
 
-Edge = id:( EdgeIdentifier )? from:( @Identifier DW )? direction:Direction DW to:Identifier /* Identifier mandatory! */
+/* FIXME: Only EdgeIdentifier is optional, both Identifier are required */
+Edge = id:( EdgeIdentifier )? from:( @Identifier DW )? direction:Direction DW to:Identifier
 {
   if (!id && !from) { expected("identifier") }
   if (!from) {
@@ -165,7 +166,7 @@ SingleQuoted = Unescaped / '"' / Escaped
 
 DoubleQuoted = Unescaped / "'" / Escaped
 
-// Excludes quoted, escape, and control codes but includes \t, \n, \r
+/* Excludes quoted, escape, and control codes but includes \t, \n, \r */
 Unescaped = [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]
 
 Escaped
@@ -182,7 +183,7 @@ Escaped
       / "t" { return "\t" }
       / "u" @Codepoint )
 
-Codepoint = [0-9a-fA-Z] |4|    /* Hexademical two byte number */
+Codepoint = [0-9a-fA-Z] |4|
 {
   return String.fromCharCode(parseInt(text(), 16))
 }
@@ -195,5 +196,6 @@ Spaces = [\x20\x09]+
 
 Comment = $( '#' [^\x0D\x0A]* )
 
-DW = (Empty LineBreak)* Spaces    /* Delimiting Whitespace */
+/* Delimiting Whitespace */
+DW = (Empty LineBreak)* Spaces
 

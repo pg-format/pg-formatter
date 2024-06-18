@@ -21,7 +21,8 @@ UnquotedStart  ::= ![:#,-] UnquotedChar
 
 /* 3.3 Nodes & 3.4 Edges */
 Node           ::= Identifier
-Edge           ::= ( EdgeIdentifier )? ( Identifier DW )? Direction DW Identifier /* Identifier mandatory! */
+/* FIXME: Only EdgeIdentifier is optional, both Identifier are required */
+Edge           ::= ( EdgeIdentifier )? ( Identifier DW )? Direction DW Identifier
 EdgeIdentifier ::= QuotedKey DW | UnquotedKey !"#" DW
 Direction      ::= '--' | '->'
 
@@ -46,13 +47,15 @@ QuotedString   ::= "'" SingleQuoted* "'" | '"' DoubleQuoted* '"'
 QuotedNonEmpty ::= "'" SingleQuoted+ "'" | '"' DoubleQuoted+ '"'
 SingleQuoted   ::= Unescaped | '"' | Escaped
 DoubleQuoted   ::= Unescaped | "'" | Escaped
+/* Excludes quoted, escape, and control codes but includes \t, \n, \r */
 Unescaped      ::= [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]
 Escaped        ::= "\\" | "'" | "\\" | "/" | "b"  | "f"  | "n"  | "r"  | "t"  | "u" Codepoint
-Codepoint      ::= [0-9a-fA-Z] |4|    /* Hexademical two byte number */
+Codepoint      ::= [0-9a-fA-Z] |4|
 
 /* 3.8 Whitespace */
 LineBreak      ::= [\x0A] | [\x0D] [\x0A]?
 Spaces         ::= [\x20\x09]+
 Comment        ::= '#' [^\x0D\x0A]*
-DW             ::= (Empty LineBreak)* Spaces    /* Delimiting Whitespace */
+/* Delimiting Whitespace */
+DW             ::= (Empty LineBreak)* Spaces
 ```
