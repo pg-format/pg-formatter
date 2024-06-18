@@ -47,6 +47,11 @@ for my $line (@LINE) {
         $rule =~ s/ \/ / \| /g;
         $rule =~ s/\@//g;
         $rule =~ s/^\$\(\s*|\s*\)\s*$//g;
+        if ( $term eq 'Edge' ) {
+
+            # hack because peggy parsing adds rule in code
+            $rule =~ s/\( Identifier DW \)\?/Identifier DW/;
+        }
         push( @TERM,     $term );
         push( @RULE,     $rule );
         push( @TERM_LEN, $term_len );
@@ -72,7 +77,7 @@ if ( !$OPT{s} ) {
 }
 for ( my $i = 0 ; $i < @LINE ; $i++ ) {
     if ( $LINE[$i] =~ /^\/\*/ ) {
-        say "" if $LINE[$i] =~ /^..\s+[0-9]/;
+        say "";
         say $LINE[$i];
     }
     else {

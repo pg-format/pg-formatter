@@ -11,7 +11,7 @@
 
 /* 3.1 Basic Structure */
 
-PG = ( Empty LineBreak / Statement EOL )* Empty 
+PG = ( Empty LineBreak / Statement ( LineBreak / END ) )* Empty 
 {
   return { lines, comments };
 }
@@ -34,7 +34,6 @@ Empty = Spaces? c:Comment?
   if (c) comments[location().start.offset] = text();
 }
 
-EOL = LineBreak / END
 END = !.
 
 
@@ -63,7 +62,6 @@ Node = id:Identifier
   }
 }
 
-/* FIXME: Only EdgeIdentifier is optional, both Identifier are required */
 Edge = id:( EdgeIdentifier )? from:( @Identifier DW )? direction:Direction DW to:Identifier
 {
   if (!id && !from) { expected("identifier") }
@@ -166,7 +164,6 @@ SingleQuoted = Unescaped / '"' / Escaped
 
 DoubleQuoted = Unescaped / "'" / Escaped
 
-/* Excludes quoted, escape, and control codes but includes \t, \n, \r */
 Unescaped = [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]
 
 Escaped
@@ -196,6 +193,5 @@ Spaces = [\x20\x09]+
 
 Comment = $( '#' [^\x0D\x0A]* )
 
-/* Delimiting Whitespace */
 DW = (Empty LineBreak)* Spaces
 

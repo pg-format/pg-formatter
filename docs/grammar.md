@@ -8,10 +8,9 @@ $ ./docs/peg2md.pl src/pg.pegjs > docs/grammar.md
 ```ebnf
 
 /* 3.1 Basic Structure */
-PG             ::= ( Empty LineBreak | Statement EOL )* Empty 
+PG             ::= ( Empty LineBreak | Statement ( LineBreak | END ) )* Empty 
 Statement      ::= ( Edge | Node ) ( DW Label )* ( DW Property )* Empty
 Empty          ::= Spaces? Comment?
-EOL            ::= LineBreak | END
 END            ::= !.
 
 /* 3.2 Identifiers */
@@ -21,8 +20,7 @@ UnquotedStart  ::= ![:#,-] UnquotedChar
 
 /* 3.3 Nodes & 3.4 Edges */
 Node           ::= Identifier
-/* FIXME: Only EdgeIdentifier is optional, both Identifier are required */
-Edge           ::= ( EdgeIdentifier )? ( Identifier DW )? Direction DW Identifier
+Edge           ::= ( EdgeIdentifier )? Identifier DW Direction DW Identifier
 EdgeIdentifier ::= QuotedKey DW | UnquotedKey !"#" DW
 Direction      ::= '--' | '->'
 
@@ -47,7 +45,6 @@ QuotedString   ::= "'" SingleQuoted* "'" | '"' DoubleQuoted* '"'
 QuotedNonEmpty ::= "'" SingleQuoted+ "'" | '"' DoubleQuoted+ '"'
 SingleQuoted   ::= Unescaped | '"' | Escaped
 DoubleQuoted   ::= Unescaped | "'" | Escaped
-/* Excludes quoted, escape, and control codes but includes \t, \n, \r */
 Unescaped      ::= [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]
 Escaped        ::= "\\" | "'" | "\\" | "/" | "b"  | "f"  | "n"  | "r"  | "t"  | "u" Codepoint
 Codepoint      ::= [0-9a-fA-Z] |4|
@@ -56,6 +53,5 @@ Codepoint      ::= [0-9a-fA-Z] |4|
 LineBreak      ::= [\x0A] | [\x0D] [\x0A]?
 Spaces         ::= [\x20\x09]+
 Comment        ::= '#' [^\x0D\x0A]*
-/* Delimiting Whitespace */
 DW             ::= (Empty LineBreak)* Spaces
 ```

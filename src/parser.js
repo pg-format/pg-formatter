@@ -506,7 +506,10 @@ function peg$parse(input, options) {
       s2 = peg$currPos;
       s3 = peg$parseStatement();
       if (s3 !== peg$FAILED) {
-        s4 = peg$parseEOL();
+        s4 = peg$parseLineBreak();
+        if (s4 === peg$FAILED) {
+          s4 = peg$parseEND();
+        }
         if (s4 !== peg$FAILED) {
           s3 = [s3, s4];
           s2 = s3;
@@ -535,7 +538,10 @@ function peg$parse(input, options) {
         s2 = peg$currPos;
         s3 = peg$parseStatement();
         if (s3 !== peg$FAILED) {
-          s4 = peg$parseEOL();
+          s4 = peg$parseLineBreak();
+          if (s4 === peg$FAILED) {
+            s4 = peg$parseEND();
+          }
           if (s4 !== peg$FAILED) {
             s3 = [s3, s4];
             s2 = s3;
@@ -654,17 +660,6 @@ function peg$parse(input, options) {
     }
     peg$savedPos = s0;
     s0 = peg$f2(s2);
-
-    return s0;
-  }
-
-  function peg$parseEOL() {
-    var s0;
-
-    s0 = peg$parseLineBreak();
-    if (s0 === peg$FAILED) {
-      s0 = peg$parseEND();
-    }
 
     return s0;
   }
