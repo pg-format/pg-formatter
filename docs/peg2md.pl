@@ -42,16 +42,22 @@ for my $line (@LINE) {
     }
     elsif ( $line =~ /(\S+) += (.+)/ ) {
         my ( $term, $rule ) = ( $1, $2 );
+        next if $term eq 'END';
+
         my $term_len = length($term);
         $rule =~ s/[a-z]+://g;
         $rule =~ s/ \/ / \| /g;
         $rule =~ s/\@//g;
-        $rule =~ s/^\$\(\s*|\s*\)\s*$//g;
+        $rule =~ s/^\$\(\s*(.+)\s*\)\s*$/$1/g;
+        $rule =~ s/\\x([0-9A-F][0-9A-F])/#x$1/g;
+        $rule =~ s/\\\\/\\/g;
+
         if ( $term eq 'Edge' ) {
 
             # hack because peggy parsing adds rule in code
             $rule =~ s/\( Identifier DW \)\?/Identifier DW/;
         }
+
         push( @TERM,     $term );
         push( @RULE,     $rule );
         push( @TERM_LEN, $term_len );

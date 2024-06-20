@@ -80,12 +80,12 @@ Edge = id:( EdgeIdentifier )? from:( @Identifier DW )? direction:Direction DW to
 
 EdgeIdentifier = @QuotedKey DW / @UnquotedKey !"#" DW
 
-Direction = '--' / '->'
+Direction = "--" / "->"
 
 
 /* 3.5 Labels */
 
-Label = ':' Spaces? @Identifier
+Label = ":" Spaces? @Identifier
 
 
 /* 3.6 Properties */
@@ -97,19 +97,19 @@ Property = key:Key values:ValueList
 
 Key = QuotedKey
 / @UnquotedKey DW
-/ UnquotedStart (!":" UnquotedChar)* ':'
+/ UnquotedStart (!":" UnquotedChar)* ":"
 {
   return { literal: text().slice(0,-1) }
 }
 
-QuotedKey = @QuotedNonEmpty ':'
+QuotedKey = @QuotedNonEmpty ":"
 
-UnquotedKey = UnquotedStart ( ( !":" UnquotedChar )* ':' )+
+UnquotedKey = UnquotedStart ( ( !":" UnquotedChar )* ":" )+
 {
   return { literal: text().slice(0,-1) }
 }
 
-ValueList = DW? a:Value b:( DW? ',' DW? @Value )*
+ValueList = DW? a:Value b:( DW? "," DW? @Value )*
 {
   return [a, ...b]
 }
@@ -121,16 +121,16 @@ Value = Number
 / QuotedString
 / UnquotedValue
 
-Number = '-'? ('0' / [1-9] [0-9]*) ( '.' [0-9]+ )? ([eE] [+-]? [0-9]+)?
+Number = "-"? ("0" / [1-9] [0-9]*) ( "." [0-9]+ )? ([eE] [+-]? [0-9]+)?
 {
   return { literal: Number(text()) }
 }
 
-Boolean = 'true'
+Boolean = "true"
 {
   return { literal: true } 
 }
-/ 'false'
+/ "false"
 {
   return { literal: false }
 }
@@ -167,9 +167,7 @@ DoubleQuoted = Unescaped / "'" / Escaped
 Unescaped = [^\x00-\x08\x0B\x0C\x0E-\x1F"'\\]
 
 Escaped
-  = "\\"
-    @(
-        '"'
+  = "\\" @( '"'
       / "'"
       / "\\"
       / "/"
@@ -180,7 +178,7 @@ Escaped
       / "t" { return "\t" }
       / "u" @Codepoint )
 
-Codepoint = [0-9a-fA-Z] |4|
+Codepoint = [0-9a-fA-Z] [0-9a-fA-Z] [0-9a-fA-Z] [0-9a-fA-Z]
 {
   return String.fromCharCode(parseInt(text(), 16))
 }
@@ -191,7 +189,7 @@ LineBreak = [\x0A] / [\x0D] [\x0A]?
 
 Spaces = [\x20\x09]+
 
-Comment = $( '#' [^\x0D\x0A]* )
+Comment = $( "#" [^\x0D\x0A]* )
 
 DW = (Empty LineBreak)* Spaces
 
