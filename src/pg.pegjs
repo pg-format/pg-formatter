@@ -74,6 +74,7 @@ Edge = id:( EdgeIdentifier )? from:( @Identifier DW )? direction:Direction DW to
   const edge = { from, to, direction }
   if (id) {
     edge.id = id
+    id = id.value || id.literal
     if (id in edgeIds) {
       error(`Repeated edge identifier: ${id}`)
     }

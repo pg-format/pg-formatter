@@ -279,6 +279,7 @@ function peg$parse(input, options) {
   const edge = { from, to, direction }
   if (id) {
     edge.id = id
+    id = id.value || id.literal
     if (id in edgeIds) {
       error(`Repeated edge identifier: ${id}`)
     }
