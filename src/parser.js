@@ -277,7 +277,13 @@ function peg$parse(input, options) {
     id = null
   } 
   const edge = { from, to, direction }
-  if (id) edge.id = id
+  if (id) {
+    edge.id = id
+    if (id in edgeIds) {
+      error(`Repeated edge identifier: ${id}`)
+    }
+    edgeIds[id] = true
+  }
   return {
     edge,
     pos: { start: location().start.offset },
@@ -2264,13 +2270,14 @@ function peg$parse(input, options) {
   }
 
 
-  let lines = [];
-  let comments = {};
-  let quotedString = chars => ({
+  const lines = [];
+  const comments = {};
+  const quotedString = chars => ({
     quote: text()[0],
     literal: text().slice(1,-1),
     value: chars.join(''),
   });
+  const edgeIds = {}
 
   peg$result = peg$startRuleFunction();
 

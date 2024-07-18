@@ -28,7 +28,7 @@ describe("parse examples", () => {
 const valid = JSON.parse(suiteFile('pg-format-valid.json'))
 describe("parse valid test cases", () => {
   valid.forEach(({pg,about,formatted,graph}) => {
-    it(about, () => { 
+    it(about||pg, () => { 
       const g = parse(pg)
       if (formatted) {
         if (format(g) != formatted) console.log(JSON.stringify(g,null,2))
