@@ -1,10 +1,47 @@
 const q = document.querySelector.bind(document);
 const editor = CodeMirror.fromTextArea(q('#input-text'), {
+    mode: "pg",
     lineNumbers: true,
     viewportMargin: Infinity,
     lineWrapping: true,
     gutters: ["CodeMirror-lint-markers"],
+    lint: true,
 });
+
+var node = document.createElement("div")
+node.setAttribute("style", "padding-left: 45px; padding-top: 2px;");
+let bottomPanel = node.appendChild(document.createElement("div"));
+bottomPanel.textContent = "\xA0"
+editor.addPanel(node,{position:"bottom",stable:true})
+
+CodeMirror.registerHelper('lint', 'pg', text => {
+  try {
+    pgParse(text) // TODO: we could save parsing result to avoid parsing twice
+    bottomPanel.setAttribute("style", "color: green;");
+    bottomPanel.textContent = "Valid PG format syntax"
+  } catch ({ message, location }) {
+    /*
+    message = message.replace(/ but .* found.$/, '');
+    message = message.replace('[ \\t]', '');
+    message = message.replace('[\\n]', '');
+    message = message.replace('[\\r]', '');
+    message = message.replace(/"(\S+)"/g, '$1');
+    message = message.replace(/\\"/g, '"');
+    message = message.replace('or ', ', ');
+    message = message.replace(/(, )+/g, '<br>');
+    */
+    bottomPanel.textContent = message
+    bottomPanel.setAttribute("style", "color: red;");
+    const e = { message }
+    if (location) {
+      e.from = { line: location.start.line-1, ch: location.start.column-1 }
+      e.to = { line: location.end.line-1, ch: location.end.column-1 }
+    }
+    return [e]
+  }
+  return []
+})
+
 const outputArea = CodeMirror.fromTextArea(q('#formatted-text'), {
     lineNumbers: true,
     viewportMargin: Infinity,
@@ -21,58 +58,25 @@ let timerId;
 function reformat(event, ui) {
   const input = editor.getValue();
   const outputStyle = q('#indent-depth').value;
-  if (outputStyle === 'jsonl' || outputStyle === 'json') {
-    outputArea.setOption('mode', 'javascript');
-  } else {
-    outputArea.setOption('mode', 'pg');
-  }
-  blitzboard.setGraph('', false);
   try {
-    toastr.clear();
-    outputArea.setValue(pgFormat(input, outputStyle));
+    const output = pgFormat(input, outputStyle);
+    outputArea.setValue(output);
+    if (outputStyle === 'jsonl' || outputStyle === 'json') {
+      outputArea.setOption('mode', 'javascript');
+    } else {
+      outputArea.setOption('mode', 'pg');
+    }
     try {
       blitzboard.setGraph(pgForBlitz(input), false);
       blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
       blitzboard.network.stabilize();
     } catch (err) {
-      console.log(err);
+      console.log(err); // TODO: this should not happen
     }
   } catch (err) {
-    toastr.remove();
-    outputArea.setValue(input);
-    let title = 'SyntaxError';
-    if (err.location) {
-      const startLine = err.location.start.line;
-      const endLine = err.location.end.line;
-      const startCol = err.location.start.column;
-      const endCol = err.location.end.column;
-      if (startLine == endLine) {
-        title += ` at line:${startLine}(col:${startCol}-${endCol})\n`;
-      } else {
-        title += ` at line:${startLine}(col:${startCol})-${endLine}(col:${endCol})\n`;
-      }
-      outputArea.setSelection({line: startLine-1, ch: startCol-1}, {line: endLine-1, ch: endCol-1});
-    }
-    toastr.options = {
-      timeOut: 0,
-      extendedTimeOut: 0,
-      closeButton: true,
-      preventDuplicates: true
-    }
-    let message = '';
-    if (err.message) {
-      message = err.message;
-      message = message.replace(/ but .* found.$/, '');
-      message = message.replace('end of input', '');
-      message = message.replace('[ \\t]', '');
-      message = message.replace('[\\n]', '');
-      message = message.replace('[\\r]', '');
-      message = message.replace(/"(\S+)"/g, '$1');
-      message = message.replace(/\\"/g, '"');
-      message = message.replace('or ', ', ');
-      message = message.replace(/(, )+/g, '<br>');
-    }
-    toastr.error(message, title);
+    // error will also be shown as result of linter
+    console.warn(err.message)
+    //outputArea.setValue(input);
   }
 }
 

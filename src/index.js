@@ -24,4 +24,5 @@ export const pgForBlitz = input => formatForBlitz(buildGraph(parse(input).lines)
 if (typeof window !== 'undefined') {
   window.pgFormat = pgFormat;
   window.pgForBlitz = pgForBlitz;
+  window.pgParse = parse;
 }

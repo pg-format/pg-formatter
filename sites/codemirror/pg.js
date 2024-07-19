@@ -3,6 +3,16 @@
 //
 // reference: <https://codemirror.net/5/doc/manual.html#modeapi>
 
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+"use strict";
+
 const reserved = "\x00-\x20<>\"{}\\^`|"
 const unquoteStart = `[^${reserved}:',-]`
 
@@ -263,3 +273,5 @@ CodeMirror.defineMode("pg", () => {
     token,
   }
 })
+
+});
