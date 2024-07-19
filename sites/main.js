@@ -1,3 +1,20 @@
+const q = document.querySelector.bind(document);
+const editor = CodeMirror.fromTextArea(q('#input-text'), {
+    lineNumbers: true,
+    viewportMargin: Infinity,
+    lineWrapping: true,
+    gutters: ["CodeMirror-lint-markers"],
+});
+const outputArea = CodeMirror.fromTextArea(q('#formatted-text'), {
+    lineNumbers: true,
+    viewportMargin: Infinity,
+    lineWrapping: false,
+    readOnly: true
+});
+editor.setSize('100%', '100%');
+outputArea.setSize('100%', '100%');
+let blitzboard = new Blitzboard(document.getElementById('child-area'));
+
 let byProgram = false;
 let timerId;
 
@@ -13,6 +30,13 @@ function reformat(event, ui) {
   try {
     toastr.clear();
     outputArea.setValue(pgFormat(input, outputStyle));
+    try {
+      blitzboard.setGraph(pgForBlitz(input), false);
+      blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
+      blitzboard.network.stabilize();
+    } catch (err) {
+      console.log(err);
+    }
   } catch (err) {
     toastr.remove();
     outputArea.setValue(input);
@@ -49,13 +73,6 @@ function reformat(event, ui) {
       message = message.replace(/(, )+/g, '<br>');
     }
     toastr.error(message, title);
-  }
-  try {
-    blitzboard.setGraph(pgForBlitz(input), false);
-    blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
-    blitzboard.network.stabilize();
-  } catch (err) {
-    console.log(err);
   }
 }
 

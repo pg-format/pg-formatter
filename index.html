@@ -91,23 +91,6 @@
                 </div>
             </div>
         </div>
-        <script>
-         const q = document.querySelector.bind(document);
-         const editor = CodeMirror.fromTextArea(q('#input-text'), {
-             lineNumbers: true,
-             viewportMargin: Infinity,
-             lineWrapping: true
-         });
-         const outputArea = CodeMirror.fromTextArea(q('#formatted-text'), {
-             lineNumbers: true,
-             viewportMargin: Infinity,
-             lineWrapping: false,
-             readOnly: true
-         });
-         editor.setSize('100%', '100%');
-         outputArea.setSize('100%', '100%');
-         let blitzboard = new Blitzboard(document.getElementById('child-area'));
-        </script>
         <script src='./dist/main.js'></script>
         <script src='./sites/main.js'></script>
     </body>
