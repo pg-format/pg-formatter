@@ -1,9 +1,16 @@
+// PG format parser with additional information. 
+//
+// The result object consists of an array of `statements` and a `comments` object.
+// Each statement is a PG-JSONL object with additional `pos`
+// Properties are stored as array of `key` and `values` 
+// Each identifier (`id`), property `key`, and value is an object with
+// keys `value` (the actual value) and `literal` (its serialization)
+
 {
-  const lines = [];
+  const statements = [];
   const comments = {};
   const quotedString = chars => ({
-    quote: text()[0],
-    literal: text().slice(1,-1),
+    literal: text(),
     value: chars.join(''),
   });
   const edgeIds = {}
@@ -14,20 +21,15 @@
 
 PG = ( Empty LineBreak / Statement ( LineBreak / END ) )* Empty 
 {
-  return { lines, comments };
+  return { statements, comments };
 }
 
-Statement = e:( Edge / Node ) l:( DW @Label )* p:( DW @Property )* Empty
+Statement = s:( Edge / Node ) l:( DW @Label )* p:( DW @Property )* Empty
 {
-  if (e.node) {
-    e.node.labels = l;
-    e.node.properties = p;
-  } else if (e.edge) {
-    e.edge.labels = l;
-    e.edge.properties = p;
-  }
-  e.pos.end = location().end.offset;
-  lines.push(e);
+  s.labels = l;
+  s.properties = p;
+  s.pos.end = location().end.offset;
+  statements.push(s);
 }
 
 Empty = Spaces? c:Comment?
@@ -43,7 +45,7 @@ END = !.
 Identifier = QuotedNonEmpty
 / UnquotedStart UnquotedChar*
 {
-  return { literal: text() }
+  return { value: text(), literal: text() }
 }
 
 UnquotedChar "UnquotedChar"
@@ -58,7 +60,8 @@ UnquotedStart
 Node = id:Identifier
 {
   return {
-    node: { id },
+    type: "node",
+    id,
     pos: { start: location().start.offset },
   }
 }
@@ -71,7 +74,7 @@ Edge = id:( EdgeIdentifier )? from:( @Identifier DW )? direction:Direction DW to
     from = id
     id = null
   } 
-  const edge = { from, to, direction }
+  const edge = { type: "edge", from, to, direction }
   if (id) {
     edge.id = id
     id = id.value || id.literal
@@ -81,7 +84,7 @@ Edge = id:( EdgeIdentifier )? from:( @Identifier DW )? direction:Direction DW to
     edgeIds[id] = true
   }
   return {
-    edge,
+    ...edge,
     pos: { start: location().start.offset },
   }
 }
@@ -107,14 +110,16 @@ Key = QuotedKey
 / @UnquotedKey DW
 / UnquotedStart (!":" UnquotedChar)* ":"
 {
-  return { literal: text().slice(0,-1) }
+  const value = text().slice(0,-1) 
+  return { value, literal: value }
 }
 
 QuotedKey = @QuotedNonEmpty ":"
 
 UnquotedKey = UnquotedStart ( ( !":" UnquotedChar )* ":" )+
 {
-  return { literal: text().slice(0,-1) }
+  const value = text().slice(0,-1) 
+  return { value, literal: value }
 }
 
 ValueList = DW? a:Value b:( DW? "," DW? @Value )*
@@ -131,21 +136,21 @@ Value = Number
 
 Number = "-"? ("0" / [1-9] [0-9]*) ( "." [0-9]+ )? ([eE] [+-]? [0-9]+)?
 {
-  return { literal: Number(text()) }
+  return { value: Number(text()), literal: text() }
 }
 
 Boolean = "true"
 {
-  return { literal: true } 
+  return { value: true, literal: "true" } 
 }
 / "false"
 {
-  return { literal: false }
+  return { value: false, literal: "false" }
 }
 
 UnquotedValue = UnquotedStart (!"," UnquotedChar)*
 {
-  return { literal: text() }
+  return { literal: text(), value: text() }
 }
 
 /* 3.7 Quoted Strings */

@@ -11,23 +11,23 @@
  * Formatting can be configured with
  * - delimiter between elements (expect between the first three
  *   elements of an edge, these are always separated with space)
- * - separator between lines
+ * - separator between statements
  */
 
 let formatted;
 let commentsArr;
 
-export function format({ lines, comments }, delim=' ', sep='') {
+export function format({ statements, comments }, delim=' ', sep='') {
   formatted = [];
   commentsArr = Object.entries(comments).map(([pos, text]) => ({
     pos: parseInt(pos),
     text: text,
   }));
-  lines.forEach((line) => {
-    if (line.node) {
-      formatNode(line.node, line.pos, delim);
-    } else if (line.edge) {
-      formatEdge(line.edge, line.pos, delim);
+  statements.forEach(stm => {
+    if (stm.type === "node") {
+      formatNode(stm, stm.pos, delim);
+    } else if (stm.type === "edge") {
+      formatEdge(stm, stm.pos, delim);
     }
   });
   while (commentsArr.length) {
@@ -66,17 +66,14 @@ function formatLabel(label) {
 }
 
 function formatProperty({ key, values }) {
-  return (!key.quote && key.literal.match(/:/)) // unquoted key with colon
+  return (key.literal === key.value && key.value.match(/:/)) // unquoted key with colon
     ? `${key.literal}: ${formatValueList(values)}`
     : `${formatElement(key)}:${formatValueList(values)}`;
 }
 
 function formatElement(value) {
-  if (value.quote) {
-    return value.quote + value.literal + value.quote;
-  } else {
-    return value.literal;
-  }
+  if (typeof value.value === "number") return value.value
+  return value.literal ?? value.value
 }
 
 function formatValueList(values) {

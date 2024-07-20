@@ -244,28 +244,24 @@ function peg$parse(input, options) {
   var peg$e33 = peg$classExpectation(["\r", "\n"], true, false);
 
   var peg$f0 = function() {
-  return { lines, comments };
+  return { statements, comments };
 };
-  var peg$f1 = function(e, l, p) {
-  if (e.node) {
-    e.node.labels = l;
-    e.node.properties = p;
-  } else if (e.edge) {
-    e.edge.labels = l;
-    e.edge.properties = p;
-  }
-  e.pos.end = location().end.offset;
-  lines.push(e);
+  var peg$f1 = function(s, l, p) {
+  s.labels = l;
+  s.properties = p;
+  s.pos.end = location().end.offset;
+  statements.push(s);
 };
   var peg$f2 = function(c) {
   if (c) comments[location().start.offset] = text();
 };
   var peg$f3 = function() {
-  return { literal: text() }
+  return { value: text(), literal: text() }
 };
   var peg$f4 = function(id) {
   return {
-    node: { id },
+    type: "node",
+    id,
     pos: { start: location().start.offset },
   }
 };
@@ -276,7 +272,7 @@ function peg$parse(input, options) {
     from = id
     id = null
   } 
-  const edge = { from, to, direction }
+  const edge = { type: "edge", from, to, direction }
   if (id) {
     edge.id = id
     id = id.value || id.literal
@@ -286,7 +282,7 @@ function peg$parse(input, options) {
     edgeIds[id] = true
   }
   return {
-    edge,
+    ...edge,
     pos: { start: location().start.offset },
   }
 };
@@ -294,25 +290,27 @@ function peg$parse(input, options) {
   return { key, values };
 };
   var peg$f7 = function() {
-  return { literal: text().slice(0,-1) }
+  const value = text().slice(0,-1) 
+  return { value, literal: value }
 };
   var peg$f8 = function() {
-  return { literal: text().slice(0,-1) }
+  const value = text().slice(0,-1) 
+  return { value, literal: value }
 };
   var peg$f9 = function(a, b) {
   return [a, ...b]
 };
   var peg$f10 = function() {
-  return { literal: Number(text()) }
+  return { value: Number(text()), literal: text() }
 };
   var peg$f11 = function() {
-  return { literal: true } 
+  return { value: true, literal: "true" } 
 };
   var peg$f12 = function() {
-  return { literal: false }
+  return { value: false, literal: "false" }
 };
   var peg$f13 = function() {
-  return { literal: text() }
+  return { literal: text(), value: text() }
 };
   var peg$f14 = function(chars) {
   return quotedString(chars)
@@ -2271,11 +2269,10 @@ function peg$parse(input, options) {
   }
 
 
-  const lines = [];
+  const statements = [];
   const comments = {};
   const quotedString = chars => ({
-    quote: text()[0],
-    literal: text().slice(1,-1),
+    literal: text(),
     value: chars.join(''),
   });
   const edgeIds = {}

@@ -11,11 +11,11 @@ function mergeProperties(properties={}, props) {
   return properties
 }
 
-export function buildGraph(lines) {
+export function buildGraph({ statements }) {
   const nodes = {}, edges = []
-  for (let line of lines) {
-    if (line.node) {
-      const node = getNodeObj(line.node);
+  for (let stm of statements) {
+    if (stm.type === "node") {
+      const node = getNodeObj(stm);
       if (node.id in nodes) { // merge node information
         const labels = [...nodes[node.id].labels, ...node.labels]
         nodes[node.id].labels = Array.from(new Set(labels))
@@ -23,8 +23,8 @@ export function buildGraph(lines) {
       } else {
         nodes[node.id] = node;
       }
-    } else if (line.edge) {
-      const edge = getEdgeObj(line.edge)
+    } else if (stm.type === "edge") {
+      const edge = getEdgeObj(stm)
       for (let id of [edge.from,edge.to]) {
         if (!(id in nodes)) {
           nodes[id] = { id, labels: [], properties: {} }
@@ -39,35 +39,35 @@ export function buildGraph(lines) {
   }
 }
 
-export function formatJSONL(line) {
+export function formatJSONL(statement) {
   let obj;
-  if (line.node) {
-    obj = { type: "node", ...getNodeObj(line.node) };
-  } else if (line.edge) {
-    obj = { type: "edge", ...getEdgeObj(line.edge) };
+  if (statement.type === "node") {
+    obj = { type: "node", ...getNodeObj(statement) };
+  } else if (statement.type === "edge") {
+    obj = { type: "edge", ...getEdgeObj(statement) };
   }
   return JSON.stringify(obj)
 }
 
 function getNodeObj(node) {
   return {
-    id: getLiteral(node.id),
-    labels: [...(new Set(node.labels.map(getLiteral)))],
+    id: getIdentifier(node.id),
+    labels: [...(new Set(node.labels.map(getIdentifier)))],
     properties: getPropertiesObj(node.properties),
   };
 }
 
 function getEdgeObj(edge) {
   let obj = {
-    from: getLiteral(edge.from),
-    to: getLiteral(edge.to),
-    labels: edge.labels.map(getLiteral),
+    from: getIdentifier(edge.from),
+    to: getIdentifier(edge.to),
+    labels: edge.labels.map(getIdentifier),
     properties: getPropertiesObj(edge.properties),
   };
   if (edge.direction === '--') obj.undirected = true
   if (edge.id) {
     return {
-      id: getLiteral(edge.id),
+      id: getIdentifier(edge.id),
       ...obj,
     };
   } else {
@@ -78,8 +78,8 @@ function getEdgeObj(edge) {
 function getPropertiesObj(properties) {
   let obj = {};
   properties.forEach((property) => {
-    const key = getLiteral(property.key);
-    const values = property.values.map(getLiteral);
+    const key = getIdentifier(property.key);
+    const values = property.values.map(getIdentifier);
     if (obj.hasOwnProperty(key)) {
       obj[key] = obj[key].concat(values);
     } else {
@@ -89,6 +89,6 @@ function getPropertiesObj(properties) {
   return obj;
 }
 
-function getLiteral(elem) {
+function getIdentifier(elem) {
   return elem.value ?? elem.literal;
 }

@@ -11,15 +11,17 @@ export const pgFormat = (input, style) => {
     case 'lines':
       return format(parsed, '\n  ', '\n')
     case 'jsonl':
-      return parsed.lines.map(formatJSONL).join('\n')
+      return parsed.statements.map(formatJSONL).join('\n')
     case 'json':
-      return JSON.stringify(buildGraph(parsed.lines),null,2)
+      return JSON.stringify(buildGraph(parsed),null,2)
     case 'blitz':
-      return formatForBlitz(buildGraph(parsed.lines))
+      return formatForBlitz(buildGraph(parsed))
+    case 'parsed':
+      return JSON.stringify(parsed,null,2)
   }
 };
 
-export const pgForBlitz = input => formatForBlitz(buildGraph(parse(input).lines))
+export const pgForBlitz = input => formatForBlitz(buildGraph(parse(input)))
 
 if (typeof window !== 'undefined') {
   window.pgFormat = pgFormat;

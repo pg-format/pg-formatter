@@ -65,7 +65,7 @@ function reformat(event, ui) {
   try {
     const output = pgFormat(input, outputStyle);
     outputArea.setValue(output);
-    if (outputStyle === 'jsonl' || outputStyle === 'json') {
+    if (outputStyle === 'jsonl' || outputStyle === 'json' || outputStyle === 'parsed') {
       outputArea.setOption('mode', 'javascript');
     } else {
       outputArea.setOption('mode', 'pg');
