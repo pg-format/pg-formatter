@@ -14,6 +14,11 @@ let bottomPanel = node.appendChild(document.createElement("div"));
 bottomPanel.textContent = "\xA0"
 editor.addPanel(node,{position:"bottom",stable:true})
 
+function showError(message) {
+  bottomPanel.textContent = message
+  bottomPanel.setAttribute("style", "color: red;");
+}
+
 CodeMirror.registerHelper('lint', 'pg', text => {
   try {
     pgParse(text) // TODO: we could save parsing result to avoid parsing twice
@@ -30,8 +35,7 @@ CodeMirror.registerHelper('lint', 'pg', text => {
     message = message.replace('or ', ', ');
     message = message.replace(/(, )+/g, '<br>');
     */
-    bottomPanel.textContent = message
-    bottomPanel.setAttribute("style", "color: red;");
+    showError(message)
     const e = { message }
     if (location) {
       e.from = { line: location.start.line-1, ch: location.start.column-1 }
@@ -71,12 +75,14 @@ function reformat(event, ui) {
       blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
       blitzboard.network.stabilize();
     } catch (err) {
-      console.log(err); // TODO: this should not happen
+      // TODO: this should not happen
+      showError("Failed to display graph (sorry, will be fixed!)")
+      console.log(err);
+      blitzboard.setGraph("", false);
     }
   } catch (err) {
-    // error will also be shown as result of linter
+    // TODO: error is already be shown as result of linter so no need to emit it here?
     console.warn(err.message)
-    //outputArea.setValue(input);
   }
 }
 
