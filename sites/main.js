@@ -16,14 +16,18 @@ editor.addPanel(node,{position:"bottom",stable:true})
 
 function showError(message) {
   bottomPanel.textContent = message
-  bottomPanel.setAttribute("style", "color: red;");
+  bottomPanel.setAttribute("style", "color: red;")
+}
+
+function showStatus(message) {
+  bottomPanel.textContent = message
+  bottomPanel.setAttribute("style", "color: green;")
 }
 
 CodeMirror.registerHelper('lint', 'pg', text => {
   try {
+    // TODO: use this instead of onChange?
     pgParse(text) // TODO: we could save parsing result to avoid parsing twice
-    bottomPanel.setAttribute("style", "color: green;");
-    bottomPanel.textContent = "Valid PG format syntax"
   } catch ({ message, location }) {
     /*
     message = message.replace(/ but .* found.$/, '');
@@ -54,16 +58,24 @@ const outputArea = CodeMirror.fromTextArea(q('#formatted-text'), {
 });
 editor.setSize('100%', '100%');
 outputArea.setSize('100%', '100%');
+
 let blitzboard = new Blitzboard(document.getElementById('child-area'));
 
 let byProgram = false;
 let timerId;
+let parsedGraph = null;
 
 function reformat(event, ui) {
   const input = editor.getValue();
-  const outputStyle = q('#indent-depth').value;
+  const outputStyle = q('#output-style').value;
   try {
-    const output = pgFormat(input, outputStyle);
+    parsedGraph = pgParse(input)
+
+    const nodeCount = parsedGraph.statements.filter(s => s.type === "node").length
+    const edgeCount = parsedGraph.statements.filter(s => s.type === "edge").length
+    showStatus(`Parsed ${nodeCount} node statements and ${edgeCount} edge statements.`)
+
+    const output = pgFormat(parsedGraph, outputStyle);
     outputArea.setValue(output);
     if (outputStyle === 'jsonl' || outputStyle === 'json' || outputStyle === 'parsed') {
       outputArea.setOption('mode', 'javascript');
@@ -71,7 +83,7 @@ function reformat(event, ui) {
       outputArea.setOption('mode', 'pg');
     }
     try {
-      blitzboard.setGraph(pgForBlitz(input), false);
+      blitzboard.setGraph(pgForBlitz(parsedGraph), false);
       blitzboard.setConfig(Function('blitzboard', `"use strict";return ({edge:{caption:[]}})`)(blitzboard), true);
       blitzboard.network.stabilize();
     } catch (err) {
@@ -100,8 +112,12 @@ function onChanged(delta) {
 }
 
 editor.on('change', onChanged);
+editor.on('cursorActivity', editor => {
+  // TODO: look up in graph
+  // console.log(editor.getCursor())
+})
 
-q('#indent-depth').addEventListener('change', onChanged);
+q('#output-style').addEventListener('change', onChanged);
 
 q('#query-select').addEventListener('change', (event) => {
   if (event.target.value === '') {
