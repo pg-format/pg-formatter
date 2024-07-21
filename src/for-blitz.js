@@ -1,6 +1,6 @@
-export const formatForBlitz = statements => [
-    ...statements.filter(s => s.type === "node").map(formatNode),
-    ...statements.filter(s => s.type === "edge").map(formatNode),
+export const formatForBlitz = ({nodes, edges}) => [
+    ...nodes.map(formatNode),
+    ...edges.map(formatEdge),
   ].join('\n')
 
 const formatNode = ({ id, labels, properties }) =>
