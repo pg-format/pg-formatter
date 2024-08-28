@@ -32,36 +32,15 @@ while (<>) {
     }
 }
 
-my @TERM;
-my @RULE;
-my @TERM_LEN;
 my $MAX_TERM_LEN = 0;
 for my $line (@LINE) {
     say STDERR $line if $OPT{d};
     if ( $line =~ /^\/\*/ ) {
     }
-    elsif ( $line =~ /(\S+) += (.+)/ ) {
-        my ( $term, $rule ) = ( $1, $2 );
+    elsif ( $line =~ /(\S+) += .+/ ) {
+        my $term = $1;
         next if $term eq 'END';
-
         my $term_len = length($term);
-        $rule =~ s/[a-z]+://g;
-        $rule =~ s/ \/ / \| /g;
-        $rule =~ s/\@//g;
-        $rule =~ s/^\$\(\s*(.+)\s*\)\s*$/$1/g;
-        $rule =~ s/\\x([0-9A-F][0-9A-F])/#x$1/g;
-        $rule =~ s/\\\\/\\/g;
-
-        if ( $term eq 'Edge' ) {
-
-            # hack because peggy parsing adds rule in code
-            $rule =~ s/\( Identifier DW \)\?/Identifier DW/;
-        }
-
-        push( @TERM,     $term );
-        push( @RULE,     $rule );
-        push( @TERM_LEN, $term_len );
-
         if ( $term_len > $MAX_TERM_LEN ) {
             $MAX_TERM_LEN = $term_len;
         }
@@ -86,11 +65,21 @@ for ( my $i = 0 ; $i < @LINE ; $i++ ) {
         say "";
         say $LINE[$i];
     }
-    elsif (@TERM) {
-        my $term = shift @TERM;
-        my $rule = shift @RULE;
-        my $len  = shift @TERM_LEN;
-        my $space = " " x ( $MAX_TERM_LEN - $len );
+    elsif ( $LINE[$i] =~ /(\S+) += (.+)/ ) {
+        my ( $term, $rule ) = ( $1, $2 );
+        next if $term eq 'END';
+        my $term_len = length($term);
+        $rule =~ s/[a-z]+://g;
+        $rule =~ s/ \/ / \| /g;
+        $rule =~ s/\@//g;
+        $rule =~ s/^\$\(\s*(.+)\s*\)\s*$/$1/g;
+        $rule =~ s/\\x([0-9A-F][0-9A-F])/#x$1/g;
+        $rule =~ s/\\\\/\\/g;
+        if ( $term eq 'Edge' ) {
+            # hack because peggy parsing adds rule in code
+            $rule =~ s/\( Identifier DW \)\?/Identifier DW/;
+        }
+        my $space = " " x ( $MAX_TERM_LEN - $term_len );
         say "$term$space ::= $rule";
     }
 }
