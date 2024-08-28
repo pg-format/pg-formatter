@@ -15,7 +15,7 @@ describe("parse examples", () => {
   for(let file of examples) {
     it(file, () => {
       const pg = suiteFile('examples',file)
-      const graph = buildGraph(parse(pg))
+      const graph = buildGraph(parse(pg), true)
       const jsonFile = suitePath('examples',file.replace(/\.pg$/, ".json"))
       if (fs.existsSync(jsonFile)) {
         const json = JSON.parse(suiteFile(jsonFile))

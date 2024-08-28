@@ -11,7 +11,7 @@ function mergeProperties(properties={}, props) {
   return properties
 }
 
-export function buildGraph({ statements }) {
+export function buildGraph({ statements }, sort=false) {
   const nodes = {}, edges = []
   for (let stm of statements) {
     if (stm.type === "node") {
@@ -32,6 +32,10 @@ export function buildGraph({ statements }) {
       }
       edges.push(edge)
     }
+  }
+  if (sort) {
+    for (let i in nodes) nodes[i].labels.sort()
+    for (let e of edges) e.labels.sort()
   }
   return {
     nodes: Object.keys(nodes).sort().map(id => nodes[id]),
