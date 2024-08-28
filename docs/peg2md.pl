@@ -86,11 +86,10 @@ for ( my $i = 0 ; $i < @LINE ; $i++ ) {
         say "";
         say $LINE[$i];
     }
-    else {
+    elsif (@TERM) {
         my $term = shift @TERM;
         my $rule = shift @RULE;
         my $len  = shift @TERM_LEN;
-
         my $space = " " x ( $MAX_TERM_LEN - $len );
         say "$term$space ::= $rule";
     }

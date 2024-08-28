@@ -53,5 +53,4 @@ LineBreak      ::= [#x0A] | [#x0D] [#x0A]?
 Spaces         ::= [#x20#x09]+
 Comment        ::= "#" [^#x0D#x0A]* 
 DW             ::= (Empty LineBreak)* Spaces
-               ::= 
 ```
