@@ -42,7 +42,11 @@ function formatNode({ id, labels, properties }, pos, delim) {
   }
   formatted.push([formatElement(id), ...labels.map(formatLabel), ...properties.map(formatProperty)].join(delim));
   while (commentsArr.length && commentsArr[0].pos < pos.end) {
-    formatted[formatted.length - 1] += commentsArr.shift().text;
+    let comment = commentsArr.shift().text;
+    if (!/^[ \t]/.test(comment)) {
+      comment = ' ' + comment;
+    }
+    formatted[formatted.length - 1] += comment;
   }
 }
 
@@ -57,7 +61,11 @@ function formatEdge({ id, from, to, direction, labels, properties }, pos, delim)
   edge += `${formatElement(from)} ${direction} ${formatElement(to)}`;
   formatted.push([edge, ...labels.map(formatLabel), ...properties.map(formatProperty)].join(delim));
   while (commentsArr.length && commentsArr[0].pos < pos.end) {
-    formatted[formatted.length - 1] += commentsArr.shift().text;
+    let comment = commentsArr.shift().text;
+    if (!/^[ \t]/.test(comment)) {
+      comment = ' ' + comment;
+    }
+    formatted[formatted.length - 1] += comment;
   }
 }
 
